@@ -1,0 +1,51 @@
+[2026-03-07 04:58:09,885] INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.25.101.51:5000
+[2026-03-07 04:58:09,885] INFO [33mPress CTRL+C to quit[0m
+[2026-03-07 04:58:09,888] INFO  * Restarting with stat
+[2026-03-07 04:58:10,395] WARNING  * Debugger is active!
+[2026-03-07 04:58:10,405] INFO  * Debugger PIN: 122-255-992
+[2026-03-07 05:06:32,251] INFO 127.0.0.1 - - [07/Mar/2026 05:06:32] "GET /health HTTP/1.1" 200 -
+[2026-03-07 05:06:51,318] INFO CLASSIFY [FAST] video_id=pkD3Q2bpsqs label=Uncertain
+[2026-03-07 05:06:51,322] INFO 127.0.0.1 - - [07/Mar/2026 05:06:51] "POST /classify_fast HTTP/1.1" 200 -
+[2026-03-07 05:12:53,445] INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.25.101.51:5000
+[2026-03-07 05:12:53,445] INFO [33mPress CTRL+C to quit[0m
+[2026-03-07 05:12:53,446] INFO  * Restarting with stat
+[2026-03-07 05:12:54,175] WARNING  * Debugger is active!
+[2026-03-07 05:12:54,178] INFO  * Debugger PIN: 122-255-992
+[2026-03-07 05:13:44,150] INFO 127.0.0.1 - - [07/Mar/2026 05:13:44] "GET /health HTTP/1.1" 200 -
+[2026-03-07 05:14:14,641] INFO CLASSIFY [FAST] video_id=pkD3Q2bpsqs label=Educational
+[2026-03-07 05:14:14,642] INFO 127.0.0.1 - - [07/Mar/2026 05:14:14] "POST /classify_fast HTTP/1.1" 200 -
+[2026-03-07 05:15:37,122] INFO CLASSIFY [FULL] video_id=pkD3Q2bpsqs label=Educational
+[2026-03-07 05:15:37,122] INFO 127.0.0.1 - - [07/Mar/2026 05:15:37] "POST /classify_full HTTP/1.1" 200 -
+[2026-03-07 05:16:49,149] INFO 127.0.0.1 - - [07/Mar/2026 05:16:49] "GET /config HTTP/1.1" 200 -
+[2026-03-07 05:18:13,849] INFO CLASSIFY [FULL] video_id=pkD3Q2bpsqs label=Educational
+[2026-03-07 05:18:13,849] INFO 127.0.0.1 - - [07/Mar/2026 05:18:13] "POST /classify_full HTTP/1.1" 200 -
+[2026-03-07 05:21:41,546] INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.25.101.51:5000
+[2026-03-07 05:21:41,546] INFO [33mPress CTRL+C to quit[0m
+[2026-03-07 05:21:41,549] INFO  * Restarting with stat
+[2026-03-07 05:21:42,167] WARNING  * Debugger is active!
+[2026-03-07 05:21:42,171] INFO  * Debugger PIN: 122-255-992
+[2026-03-07 05:22:33,465] INFO CLASSIFY [FULL] video_id=pkD3Q2bpsqs label=Educational
+[2026-03-07 05:22:33,466] INFO 127.0.0.1 - - [07/Mar/2026 05:22:33] "POST /classify_full HTTP/1.1" 200 -
+[2026-03-07 05:27:25,846] INFO  * Detected change in 'C:\\Users\\kate\\OneDrive\\Documents\\ChildFocus\\backend\\run.py', reloading
+[2026-03-07 05:27:26,644] INFO  * Restarting with stat
+[2026-03-07 05:27:27,342] WARNING  * Debugger is active!
+[2026-03-07 05:27:27,345] INFO  * Debugger PIN: 122-255-992
+[2026-03-07 05:27:55,681] INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.25.101.51:5000
+[2026-03-07 05:27:55,681] INFO [33mPress CTRL+C to quit[0m
+[2026-03-07 05:27:55,684] INFO  * Restarting with stat
+[2026-03-07 05:27:56,209] WARNING  * Debugger is active!
+[2026-03-07 05:27:56,212] INFO  * Debugger PIN: 122-255-992
+[2026-03-07 05:29:27,821] INFO CLASSIFY [FULL] video_id=pkD3Q2bpsqs label=Educational
+[2026-03-07 05:29:27,822] INFO 127.0.0.1 - - [07/Mar/2026 05:29:27] "POST /classify_full HTTP/1.1" 200 -
