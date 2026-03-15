@@ -2,7 +2,21 @@
 ChildFocus - Frame Sampling Module
 backend/app/modules/frame_sampler.py
 
-Optimizations:
+Fallback chain for unavailable / age-restricted videos
+───────────────────────────────────────────────────────
+  1. fetch_video()            — normal download (no cookies)
+  2. fetch_video(cookies)     — retry with cookies.txt (bypasses age-gate)
+  3. _sample_thumbnail_only() — CSV from thumbnail image, FCR=0, ATT=0
+  4. status="unavailable"     — classify.py falls back to NB-only
+
+Cookies setup (one-time)
+────────────────────────
+  Export cookies from a logged-in YouTube tab using the browser extension
+  "Get cookies.txt LOCALLY" (Chrome/Firefox), save as:
+      backend/cookies.txt
+  That path is controlled by COOKIES_PATH below.
+
+Optimizations (unchanged from Sprint 2):
   1. fetch_video()        → validate + download in ONE yt-dlp call (saves ~8-15s)
   2. ThreadPoolExecutor   → S1, S2, S3, thumbnail all run concurrently (saves ~10-20s)
   3. librosa direct read  → no ffmpeg subprocess per segment (saves ~3-6s)
@@ -12,6 +26,7 @@ Optimizations:
 """
 
 import os
+import re
 import time
 import warnings
 import cv2
@@ -52,9 +67,43 @@ S_MAX             = 128.0
 FRAME_WIDTH       = 320
 NODE_PATH         = r"C:\Program Files\nodejs\node.exe"
 
+# ── Cookies path ───────────────────────────────────────────────────────────────
+# Place your exported cookies.txt here to bypass age-restricted videos.
+# Export using "Get cookies.txt LOCALLY" extension while logged into YouTube.
+COOKIES_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "cookies.txt")
+
+
+def _has_cookies() -> bool:
+    """Returns True if a non-empty cookies.txt exists at COOKIES_PATH."""
+    return os.path.isfile(COOKIES_PATH) and os.path.getsize(COOKIES_PATH) > 0
+
+
+def _extract_video_id(url_or_id: str) -> str:
+    """
+    Normalise input: accepts a full YouTube URL or a bare 11-char video ID.
+    Returns the 11-character video ID.
+
+    This is needed because classify.py passes the full URL to sample_video(),
+    but fetch_video() constructs its own URLs from the ID — passing a full
+    URL would create a malformed https://...watch?v=https://... URL.
+    """
+    for pattern in [
+        r"(?:v=)([a-zA-Z0-9_-]{11})",
+        r"(?:youtu\.be/)([a-zA-Z0-9_-]{11})",
+        r"(?:shorts/)([a-zA-Z0-9_-]{11})",
+        r"(?:embed/)([a-zA-Z0-9_-]{11})",
+    ]:
+        m = re.search(pattern, url_or_id)
+        if m:
+            return m.group(1)
+    # Already a bare ID
+    if re.fullmatch(r"[a-zA-Z0-9_-]{11}", url_or_id.strip()):
+        return url_or_id.strip()
+    return url_or_id.strip()
+
 
 # ── yt-dlp shared options ──────────────────────────────────────────────────────
-def _ydl_opts(extra: dict = None) -> dict:
+def _ydl_opts(extra: dict = None, cookies_file: str = None) -> dict:
     opts = {
         "quiet":              True,
         "no_warnings":        True,
@@ -77,16 +126,20 @@ def _ydl_opts(extra: dict = None) -> dict:
             "Accept-Language": "en-US,en;q=0.9",
         },
     }
+    if cookies_file:
+        opts["cookiefile"] = cookies_file
+        print(f"[SAMPLER] Using cookies: {cookies_file}")
     if extra:
         opts.update(extra)
     return opts
 
 
 # ── Step 0+1 combined: validate AND download in one yt-dlp call ───────────────
-def fetch_video(video_id: str, max_duration: int = 90) -> dict:
+def fetch_video(video_id: str, max_duration: int = 90,
+                cookies_file: str = None) -> dict:
     """
     Single yt-dlp call — validates availability AND downloads.
-    Previous version made two separate calls (validate then download) = wasted ~8-15s.
+    Pass cookies_file to bypass age-restricted content.
     """
     if not YTDLP_AVAILABLE:
         return {"ok": False, "reason": "yt-dlp not installed"}
@@ -101,12 +154,15 @@ def fetch_video(video_id: str, max_duration: int = 90) -> dict:
     last_error = None
     for url in urls_to_try:
         try:
-            opts = _ydl_opts({
-                "format":            "worst[ext=mp4]/worst",
-                "outtmpl":           output_path,
-                "download_sections": [f"*0-{max_duration}"],
-                "postprocessors":    [],
-            })
+            opts = _ydl_opts(
+                extra={
+                    "format":            "worst[ext=mp4]/worst",
+                    "outtmpl":           output_path,
+                    "download_sections": [f"*0-{max_duration}"],
+                    "postprocessors":    [],
+                },
+                cookies_file=cookies_file,
+            )
             with yt_dlp.YoutubeDL(opts) as ydl:
                 info = ydl.extract_info(url, download=True)
 
@@ -116,9 +172,11 @@ def fetch_video(video_id: str, max_duration: int = 90) -> dict:
             return {
                 "ok":       True,
                 "path":     output_path,
-                "title":    info.get("title",    "Unknown"),
-                "duration": info.get("duration", 0),
-                "uploader": info.get("uploader", "Unknown"),
+                "title":    info.get("title",       "Unknown"),
+                "tags":     info.get("tags",         []) or [],
+                "description": info.get("description", "") or "",
+                "duration": info.get("duration",     0),
+                "uploader": info.get("uploader",     "Unknown"),
             }
         except Exception as e:
             last_error = e
@@ -132,8 +190,12 @@ def fetch_video(video_id: str, max_duration: int = 90) -> dict:
         reason = "Video is not available in this region or has been removed"
     elif "private" in msg:
         reason = "Video is private"
-    elif "age" in msg:
+    elif "age" in msg or "restricted" in msg:
         reason = "Video is age-restricted"
+    elif "members" in msg:
+        reason = "Video is members-only"
+    elif "copyright" in msg:
+        reason = "Video is unavailable due to copyright"
     else:
         reason = str(last_error)
     return {"ok": False, "reason": reason}
@@ -270,6 +332,104 @@ def compute_thumbnail_intensity(url: str) -> float:
         return 0.0
 
 
+# ── Thumbnail-only heuristic ──────────────────────────────────────────────────
+def _sample_thumbnail_only(video_id: str, thumbnail_url: str,
+                            hint_title: str = "") -> dict:
+    """
+    Partial heuristic when video download is impossible (age-restricted even
+    with cookies, private, geo-blocked, etc.).
+
+    What we can compute from the thumbnail:
+      CSV  — spatial saturation variance across pixel rows (proxy for visual noise)
+      THUMB — mean saturation + edge density (existing thumbnail_intensity metric)
+
+    What we cannot compute without video:
+      FCR = 0.0  (no frames to diff)
+      ATT = 0.0  (no audio)
+
+    Segment score: score_h = 0.35×FCR + 0.25×CSV + 0.20×ATT = 0.25×CSV
+    Aggregate:     agg     = 0.80×score_h + 0.20×THUMB
+
+    The result dict is structurally identical to a normal sample_video() success,
+    so compute_heuristic_score() in heuristic.py receives what it expects.
+    status is set to "thumbnail_only" so classify.py can log the degraded path.
+    """
+    t_start = time.time()
+    print(f"[SAMPLER] ── Thumbnail-only fallback for {video_id} ──────────")
+
+    if not thumbnail_url:
+        print(f"[SAMPLER] ✗ No thumbnail URL — cannot compute thumbnail heuristic")
+        return {"video_id": video_id, "status": "unavailable",
+                "reason": "No thumbnail URL available"}
+
+    try:
+        raw = requests.get(thumbnail_url, timeout=6).content
+        img = (cv2.cvtColor(np.array(Image.open(BytesIO(raw)).convert("RGB")),
+                            cv2.COLOR_RGB2BGR)
+               if PILLOW_AVAILABLE
+               else cv2.imdecode(np.frombuffer(raw, np.uint8), cv2.IMREAD_COLOR))
+
+        if img is None:
+            raise ValueError("Thumbnail decode returned None")
+
+        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+        # ── CSV proxy: std of per-row mean saturations ────────────────────────
+        # Divides the thumbnail into horizontal strips and measures how much
+        # the saturation fluctuates between strips — high = visually chaotic.
+        step       = max(1, hsv.shape[0] // 20)
+        row_sats   = [float(np.mean(hsv[r, :, 1]))
+                      for r in range(0, hsv.shape[0], step)]
+        csv        = round(min(1.0, float(np.std(row_sats)) / S_MAX), 4)
+
+        # ── Thumbnail intensity (reuse existing metric) ────────────────────────
+        mean_sat = float(np.mean(hsv[:, :, 1])) / 255.0
+        gray     = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        edge_den = float(np.sum(cv2.Canny(gray, 100, 200) > 0)) / float(gray.size)
+        thumb    = round(min(1.0, 0.7 * mean_sat + 0.3 * edge_den), 4)
+
+        # ── Synthetic segment ─────────────────────────────────────────────────
+        fcr     = 0.0
+        att     = 0.0
+        score_h_seg = round(0.35 * fcr + 0.25 * csv + 0.20 * att, 4)
+
+        # Triplicate so compute_heuristic_score() always receives 3 segments
+        seg = {
+            "segment_id":     "S_THUMB",
+            "offset_seconds": 0,
+            "length_seconds": 0,
+            "fcr": fcr, "csv": csv, "att": att, "score_h": score_h_seg,
+        }
+        segments = [seg, seg, seg]
+
+        agg_score = round(0.80 * score_h_seg + 0.20 * thumb, 4)
+        label     = ("Overstimulating" if agg_score >= 0.75
+                     else "Safe"       if agg_score <= 0.35
+                     else "Uncertain")
+
+        print(f"[SAMPLER] Thumbnail-only: CSV={csv} | THUMB={thumb} | "
+              f"seg_h={score_h_seg} | agg={agg_score} → {label}")
+
+        return {
+            "video_id":                  video_id,
+            "video_title":               hint_title,
+            "video_duration_sec":        0,
+            "thumbnail_url":             thumbnail_url,
+            "thumbnail_intensity":       thumb,
+            "segments":                  segments,
+            "tags":                      [],
+            "description":               "",
+            "aggregate_heuristic_score": agg_score,
+            "preliminary_label":         label,
+            "status":                    "thumbnail_only",   # ← signals degraded path
+            "runtime_seconds":           round(time.time() - t_start, 2),
+        }
+
+    except Exception as e:
+        print(f"[SAMPLER] ✗ Thumbnail-only failed: {e}")
+        return {"video_id": video_id, "status": "unavailable", "reason": str(e)}
+
+
 # ── Process one segment (runs concurrently with other segments) ───────────────
 def _process_segment(
     video_path: str, seg_id: str, start: int, seg_dur: int = SEGMENT_DURATION
@@ -290,50 +450,66 @@ def _process_segment(
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
-def sample_video(video_id: str, thumbnail_url: str = "") -> dict:
-    t_start    = time.time()
-    video_path = None
+def sample_video(video_url_or_id: str, thumbnail_url: str = "",
+                 hint_title: str = "") -> dict:
+    """
+    Full fallback chain:
+      1. Normal download (no cookies)
+      2. Cookie-authenticated download  [if cookies.txt exists]
+      3. Thumbnail-only heuristic       [CSV + thumb intensity, FCR/ATT = 0]
+      4. status="unavailable"           [classify.py falls back to NB-only]
+
+    Accepts both a full YouTube URL and a bare 11-char video ID.
+    hint_title is passed through to thumbnail-only result for NB to use.
+    """
+    t_start = time.time()
+
+    # ── Normalise input: extract bare video ID from any URL form ──────────────
+    video_id = _extract_video_id(video_url_or_id)
 
     try:
         print(f"\n[SAMPLER] ══════════════════════════════════════")
         print(f"[SAMPLER] Analyzing: {video_id}")
 
-        # Step 1: Fetch (validate + download — one yt-dlp call)
+        # ── Step 1: Normal download ───────────────────────────────────────────
         t0     = time.time()
         result = fetch_video(video_id, max_duration=90)
         print(f"[SAMPLER] Download: {time.time()-t0:.1f}s")
 
-        if not result["ok"]:
-            print(f"[SAMPLER] ✗ {result['reason']}")
-            return {
-                "video_id": video_id, "status": "unavailable",
-                "reason":   result["reason"],
-                "message":  f"Video cannot be analyzed: {result['reason']}",
-            }
+        # ── Step 2: Cookie retry for age-restricted ───────────────────────────
+        if not result["ok"] and "age" in result["reason"].lower():
+            if _has_cookies():
+                print(f"[SAMPLER] ⚠ Age-restricted — retrying with cookies.txt")
+                t0     = time.time()
+                result = fetch_video(video_id, max_duration=90,
+                                     cookies_file=COOKIES_PATH)
+                print(f"[SAMPLER] Cookie download: {time.time()-t0:.1f}s")
+            else:
+                print(f"[SAMPLER] ⚠ Age-restricted — no cookies.txt found at {COOKIES_PATH}")
+                print(f"[SAMPLER]   Export cookies from a logged-in YouTube tab to bypass.")
 
+        # ── Step 3: Thumbnail-only heuristic if video still unavailable ───────
+        if not result["ok"]:
+            print(f"[SAMPLER] ✗ {result['reason']} — trying thumbnail-only heuristic")
+            return _sample_thumbnail_only(video_id, thumbnail_url,
+                                          hint_title=hint_title)
+
+        # ── Full pipeline (video downloaded successfully) ──────────────────────
         video_path     = result["path"]
         cap            = cv2.VideoCapture(video_path)
         video_duration = cap.get(cv2.CAP_PROP_FRAME_COUNT) / (cap.get(cv2.CAP_PROP_FPS) or 30)
         cap.release()
         print(f"[SAMPLER] ✓ '{result['title']}' ({video_duration:.1f}s)")
 
-        # Step 2: Segment starts — short video safe
         actual_dur = min(video_duration, 90)
 
         if actual_dur <= SEGMENT_DURATION:
-            # Video shorter than one segment (e.g. Shorts < 20s)
             effective_seg_dur = max(1, int(actual_dur))
-            seg_starts = [
-                ("S1", 0),
-                ("S2", 0),
-                ("S3", 0),
-            ]
+            seg_starts = [("S1", 0), ("S2", 0), ("S3", 0)]
         else:
             effective_seg_dur = SEGMENT_DURATION
             mid = max(0, int(actual_dur / 2) - effective_seg_dur // 2)
             end = max(0, int(actual_dur) - effective_seg_dur)
-
-            # Deduplicate segment starts
             seen = []
             for v in [0, mid, end]:
                 if v not in seen:
@@ -344,7 +520,6 @@ def sample_video(video_id: str, thumbnail_url: str = "") -> dict:
 
         print(f"[SAMPLER] Segments: {[(s, o) for s, o in seg_starts]} | seg_dur={effective_seg_dur}s")
 
-        # Step 3: All 3 segments + thumbnail concurrently
         t0       = time.time()
         segments = [None, None, None]
         thumb    = 0.0
@@ -366,7 +541,6 @@ def sample_video(video_id: str, thumbnail_url: str = "") -> dict:
 
         print(f"[SAMPLER] Analysis: {time.time()-t0:.1f}s")
 
-        # Step 4: OIR score
         max_seg   = max(s["score_h"] for s in segments)
         agg_score = round(0.80 * max_seg + 0.20 * thumb, 4)
         label     = ("Overstimulating" if agg_score >= 0.75
@@ -381,6 +555,8 @@ def sample_video(video_id: str, thumbnail_url: str = "") -> dict:
         return {
             "video_id":                  video_id,
             "video_title":               result.get("title", ""),
+            "tags":                      result.get("tags", []),
+            "description":               result.get("description", ""),
             "video_duration_sec":        round(video_duration, 1),
             "thumbnail_url":             thumbnail_url,
             "thumbnail_intensity":       thumb,
@@ -396,6 +572,9 @@ def sample_video(video_id: str, thumbnail_url: str = "") -> dict:
         import traceback; traceback.print_exc()
         return {"video_id": video_id, "status": "error", "message": str(e)}
     finally:
-        if video_path and os.path.exists(video_path):
-            try: os.remove(video_path)
-            except Exception: pass
+        # Clean up temp video file
+        if "result" in dir() and isinstance(result, dict) and result.get("ok"):
+            path = result.get("path", "")
+            if path and os.path.exists(path):
+                try: os.remove(path)
+                except Exception: pass
