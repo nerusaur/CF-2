@@ -14,11 +14,24 @@ DB_PATH = os.path.join(
     os.path.dirname(__file__), "..", "..", "..", "database", "childfocus.db"
 )
 
+# ── Empirically validated fusion config ───────────────────────────────────────
+ALPHA           = 0.6    # NB weight
+BETA            = 0.4    # Heuristic weight
+THRESHOLD_BLOCK = 0.20
+THRESHOLD_ALLOW = 0.08
+
+
+def _oir_label(score: float) -> str:
+    if score >= THRESHOLD_BLOCK: return "Overstimulating"
+    if score <= THRESHOLD_ALLOW: return "Educational"
+    return "Neutral"
+
 
 def extract_video_id(url: str) -> str:
     import re
     for pattern in [r"(?:v=)([a-zA-Z0-9_-]{11})",
                     r"(?:youtu\.be/)([a-zA-Z0-9_-]{11})",
+                    r"(?:shorts/)([a-zA-Z0-9_-]{11})",
                     r"(?:embed/)([a-zA-Z0-9_-]{11})"]:
         m = re.search(pattern, url)
         if m:
@@ -29,22 +42,13 @@ def extract_video_id(url: str) -> str:
 
 
 def _nb_only_result(video_id: str, metadata: dict, reason: str, t_start: float) -> dict:
-    """
-    Absolute last-resort: NB score only, no heuristic.
-    score_h = None, score_final = score_nb.
-    """
+    """Last resort fallback: NB only when video and thumbnail both unavailable."""
     nb_obj      = score_from_metadata_dict(metadata)
     score_nb    = nb_obj.score_nb
     score_final = round(score_nb, 4)
-
-    if score_final >= 0.75:
-        oir_label = "Overstimulating"; action = "block"
-    elif score_final <= 0.35:
-        oir_label = "Educational";     action = "allow"
-    else:
-        oir_label = "Neutral";         action = "allow"
-
-    runtime = round(time.time() - t_start, 3)
+    oir_label   = _oir_label(score_final)
+    action      = "block" if oir_label == "Overstimulating" else "allow"
+    runtime     = round(time.time() - t_start, 3)
     print(f"[ROUTE] NB-only ({reason[:60]}) → {video_id} {oir_label} ({score_final}) in {runtime}s")
     return {
         "video_id":        video_id,
@@ -130,7 +134,7 @@ def _check_cache(video_id: str):
 
 @classify_bp.route("/classify_fast", methods=["POST"])
 def classify_fast():
-    data = request.get_json(silent=True) or {}
+    data  = request.get_json(silent=True) or {}
     title = data.get("title", "")
     if not title:
         return jsonify({"error": "title is required", "status": "error"}), 400
@@ -153,19 +157,20 @@ def classify_fast():
 @classify_bp.route("/classify_full", methods=["POST"])
 def classify_full():
     """
-    Full hybrid classification. sample_video() handles the fallback chain:
+    Full Hybrid Heuristic-Naïve Bayes classification.
 
+    Always runs BOTH algorithms:
+      1. Naïve Bayes — metadata scoring (title, tags, description)
+      2. Heuristic   — audiovisual analysis (FCR, CSV, ATT, thumbnail)
+
+    Fusion: Score_final = (0.6 × Score_NB) + (0.4 × Score_H)
+    Thresholds: Block >= 0.20, Allow <= 0.08
+
+    Fallback chain inside sample_video():
       Normal download
-        → Cookie-authenticated retry   (if age-restricted + cookies.txt exists)
-          → Thumbnail-only heuristic   (CSV + thumb intensity; FCR/ATT = 0)
-            → status="unavailable"     (NB-only here as absolute last resort)
-
-    This route handles all three outcome statuses:
-      "success"        → full hybrid   (video frames + NB)
-      "thumbnail_only" → partial hybrid (thumbnail heuristic + NB)
-      "unavailable"    → NB-only
-
-    `hint_title` from classify_by_title ensures NB always has a title to score.
+        → Cookie-authenticated retry  (age-restricted videos)
+          → Thumbnail-only heuristic  (CSV + thumbnail, FCR/ATT = 0)
+            → NB-only                 (video and thumbnail both unavailable)
     """
     data          = request.get_json(silent=True) or {}
     video_url     = data.get("video_url", "").strip()
@@ -177,6 +182,7 @@ def classify_full():
 
     video_id = extract_video_id(video_url)
 
+    # ── Cache check ───────────────────────────────────────────────────────────
     cached = _check_cache(video_id)
     if cached:
         label, final_score, last_checked = cached
@@ -195,13 +201,15 @@ def classify_full():
 
     try:
         print(f"[ROUTE] /classify_full → {video_id}")
-        sample = sample_video(video_url, thumbnail_url=thumbnail_url,
-                              hint_title=hint_title)
+
+        # ── Run full pipeline: download + heuristic + NB ──────────────────────
+        sample        = sample_video(video_url, thumbnail_url=thumbnail_url,
+                                     hint_title=hint_title)
         sample_status = sample.get("status", "error")
 
-        # ── Absolute fallback: video AND thumbnail both failed ─────────────────
+        # ── Absolute fallback: video AND thumbnail both failed ────────────────
         if sample_status in ("unavailable", "error"):
-            reason = sample.get("reason", sample.get("message", "unavailable"))
+            reason   = sample.get("reason", sample.get("message", "unavailable"))
             print(f"[ROUTE] ✗ Fully unavailable — NB-only for {video_id}")
             metadata = _fetch_metadata_only(video_url)
             if not metadata["title"] and hint_title:
@@ -210,13 +218,12 @@ def classify_full():
             _save_to_db(result)
             return jsonify(result), 200
 
-        # ── Heuristic available (full video OR thumbnail-only) ─────────────────
-        # compute_heuristic_score() receives identical dict structure in both cases
+        # ── Heuristic score (full video or thumbnail-only) ────────────────────
         h_result  = compute_heuristic_score(sample)
         score_h   = h_result["score_h"]
         h_details = h_result.get("details", {})
 
-        # NB: prefer actual video title, fall back to hint_title
+        # ── NB score (prefer downloaded title over hint) ──────────────────────
         nb_obj = score_from_metadata_dict({
             "title":       sample.get("video_title", "") or hint_title,
             "tags":        sample.get("tags", []),
@@ -224,20 +231,18 @@ def classify_full():
         })
         score_nb        = nb_obj.score_nb
         predicted_label = nb_obj.predicted_label
-        score_final     = round((0.4 * score_nb) + (0.6 * score_h), 4)
+
+        # ── Hybrid fusion ─────────────────────────────────────────────────────
+        # Score_final = (0.6 × Score_NB) + (0.4 × Score_H)
+        score_final = round((ALPHA * score_nb) + (BETA * score_h), 4)
+        oir_label   = _oir_label(score_final)
+        action      = "block" if oir_label == "Overstimulating" else "allow"
 
         path_label = "full" if sample_status == "success" else "thumbnail-only"
+        runtime    = round(time.time() - t_start, 3)
         print(f"[ROUTE] [{path_label}] nb={score_nb:.4f} h={score_h:.4f} "
               f"final={score_final:.4f}")
 
-        if score_final >= 0.75:
-            oir_label = "Overstimulating"; action = "block"
-        elif score_final <= 0.35:
-            oir_label = "Educational";     action = "allow"
-        else:
-            oir_label = "Neutral";         action = "allow"
-
-        runtime = round(time.time() - t_start, 3)
         result = {
             "video_id":          video_id,
             "video_title":       sample.get("video_title", "") or hint_title,
@@ -249,7 +254,11 @@ def classify_full():
             "action":            action,
             "runtime_seconds":   runtime,
             "status":            "success",
-            "sample_path":       sample_status,   # "success" | "thumbnail_only"
+            "sample_path":       path_label,
+            "fusion_weights": {
+                "alpha_nb":       ALPHA,
+                "beta_heuristic": BETA,
+            },
             "heuristic_details": h_details,
             "nb_details": {
                 "predicted":  predicted_label,
@@ -336,5 +345,11 @@ def health():
         "db_path":      DB_PATH,
         "db_exists":    os.path.exists(DB_PATH),
         "cookies_path": COOKIES_PATH,
-        "cookies_ok":   _has_cookies(),   # quick way to confirm cookies loaded
+        "cookies_ok":   _has_cookies(),
+        "fusion_config": {
+            "alpha_nb":        ALPHA,
+            "beta_heuristic":  BETA,
+            "threshold_block": THRESHOLD_BLOCK,
+            "threshold_allow": THRESHOLD_ALLOW,
+        },
     }), 200

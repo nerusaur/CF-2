@@ -3,14 +3,15 @@
     ChildFocus Accessibility Service Configuration
     Location: android/app/src/main/res/xml/accessibility_service_config.xml
 
-    FIX APPLIED:
-      - settingsActivity corrected from "com.childfocus.ui.MainActivity"
-        to "com.childfocus.MainActivity" (MainActivity lives at root package,
-        not inside a ui/ subpackage — this was causing "Not working. Tap for info.")
-      - Added notificationTimeout="100" for stability across Android versions
+    Event types:
+      typeWindowStateChanged   — new screen/activity opens (regular video player)
+      typeWindowContentChanged — content updates within window (title/metadata)
+      typeViewScrolled         — user scrolls or swipes (Shorts swipe between videos)
+      typeViewFocused          — focus moves between views (Shorts title gaining focus)
+      typeViewTextChanged      — text content changes in a view (Shorts title populating)
 -->
 <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
-    android:accessibilityEventTypes="typeWindowStateChanged|typeWindowContentChanged"
+    android:accessibilityEventTypes="typeWindowStateChanged|typeWindowContentChanged|typeViewScrolled|typeViewFocused|typeViewTextChanged"
     android:accessibilityFeedbackType="feedbackGeneric"
     android:packageNames="com.google.android.youtube"
     android:canRetrieveWindowContent="true"

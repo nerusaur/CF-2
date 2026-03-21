@@ -1,0 +1,40 @@
+============================================================
+CHILDFOCUS EVALUATION RESULTS
+Generated: 2026-03-16 17:40:30
+============================================================
+
+NAÏVE BAYES CLASSIFIER
+----------------------------------------
+                 precision    recall  f1-score   support
+
+    Educational     0.9149    0.9663    0.9399        89
+        Neutral     0.8974    0.8140    0.8537        86
+Overstimulating     0.8879    0.9135    0.9005       104
+
+       accuracy                         0.8996       279
+      macro avg     0.9001    0.8979    0.8980       279
+   weighted avg     0.8994    0.8996    0.8986       279
+Accuracy:  0.8996
+Precision: 0.8994
+Recall:    0.8996
+F1-Score:  0.8986
+
+HEURISTIC MODULE
+----------------------------------------
+Consistency Rate: 100.0%
+
+HYBRID MODEL
+----------------------------------------
+                 precision    recall  f1-score   support
+
+    Educational     0.5266    1.0000    0.6899        89
+        Neutral     0.3448    0.1163    0.1739        86
+Overstimulating     0.9630    0.7500    0.8432       104
+
+       accuracy                         0.6344       279
+      macro avg     0.6115    0.6221    0.5690       279
+   weighted avg     0.6332    0.6344    0.5880       279
+Accuracy:  0.6344
+Precision: 0.6332
+Recall:    0.6344
+F1-Score:  0.5880
