@@ -1,5 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.ChildFocus" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Splash / Launch Theme -->
+    <style name="Theme.ChildFocus.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.ChildFocus</item>
+    </style>
+
+    <!-- Main App Theme -->
+    <style name="Theme.ChildFocus" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- your normal theme stuff -->
+    </style>
+
 </resources>

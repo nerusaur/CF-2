@@ -66,6 +66,7 @@ import com.childfocus.ui.LandingScreen
 import com.childfocus.ui.SafetyModeScreen
 import com.childfocus.ui.ScreenTimeScreen
 import com.childfocus.ui.SessionAuthManager
+import com.childfocus.ui.SettingsScreen          // ← NEW
 import com.childfocus.ui.WebBlockerScreen
 import com.childfocus.ui.theme.ChildFocusTheme
 import com.childfocus.viewmodel.SafetyViewModel
@@ -81,6 +82,8 @@ private sealed class Screen(
     object Safety      : Screen("safety",       "Safety Mode",  Icons.Default.Shield)
     object WebBlocker  : Screen("web_blocker",  "Web Blocker",  Icons.Default.Lock)
     object ScreenTime  : Screen("screen_time",  "Screen Time",  Icons.Default.Schedule)
+    // "settings" is NOT in the bottom nav — accessed via gear icon on LandingScreen
+    object Settings    : Screen("settings",     "Settings",     Icons.Default.Home)
 }
 
 private val NAV_ITEMS = listOf(
@@ -140,30 +143,18 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // ── 1. Lock session whenever the app goes to background ───────────────
-        // onStop fires on: Home button, Recents button, screen off, or any
-        // other app coming to the foreground.
         lifecycle.addObserver(LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_STOP) {
-                SessionAuthManager.onAppStop()   // clears isAuthenticated
+                SessionAuthManager.onAppStop()
             }
         })
 
-        // ── 2. Intercept Back button to block task-kill without PIN ───────────
-        // This fires on the hardware/gesture back press. We route it through
-        // SessionAuthManager which either shows the close-confirm PIN dialog
-        // (when Safety Mode is active) or lets the system handle it normally.
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val safetyOn = viewModel.safetyModeOn.value
                 if (safetyOn) {
-                    // Safety Mode is active — require PIN to close
                     SessionAuthManager.onBackPressed()
-                    // The CloseConfirmPinDialog in SafetyModeScreen will now
-                    // appear; when confirmed it calls onConfirmedClose() below
-                    // which calls finishAndRemoveTask().
                 } else {
-                    // Safety Mode is OFF — normal back behaviour
                     isEnabled = false
                     onBackPressedDispatcher.onBackPressed()
                     isEnabled = true
@@ -193,9 +184,6 @@ class MainActivity : ComponentActivity() {
                         classifyState    = classifyState,
                         onTurnOff        = { viewModel.turnOffSafetyMode() },
                         onDismissBlock   = { viewModel.dismissBlock() },
-                        // ── 3. Called after correct PIN in close-confirm dialog ──
-                        // finishAndRemoveTask() closes the app AND removes it from
-                        // the Recents screen so the child cannot swipe back to it.
                         onConfirmedClose = { finishAndRemoveTask() }
                     )
                 } else {
@@ -315,16 +303,34 @@ private fun ChildFocusApp(isWaiting: Boolean, onTurnOn: () -> Unit) {
                 startDestination = Screen.Home.route
             ) {
                 composable(Screen.Home.route) {
-                    LandingScreen(isWaiting = isWaiting, onTurnOn = onTurnOn)
+                    LandingScreen(
+                        isWaiting       = isWaiting,
+                        onTurnOn        = onTurnOn,
+                        onSettingsClick = {              // ← NEW: gear icon tap
+                            navController.navigate(Screen.Settings.route)
+                        }
+                    )
                 }
                 composable(Screen.Safety.route) {
-                    LandingScreen(isWaiting = isWaiting, onTurnOn = onTurnOn)
+                    LandingScreen(
+                        isWaiting       = isWaiting,
+                        onTurnOn        = onTurnOn,
+                        onSettingsClick = {
+                            navController.navigate(Screen.Settings.route)
+                        }
+                    )
                 }
                 composable(Screen.WebBlocker.route) {
                     WebBlockerScreen()
                 }
                 composable(Screen.ScreenTime.route) {
                     ScreenTimeScreen()
+                }
+                // ── NEW: Settings screen (no bottom-nav tab) ──────────────────
+                composable(Screen.Settings.route) {
+                    SettingsScreen(
+                        onBack = { navController.popBackStack() }
+                    )
                 }
             }
 
