@@ -38,12 +38,55 @@ class ChildFocusAccessibilityService : AccessibilityService() {
         // Keep DEBUG_SCREEN_TIME = false in production.
         // Set to true only when you want the ticker to fire every 10 s
         // instead of 60 s for quick local testing.
-        const val DEBUG_SCREEN_TIME         = false   // ← FIX: was true
+        const val DEBUG_SCREEN_TIME         = false
         const val SCREEN_TIME_TEST_LIMIT_MS = 1 * 60 * 1000L
         private val TICKER_INTERVAL_MS      = if (DEBUG_SCREEN_TIME) 10_000L else 60_000L
 
         private const val PRIORITY_PLAYING = 3
         private const val PRIORITY_ACTIVE  = 2
+
+        /**
+         * Packages that must NEVER be counted as foreground app time or
+         * subject to screen-time enforcement. These are launchers, system UI,
+         * input methods, and our own app — none of which the child is
+         * "using" in the supervised sense.
+         *
+         * Without this list, two phantom-enforcement scenarios occur:
+         *
+         *  A) The screenTimeTicker fires while the launcher is in front
+         *     (e.g. right after a prior enforcement sent the user home).
+         *     tick() sees the previously-tracked app is still over-limit and
+         *     returns true. getCurrentForegroundPkg() returns the launcher.
+         *     enforceScreenTimeLimit(launcher) fires → random home + toast. ✗
+         *
+         *  B) A TYPE_WINDOW_STATE_CHANGED arrives for the system notification
+         *     shade or an IME. onAppForeground() starts accruing time against
+         *     that package. If it ever crosses a limit (or alreadyExceeded is
+         *     set for it by accident) → phantom enforcement while idle. ✗
+         */
+        private val EXEMPT_PACKAGES = setOf(
+            // Common AOSP / Pixel launchers
+            "com.android.launcher",
+            "com.android.launcher2",
+            "com.android.launcher3",
+            "com.google.android.apps.nexuslauncher",
+            "com.sec.android.app.launcher",          // Samsung One UI
+            "com.miui.home",                          // MIUI
+            "com.huawei.android.launcher",            // EMUI
+            "com.oppo.launcher",
+            "com.vivo.launcher",
+            "com.oneplus.launcher",
+            // System UI / overlays
+            "com.android.systemui",
+            "android",
+            "com.android.settings",
+            // Input methods
+            "com.google.android.inputmethod.latin",
+            "com.samsung.android.honeyboard",
+            "com.swiftkey.swiftkeyapp",
+            // Our own service app — never block ourselves
+            "com.childfocus",
+        )
 
         private val SKIP_TITLES = listOf(
             "Shorts", "Sponsored", "Advertisement", "Ad ·", "Skip Ads",
@@ -126,12 +169,18 @@ class ChildFocusAccessibilityService : AccessibilityService() {
     @Volatile private var lastShortsScreenHash   = 0
 
     // ── Screen-time enforcement state ─────────────────────────────────────
-    // screenTimeLimitEnforced: true while the blocked package is still in
-    //   foreground — prevents repeated GLOBAL_ACTION_HOME spam.
-    // lastEnforcedPackage: remembers WHICH package triggered enforcement so
-    //   we can reset the flag as soon as the user navigates away from it.
-    @Volatile private var screenTimeLimitEnforced = false
-    @Volatile private var lastEnforcedPackage     = ""
+    // lastEnforcedTimeMs: timestamp of the most recent GLOBAL_ACTION_HOME
+    //   triggered by screen-time. Used as a simple cooldown so rapid bursts
+    //   of TYPE_WINDOW_STATE_CHANGED events (launcher transitions) don't spam
+    //   the home action multiple times per enforcement.
+    @Volatile private var lastEnforcedTimeMs       = 0L
+    @Volatile private var lastEnforcedPackage      = ""
+    private  val ENFORCE_COOLDOWN_MS               = 2_000L
+    // Set to true as soon as the foreground changes AWAY from the enforced
+    // package (i.e. the app actually went to background). This lets us
+    // distinguish a genuine re-open from duplicate burst events so the
+    // cooldown never blocks a legitimate second enforcement.
+    @Volatile private var enforcedPkgWentBackground = false
 
     private val http = OkHttpClient.Builder()
         .connectTimeout(10, TimeUnit.SECONDS)
@@ -148,6 +197,14 @@ class ChildFocusAccessibilityService : AccessibilityService() {
     private val URL_PATTERN = Pattern.compile(
         "(?:v=|youtu\\.be/|shorts/)([a-zA-Z0-9_-]{11})"
     )
+
+    // ── Package exemption helper ─────────────────────────────────────────────
+    // Returns true for launchers, system UI, IMEs, and our own package —
+    // anything that must never be treated as a child-supervised foreground app.
+    private fun isExemptPackage(pkg: String): Boolean {
+        if (pkg.isEmpty()) return true
+        return EXEMPT_PACKAGES.any { pkg == it || pkg.startsWith("$it.") }
+    }
 
     // ═══════════════════════════════════════════════════════════════════════
     // DATA CLASS
@@ -170,22 +227,51 @@ class ChildFocusAccessibilityService : AccessibilityService() {
         // ── Screen-time enforcement ──────────────────────────────────────
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             val pkg = event.packageName?.toString() ?: ""
-            if (pkg.isNotEmpty()) {
+            if (pkg.isNotEmpty() && !isExemptPackage(pkg)) {
 
-                // ── FIX: reset enforcement flag when user leaves the blocked app ──
-                // Without this, once any tracked app is blocked, screenTimeLimitEnforced
-                // stays true forever and enforcement never fires again in this session.
-                // With this fix, the flag resets whenever the user lands on a
-                // different package — allowing the check to re-trigger if they try
-                // to reopen the same (or another) blocked app.
-                if (pkg != lastEnforcedPackage && screenTimeLimitEnforced) {
-                    screenTimeLimitEnforced = false
-                    lastEnforcedPackage     = ""
+                // If the foreground just moved AWAY from the previously enforced
+                // package, record it. This tells us the app actually went to
+                // background so the next open is a genuine re-launch, not a
+                // duplicate event from the same enforcement burst.
+                if (lastEnforcedPackage.isNotEmpty() && pkg != lastEnforcedPackage) {
+                    enforcedPkgWentBackground = true
                 }
 
+                // Always update foreground tracking so usage accumulates.
                 val overLimit = ScreenTimeManager.onAppForeground(this, pkg)
-                if (overLimit) {
-                    enforceScreenTimeLimit(pkg)
+
+                // isExceeded() reads from SharedPrefs — persisted across bursts.
+                // overLimit reflects a first-time breach detected this tick.
+                val alreadyExceeded = ScreenTimeManager.isExceeded(this, pkg)
+
+                // ── FIX #2: enforce ONLY for packages the user has configured.
+                //    Without this guard, any non-exempt package could be blocked
+                //    if isExceeded() or overLimit ever returned true for it —
+                //    e.g. due to a stale SharedPrefs entry or an event arriving
+                //    while foregroundPkg was pointing at a tracked package.
+                val shouldBlock = (alreadyExceeded || overLimit) &&
+                        pkg in ScreenTimeManager.TRACKED_PACKAGES
+
+                if (shouldBlock) {
+                    val now = System.currentTimeMillis()
+
+                    val cooldownExpired      = (now - lastEnforcedTimeMs) > ENFORCE_COOLDOWN_MS
+                    val differentPkg         = lastEnforcedPackage != pkg
+                    // Only bypass the cooldown when the app genuinely went to
+                    // background after the last enforcement and is now coming
+                    // back — i.e. the child deliberately re-opened it.
+                    // Do NOT bypass just because alreadyExceeded is true: that
+                    // flag stays set all day and would cause every stray
+                    // TYPE_WINDOW_STATE_CHANGED for this package (including
+                    // system-generated ones while the phone is idle) to fire
+                    // a home action and toast, producing the "random
+                    // notification while doing nothing" symptom.
+                    val isReopenAfterEnforce = enforcedPkgWentBackground && lastEnforcedPackage == pkg
+
+                    if (cooldownExpired || differentPkg || isReopenAfterEnforce) {
+                        enforcedPkgWentBackground = false   // reset for next burst
+                        enforceScreenTimeLimit(pkg)
+                    }
                     return
                 }
             }
@@ -275,17 +361,20 @@ class ChildFocusAccessibilityService : AccessibilityService() {
         currentJob.cancel()
         mainHandler.removeCallbacks(screenTimeTicker)
         ScreenTimeManager.onAppBackground(this)
-        lastSentTitle           = ""
-        lastSentTimeMs          = 0L
-        pendingTitle            = ""
-        lastEventTimeMs         = 0L
-        currentPriority         = 0
-        currentTarget           = ""
-        shortsPendingTitle      = ""
-        lastExtractedShortsKey  = ""
-        lastShortsScreenHash    = 0
-        screenTimeLimitEnforced = false
-        lastEnforcedPackage     = ""
+        lastSentTitle            = ""
+        lastSentTimeMs           = 0L
+        pendingTitle             = ""
+        lastEventTimeMs          = 0L
+        currentPriority          = 0
+        currentTarget            = ""
+        shortsPendingTitle       = ""
+        lastExtractedShortsKey   = ""
+        lastShortsScreenHash     = 0
+        lastEnforcedPackage      = ""
+        lastEnforcedTimeMs       = 0L
+        enforcedPkgWentBackground = false
+        // Re-schedule the ticker so it survives brief service interruptions.
+        mainHandler.postDelayed(screenTimeTicker, TICKER_INTERVAL_MS)
     }
 
     override fun onDestroy() {
@@ -540,7 +629,43 @@ class ChildFocusAccessibilityService : AccessibilityService() {
         override fun run() {
             val overLimit = ScreenTimeManager.tick(this@ChildFocusAccessibilityService)
             if (overLimit) {
-                enforceScreenTimeLimit(ScreenTimeManager.getCurrentForegroundPkg())
+                val pkg = ScreenTimeManager.getCurrentForegroundPkg()
+                if (pkg.isNotEmpty() && !isExemptPackage(pkg)) {
+
+                    // ── FIX #1: verify the package ScreenTimeManager thinks is
+                    //    in the foreground actually IS the foreground right now.
+                    //
+                    //    Problem: foregroundPkg is only updated when a
+                    //    TYPE_WINDOW_STATE_CHANGED event arrives. Some apps do
+                    //    not emit this event reliably, so foregroundPkg can stay
+                    //    pointing at the last tracked app (e.g. YouTube) even
+                    //    after the user has opened Gmail or the camera.
+                    //
+                    //    When the ticker then fires and sees YouTube is exceeded,
+                    //    enforceScreenTimeLimit("youtube") calls
+                    //    performGlobalAction(HOME) — which kicks whatever app is
+                    //    ACTUALLY in the foreground, not YouTube.
+                    //
+                    //    Fix: read the real foreground package from the window
+                    //    before enforcing. If it doesn't match, update
+                    //    ScreenTimeManager and skip this enforcement cycle.
+                    val actualPkg = rootInActiveWindow?.packageName?.toString() ?: ""
+                    when {
+                        // Real foreground matches tracked pkg — safe to enforce.
+                        actualPkg.isEmpty() || actualPkg == pkg -> {
+                            enforceScreenTimeLimit(pkg)
+                        }
+                        // Real foreground is a different app — foregroundPkg is
+                        // stale. Update tracking so future ticks are accurate,
+                        // but do NOT kick the user out of the unrelated app.
+                        else -> {
+                            println("[SCREEN TIME] ⚠ Ticker stale: tracked=$pkg actual=$actualPkg — skipping enforcement, syncing state")
+                            ScreenTimeManager.onAppForeground(
+                                this@ChildFocusAccessibilityService, actualPkg
+                            )
+                        }
+                    }
+                }
             }
             mainHandler.postDelayed(this, TICKER_INTERVAL_MS)
         }
@@ -549,24 +674,57 @@ class ChildFocusAccessibilityService : AccessibilityService() {
     /**
      * Sends the user to the home screen when a package exceeds its daily limit.
      *
-     * ── FIX ──────────────────────────────────────────────────────────────────
-     * Previously, performGlobalAction(GLOBAL_ACTION_HOME) was OUTSIDE the
-     * !screenTimeLimitEnforced guard, so it fired on EVERY accessibility event
-     * for any tracked package — not just once. This caused every app launch to
-     * immediately redirect to the home screen.
+     * ── FIX (original) ───────────────────────────────────────────────────────
+     * Calls ScreenTimeManager.markExceeded() BEFORE performing the home action.
+     * This persists the exceeded state to SharedPreferences so that even after
+     * the in-memory screenTimeLimitEnforced flag is reset (which happens as soon
+     * as the user navigates to the launcher), the next onAccessibilityEvent for
+     * this package will hit the isExceeded() check at the top and block the
+     * re-open immediately.
      *
-     * Now:
-     *  • The entire function returns early if already enforced for this package.
-     *  • The flag is reset in onAccessibilityEvent when a different package
-     *    comes to the foreground (so re-opening the blocked app re-triggers it).
+     * ── FIX (reopen bypass) ──────────────────────────────────────────────────
+     * enforcedPkgWentBackground is set to true as soon as a different package
+     * comes to the foreground after this enforcement fires. When the enforced
+     * package then re-appears, isReopenAfterEnforce = true overrides the
+     * cooldown gate so the home action fires again regardless of timing.
+     *
+     * Without markExceeded():
+     *   1. Limit hit → enforce → go home → flag resets
+     *   2. Reopen YouTube → onAppForeground → isOverLimit()
+     *      → if usedMs is 1 ms under limit due to flush lag → returns false
+     *      → YouTube proceeds ✗
+     *
+     * With markExceeded():
+     *   1. Limit hit → enforce → markExceeded("com.google.android.youtube")
+     *      → go home → in-memory flag resets
+     *   2. Reopen YouTube → isExceeded() → true → block fires immediately ✓
      * ─────────────────────────────────────────────────────────────────────────
      */
     private fun enforceScreenTimeLimit(packageName: String) {
-        // ← FIX: guard the home action — only fire once per enforcement session
-        if (screenTimeLimitEnforced) return
+        if (packageName.isEmpty()) return
 
-        screenTimeLimitEnforced = true
-        lastEnforcedPackage     = packageName
+        // ── Atomic dedup ────────────────────────────────────────────────────
+        // The ticker and onAccessibilityEvent run on different paths and can
+        // both decide to enforce in the same millisecond (e.g. the ticker fires
+        // exactly as the child opens the app). Without this gate, both calls
+        // go through, producing a double toast and a double home action.
+        // We use the same lastEnforcedTimeMs / lastEnforcedPackage pair that
+        // the event path already maintains, but guard it with synchronized so
+        // concurrent calls from IO (ticker coroutine) and main thread are safe.
+        val now = System.currentTimeMillis()
+        synchronized(this) {
+            val alreadyFiredRecently =
+                lastEnforcedPackage == packageName &&
+                        (now - lastEnforcedTimeMs) < ENFORCE_COOLDOWN_MS
+            if (alreadyFiredRecently) return
+            lastEnforcedPackage = packageName
+            lastEnforcedTimeMs  = now
+        }
+
+        // Persist exceeded state to SharedPrefs so every future re-open
+        // of this app is blocked for the rest of the day, regardless of
+        // whether the accessibility service was restarted in between.
+        ScreenTimeManager.markExceeded(this, packageName)
 
         mainHandler.post {
             performGlobalAction(GLOBAL_ACTION_HOME)

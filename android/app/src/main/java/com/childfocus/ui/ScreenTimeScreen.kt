@@ -175,9 +175,15 @@ fun ScreenTimeScreen() {
                 app         = app,
                 enabled     = enabled,
                 limitMin    = limitMin,
-                onToggle    = {
-                    appEnabled[app.packageName] = it
-                    setAppLimitEnabled(context, app.packageName, it)
+                onToggle    = { enabled ->
+                    appEnabled[app.packageName] = enabled
+                    setAppLimitEnabled(context, app.packageName, enabled)
+                    // When the parent turns OFF a limit, clear the exceeded flag
+                    // so the child can open the app again immediately without
+                    // being blocked by the persisted screen-time enforcement.
+                    if (!enabled) {
+                        com.childfocus.service.ScreenTimeManager.clearExceeded(context, app.packageName)
+                    }
                 },
                 onEditClick = { editingApp = app }
             )
