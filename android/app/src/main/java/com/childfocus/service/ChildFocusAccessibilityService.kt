@@ -27,7 +27,7 @@ class ChildFocusAccessibilityService : AccessibilityService() {
         // ── Change this ONE line to switch targets ────────────────────────
         // Emulator (Pixel AVD) → "10.0.2.2"
         // Physical (same WiFi) → your PC's local IP e.g. "192.168.1.x"
-        private const val FLASK_HOST = "192.168.100.241"
+        private const val FLASK_HOST = "192.168.100.13"
         private const val FLASK_PORT = 5000
         private const val BASE_URL = "http://$FLASK_HOST:$FLASK_PORT"
 
@@ -35,13 +35,12 @@ class ChildFocusAccessibilityService : AccessibilityService() {
         private const val DEBOUNCE_MS = 1500L
 
         // ── Screen-time testing flag ──────────────────────────────────────
-        // Set DEBUG_SCREEN_TIME = true to test enforcement quickly:
-        //   • Ticker fires every 10 s instead of 60 s
-        //   • Pass SCREEN_TIME_TEST_LIMIT_MS to ScreenTimeManager as the limit
-        // Remember to flip both back to false / your real limit before release.
-        const val DEBUG_SCREEN_TIME          = true
-        const val SCREEN_TIME_TEST_LIMIT_MS  = 1 * 60 * 1000L   // 1 minute
-        private val TICKER_INTERVAL_MS       = if (DEBUG_SCREEN_TIME) 10_000L else 60_000L
+        // Keep DEBUG_SCREEN_TIME = false in production.
+        // Set to true only when you want the ticker to fire every 10 s
+        // instead of 60 s for quick local testing.
+        const val DEBUG_SCREEN_TIME         = false   // ← FIX: was true
+        const val SCREEN_TIME_TEST_LIMIT_MS = 1 * 60 * 1000L
+        private val TICKER_INTERVAL_MS      = if (DEBUG_SCREEN_TIME) 10_000L else 60_000L
 
         private const val PRIORITY_PLAYING = 3
         private const val PRIORITY_ACTIVE  = 2
@@ -80,23 +79,16 @@ class ChildFocusAccessibilityService : AccessibilityService() {
             "Premium Lite", "Try Premium", "YouTube Premium",
             "you'll want to try", "Ad-free", "Get Premium",
             "Feature not available", "not available for this video",
-            // Notification / banner false positives
             "New content available", "content is available",
             "Subscriptions:", "new content",
         )
 
-        /**
-         * Short single-word UI terms that must only match as whole words,
-         * not as substrings inside real title words (e.g. "Subscribe" must
-         * not reject "subscriber", "seconds" must not reject "split seconds").
-         */
         private val SKIP_TITLES_WHOLE_WORD = setOf(
             "Subscribe", "Subscribed", "Join", "Bell", "Share", "Reply",
             "Report", "Queue", "Topic", "Shorts", "Explore", "Library",
             "Home", "Cast", "Minimize", "likes", "seconds", "Recommended",
         )
 
-        // Pre-compiled regex for whole-word SKIP_TITLES matching (case-insensitive)
         private val SKIP_TITLES_WHOLE_WORD_RE: Regex = run {
             val pattern = SKIP_TITLES_WHOLE_WORD
                 .joinToString("|") { Regex.escape(it) }
@@ -132,7 +124,14 @@ class ChildFocusAccessibilityService : AccessibilityService() {
     @Volatile private var shortsPendingTitle = ""
     @Volatile private var lastExtractedShortsKey  = ""
     @Volatile private var lastShortsScreenHash   = 0
-    @Volatile private var screenTimeLimitEnforced = false  // prevent toast spam
+
+    // ── Screen-time enforcement state ─────────────────────────────────────
+    // screenTimeLimitEnforced: true while the blocked package is still in
+    //   foreground — prevents repeated GLOBAL_ACTION_HOME spam.
+    // lastEnforcedPackage: remembers WHICH package triggered enforcement so
+    //   we can reset the flag as soon as the user navigates away from it.
+    @Volatile private var screenTimeLimitEnforced = false
+    @Volatile private var lastEnforcedPackage     = ""
 
     private val http = OkHttpClient.Builder()
         .connectTimeout(10, TimeUnit.SECONDS)
@@ -162,7 +161,6 @@ class ChildFocusAccessibilityService : AccessibilityService() {
 
     override fun onServiceConnected() {
         println("[CF_SERVICE] ✓ Connected — monitoring YouTube + screen time")
-        // Start the 60-second tick that enforces limits mid-session
         mainHandler.postDelayed(screenTimeTicker, TICKER_INTERVAL_MS)
     }
 
@@ -170,15 +168,25 @@ class ChildFocusAccessibilityService : AccessibilityService() {
         event ?: return
 
         // ── Screen-time enforcement ──────────────────────────────────────
-        // TYPE_WINDOW_STATE_CHANGED fires every time a new Activity / app
-        // comes to the foreground — reliable for foreground-app tracking.
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             val pkg = event.packageName?.toString() ?: ""
             if (pkg.isNotEmpty()) {
+
+                // ── FIX: reset enforcement flag when user leaves the blocked app ──
+                // Without this, once any tracked app is blocked, screenTimeLimitEnforced
+                // stays true forever and enforcement never fires again in this session.
+                // With this fix, the flag resets whenever the user lands on a
+                // different package — allowing the check to re-trigger if they try
+                // to reopen the same (or another) blocked app.
+                if (pkg != lastEnforcedPackage && screenTimeLimitEnforced) {
+                    screenTimeLimitEnforced = false
+                    lastEnforcedPackage     = ""
+                }
+
                 val overLimit = ScreenTimeManager.onAppForeground(this, pkg)
                 if (overLimit) {
                     enforceScreenTimeLimit(pkg)
-                    return   // don't run video-classification for a blocked app
+                    return
                 }
             }
         }
@@ -195,23 +203,17 @@ class ChildFocusAccessibilityService : AccessibilityService() {
         val allText = collectAllNodeText(root)
         root.recycle()
 
-        // ── Guard: skip duplicate screen states ──────────────────────────
         if (allText == lastGuardText && lastGuardResult) return
         val isAdOrComment = isAdPlaying(allText) || isCommentSectionVisible(allText)
         lastGuardText   = allText
         lastGuardResult = isAdOrComment
         if (isAdOrComment) return
 
-        // ── Shorts detection (checked first) ─────────────────────────────
-        // isRealShortsScreen: "Shorts" tab label present AND at least two of
-        // the persistent Shorts action buttons are visible — this rules out the
-        // Subscriptions feed notification banner which also contains "Shorts".
         val isShorts = allText.contains("Shorts") &&
                 !allText.contains("views", ignoreCase = true) &&
                 isRealShortsScreen(allText)
 
         if (isShorts) {
-            // Fast-path: skip node walk if screen content hasn't changed.
             val screenHash = allText.hashCode()
             if (screenHash != lastShortsScreenHash) {
                 lastShortsScreenHash = screenHash
@@ -221,12 +223,6 @@ class ChildFocusAccessibilityService : AccessibilityService() {
                     info.title != shortsPendingTitle
                 ) {
                     shortsPendingTitle = info.title
-
-                    // ── FIX: try to extract a real video ID from the URL ──
-                    // The Shorts URL (shorts/XXXXXXXXXXX) is sometimes present
-                    // in the accessibility tree. If we can grab it here we skip
-                    // the unreliable title-based YouTube search entirely and go
-                    // straight to /classify_full with the exact video ID.
                     val extractedId = tryExtractShortsVideoId(allText)
                     if (extractedId != null) {
                         println("[CF_SERVICE] ✓ [SHORTS] ID extracted from tree: $extractedId")
@@ -237,10 +233,9 @@ class ChildFocusAccessibilityService : AccessibilityService() {
                     }
                 }
             }
-            return   // always return on Shorts screen — never fall through to long-form strategies
+            return
         }
 
-        // ── Strategy 0: Direct video ID from event text ──────────────────
         val eventText = event.text?.joinToString(" ") ?: ""
         val urlMatch  = URL_PATTERN.matcher(eventText)
         if (urlMatch.find()) {
@@ -249,7 +244,6 @@ class ChildFocusAccessibilityService : AccessibilityService() {
             return
         }
 
-        // ── Strategy 1: Video ID in full node tree ────────────────────────
         val urlInTree = URL_PATTERN.matcher(allText)
         if (urlInTree.find()) {
             val videoId = urlInTree.group(1) ?: return
@@ -257,7 +251,6 @@ class ChildFocusAccessibilityService : AccessibilityService() {
             return
         }
 
-        // ── Strategy 3: Title before view count ──────────────────────────
         val viewsMatch = VIEWS_PATTERN.matcher(allText)
         if (viewsMatch.find()) {
             val t = viewsMatch.group(1)?.trim() ?: return
@@ -267,7 +260,6 @@ class ChildFocusAccessibilityService : AccessibilityService() {
             }
         }
 
-        // ── Strategy 4: Title before @channel ────────────────────────────
         val atMatch = AT_CHANNEL_PATTERN.matcher(allText)
         if (atMatch.find()) {
             val t  = atMatch.group(1)?.trim() ?: return
@@ -283,16 +275,17 @@ class ChildFocusAccessibilityService : AccessibilityService() {
         currentJob.cancel()
         mainHandler.removeCallbacks(screenTimeTicker)
         ScreenTimeManager.onAppBackground(this)
-        lastSentTitle      = ""
-        lastSentTimeMs     = 0L
-        pendingTitle       = ""
-        lastEventTimeMs    = 0L
-        currentPriority        = 0
-        currentTarget          = ""
-        shortsPendingTitle     = ""
+        lastSentTitle           = ""
+        lastSentTimeMs          = 0L
+        pendingTitle            = ""
+        lastEventTimeMs         = 0L
+        currentPriority         = 0
+        currentTarget           = ""
+        shortsPendingTitle      = ""
         lastExtractedShortsKey  = ""
-        lastShortsScreenHash   = 0
+        lastShortsScreenHash    = 0
         screenTimeLimitEnforced = false
+        lastEnforcedPackage     = ""
     }
 
     override fun onDestroy() {
@@ -305,33 +298,21 @@ class ChildFocusAccessibilityService : AccessibilityService() {
     // SHORTS VIDEO ID EXTRACTION
     // ═══════════════════════════════════════════════════════════════════════
 
-    /**
-     * Attempts to extract a Shorts video ID directly from the accessibility
-     * tree text (e.g. from a "shorts/XXXXXXXXXXX" URL node).
-     *
-     * Returns the 11-character video ID if found, null otherwise.
-     * This is the preferred fast path — it bypasses the title-based YouTube
-     * search entirely and guarantees we classify the correct video.
-     */
     private fun tryExtractShortsVideoId(allText: String): String? {
         val root = rootInActiveWindow ?: return null
         val nodes = collectTextNodes(root)
         root.recycle()
 
-        // Search every node's text for a shorts/ URL pattern
         for (node in nodes) {
             val m = URL_PATTERN.matcher(node.text)
             if (m.find()) {
                 val id = m.group(1) ?: continue
-                // Sanity check: must be exactly 11 chars and look like a real ID
                 if (id.length == 11 && id.matches(Regex("[a-zA-Z0-9_-]{11}"))) {
                     return id
                 }
             }
         }
 
-        // Also scan allText as a fallback (collectAllNodeText may include URLs
-        // that collectTextNodes misses due to class filtering)
         val m = Pattern.compile("shorts/([a-zA-Z0-9_-]{11})").matcher(allText)
         if (m.find()) {
             val id = m.group(1) ?: return null
@@ -342,15 +323,11 @@ class ChildFocusAccessibilityService : AccessibilityService() {
     }
 
     // ═══════════════════════════════════════════════════════════════════════
-    // SHORTS TITLE + CHANNEL EXTRACTION (node-based, coordinate-targeted)
+    // SHORTS TITLE + CHANNEL EXTRACTION
     // ═══════════════════════════════════════════════════════════════════════
 
     private data class TextNode(val text: String, val top: Int, val bottom: Int)
 
-    /**
-     * Walks the raw node tree collecting every non-empty text/contentDesc
-     * with its screen bounds. No class filtering — we need everything.
-     */
     private fun collectTextNodes(node: AccessibilityNodeInfo): List<TextNode> {
         val result = mutableListOf<TextNode>()
         try {
@@ -382,27 +359,13 @@ class ChildFocusAccessibilityService : AccessibilityService() {
 
         if (nodes.isEmpty()) return null
 
-        // ── Runtime screen dimensions ─────────────────────────────────────
-        // All pixel thresholds are derived from the actual screen height so that
-        // the function works correctly across:
-        //   • phones vs tablets (different resolutions)
-        //   • portrait vs landscape (screen height changes on rotation)
         val screenHeight = resources.displayMetrics.heightPixels
 
-        // The Shorts overlay UI (title + channel row) always sits in the bottom
-        // ~20–97% of the screen height regardless of device or orientation.
-        //
-        //  SETTLED_BOTTOM_MIN  — nodes above this are top-of-screen chrome
-        //  SETTLED_BOTTOM_MAX  — nodes below this are off-screen / animating in
-        //  CHANNEL_ROW_TARGET  — expected Y position of the @channel handle row
-        //  NEIGHBOUR_TOLERANCE — how many px below channelNode.bottom we still trust
-        val SETTLED_BOTTOM_MIN   = (screenHeight * 0.72).toInt()   // ~72% down
-        val SETTLED_BOTTOM_MAX   = (screenHeight * 0.97).toInt()   // ~97% down
-        val CHANNEL_ROW_TARGET   = (screenHeight * 0.87).toInt()   // ~87% down
-        val NEIGHBOUR_TOLERANCE  = (screenHeight * 0.18).toInt()   // ~18% of height
+        val SETTLED_BOTTOM_MIN   = (screenHeight * 0.72).toInt()
+        val SETTLED_BOTTOM_MAX   = (screenHeight * 0.97).toInt()
+        val CHANNEL_ROW_TARGET   = (screenHeight * 0.87).toInt()
+        val NEIGHBOUR_TOLERANCE  = (screenHeight * 0.18).toInt()
 
-        // ── Noise filter: drop pure UI chrome and play-button-like nodes ─
-        // We keep @handle nodes and anything that looks like real content text.
         val uiExact = setOf(
             "shorts", "home", "explore", "subscriptions", "library", "you",
             "like", "dislike", "comment", "share", "subscribe", "subscribed",
@@ -426,7 +389,6 @@ class ChildFocusAccessibilityService : AccessibilityService() {
                     n.text.length >= 2
         }
 
-        // ── Music label detector ──────────────────────────────────────────
         fun isMusicLabel(text: String): Boolean {
             val lower = text.lowercase()
             return lower.contains("♪") || lower.contains("♫") ||
@@ -434,89 +396,45 @@ class ChildFocusAccessibilityService : AccessibilityService() {
                     lower.contains("original audio") || lower.contains("original sound")
         }
 
-        // ── Seek bar text detector ────────────────────────────────────────
-        // e.g. "0 minutes 6 seconds of 0 minutes 8 seconds"
         val seekBarRe = Regex(
             "^\\d+\\s+minutes?\\s+\\d+\\s+seconds?\\s+of\\s+\\d+\\s+minutes?\\s+\\d+\\s+seconds?$",
             RegexOption.IGNORE_CASE
         )
 
-        // ── Locate the @channel node ──────────────────────────────────────
-        // Pick the @channel whose bottom is closest to CHANNEL_ROW_TARGET
-        // (derived from real screen height — works for any device/orientation).
-        // During swipe animations multiple @handles may appear; we want the one
-        // anchored in the active overlay zone, not a neighbour sliding in/out.
         val channelNode = filtered
             .filter { it.text.startsWith("@") && it.bottom > 0 }
             .minByOrNull { Math.abs(it.bottom - CHANNEL_ROW_TARGET) }
             ?: return null
 
-        // ── Collect candidate content nodes ──────────────────────────────
-        // Rules:
-        //  • not the @channel node itself
-        //  • not another @handle
-        //  • not a music label
-        //  • not seek-bar text ("X minutes Y seconds of …")
-        //  • bottom must be within the settled overlay band
-        //  • must not be a neighbour video's node (bottom ≤ channelNode.bottom + tolerance)
-        //  • top < bottom (reject inverted/animating nodes)
-        //  • at least 3 chars
-        //
-        // SETTLED band explanation:
-        //   During swipe animations the title node slides in from below — its
-        //   bottom is inflated or its top > bottom (inverted rect). We only trust
-        //   nodes that have landed inside the stable overlay zone.
         val maxAllowedBottom = minOf(channelNode.bottom + NEIGHBOUR_TOLERANCE, SETTLED_BOTTOM_MAX)
 
         val candidates = filtered
             .filter { it.text != channelNode.text && !it.text.startsWith("@") }
-            .filterNot { it.text.trimStart().startsWith("#") }          // bare hashtag nodes
-            .filterNot { it.text.lowercase().startsWith("search ") }    // YouTube search suggestions
+            .filterNot { it.text.trimStart().startsWith("#") }
+            .filterNot { it.text.lowercase().startsWith("search ") }
             .filterNot { isMusicLabel(it.text) }
-            .filterNot { it.text.contains(" · ") }                      // music strip "Song · Artist"
+            .filterNot { it.text.contains(" · ") }
             .filterNot { seekBarRe.matches(it.text.trim()) }
-            // Only accept nodes within the settled overlay band
             .filter { it.bottom in SETTLED_BOTTOM_MIN..maxAllowedBottom }
-            .filter { it.top < it.bottom }   // reject inverted/animating nodes
+            .filter { it.top < it.bottom }
             .filter { it.text.length >= 3 }
             .sortedByDescending { it.bottom }
 
         if (candidates.isEmpty()) return null
 
-        // ── Detect music strip ────────────────────────────────────────────
-        val hasMusicStrip = filtered
-            .filter { it.top >= channelNode.top && it.bottom <= SETTLED_BOTTOM_MAX && isMusicLabel(it.text) }
-            .isNotEmpty()
-
-        // ── Positional pick ───────────────────────────────────────────────
-        // Strip hashtags, zero-width chars, and any trailing token that looks
-        // like a channel handle (CamelCase/alphanumeric, 4-40 chars, no spaces).
-        // Keeping raw hashtags in the title sent to the server was polluting
-        // YouTube search queries and causing wrong video resolution (e.g.
-        // "Dopamine candle cleaning #wax #asmr RajendranAzam" would match
-        // unrelated videos). The NB classifier gets the real description/tags
-        // from the resolved video anyway, so stripping here is safe.
         val titleRaw = candidates[0].text
 
-        // 1. Strip invisible zero-width chars
         var titleClean = titleRaw.replace(Regex("[​‌‍﻿]"), "").trim()
 
-        // 2. Remove everything from the first '#' onward (hashtag block)
         val hashIdx = titleClean.indexOf('#')
         if (hashIdx > 0) titleClean = titleClean.substring(0, hashIdx).trim()
 
-        // 3. Strip a trailing token that matches a channel-handle pattern:
-        //    a run of alphanumeric chars (4-40), no spaces, at end of string.
-        //    This catches handles like "RajendranAzam", "life-007fi", "DewaFFreal"
-        //    that sometimes get appended when the node tree has the @channel
-        //    text adjacent to the title node without a separator.
         titleClean = titleClean
             .replace(Regex("\\s+[A-Za-z][A-Za-z0-9_-]{3,39}$"), "")
             .trim()
 
         if (titleClean.length < 3) return null
 
-        // ── Dedup: skip if same title+channel as last resolved result ─────
         val key = "${channelNode.text}|$titleClean"
         if (key == lastExtractedShortsKey) return null
         lastExtractedShortsKey = key
@@ -529,11 +447,6 @@ class ChildFocusAccessibilityService : AccessibilityService() {
     // GUARDS
     // ═══════════════════════════════════════════════════════════════════════
 
-    /**
-     * Returns true only when the Shorts player is actually on screen.
-     * Reads contentDescriptions directly from the unfiltered node tree so
-     * action buttons (like/dislike/share) are always visible.
-     */
     private fun isRealShortsScreen(allText: String): Boolean {
         val root = rootInActiveWindow ?: return false
         val nodes = collectTextNodes(root)
@@ -582,23 +495,9 @@ class ChildFocusAccessibilityService : AccessibilityService() {
         return sb.toString()
     }
 
-    /**
-     * Returns true if the given skip-term matches [text] in a way that should
-     * block it from being treated as a video title.
-     *
-     * Short single-word UI terms (defined in SKIP_TITLES_WHOLE_WORD) are matched
-     * as whole words only, so "Subscribe" does NOT block "subscriber", and
-     * "seconds" does NOT block "split seconds record".
-     *
-     * All other (multi-word or punctuated) SKIP_TITLES entries use the original
-     * plain substring match because they are specific enough to avoid false
-     * positives.
-     */
     private fun skipTitleMatches(text: String, skipTerm: String): Boolean {
         return if (skipTerm in SKIP_TITLES_WHOLE_WORD) {
             SKIP_TITLES_WHOLE_WORD_RE.containsMatchIn(text)
-                    // containsMatchIn checks all words in one pass; we only want to
-                    // fire for THIS specific skipTerm, so verify it independently.
                     && Regex("(?i)\\b${Regex.escape(skipTerm)}\\b").containsMatchIn(text)
         } else {
             text.contains(skipTerm, ignoreCase = true)
@@ -624,7 +523,6 @@ class ChildFocusAccessibilityService : AccessibilityService() {
             lowerText.startsWith("get ") && text.length < 60 ||
             lowerText.startsWith("try ") && text.length < 50
         ) return false
-        // Note: hashtag stripping is done before isCleanTitle is called for Shorts
         if (Regex("[A-Za-z]{1,4}-?\\d{4,}[A-Za-z0-9]*").containsMatchIn(text)) return false
         if (Regex("^[A-Z][a-zA-Z]+ [·•] [A-Z][a-zA-Z]+$").containsMatchIn(text)) return false
         if (CHANNEL_HANDLE_RE.matches(text.trim())) return false
@@ -638,10 +536,6 @@ class ChildFocusAccessibilityService : AccessibilityService() {
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
-    // ── Screen-time periodic ticker ───────────────────────────────────────
-    // Runs every 60 s while the service is alive. Flushes the current
-    // foreground window and re-checks the limit so the block fires
-    // mid-session rather than only on the next app switch.
     private val screenTimeTicker = object : Runnable {
         override fun run() {
             val overLimit = ScreenTimeManager.tick(this@ChildFocusAccessibilityService)
@@ -653,12 +547,42 @@ class ChildFocusAccessibilityService : AccessibilityService() {
     }
 
     /**
+     * Sends the user to the home screen when a package exceeds its daily limit.
+     *
+     * ── FIX ──────────────────────────────────────────────────────────────────
+     * Previously, performGlobalAction(GLOBAL_ACTION_HOME) was OUTSIDE the
+     * !screenTimeLimitEnforced guard, so it fired on EVERY accessibility event
+     * for any tracked package — not just once. This caused every app launch to
+     * immediately redirect to the home screen.
+     *
+     * Now:
+     *  • The entire function returns early if already enforced for this package.
+     *  • The flag is reset in onAccessibilityEvent when a different package
+     *    comes to the foreground (so re-opening the blocked app re-triggers it).
+     * ─────────────────────────────────────────────────────────────────────────
+     */
+    private fun enforceScreenTimeLimit(packageName: String) {
+        // ← FIX: guard the home action — only fire once per enforcement session
+        if (screenTimeLimitEnforced) return
+
+        screenTimeLimitEnforced = true
+        lastEnforcedPackage     = packageName
+
+        mainHandler.post {
+            performGlobalAction(GLOBAL_ACTION_HOME)
+            Toast.makeText(
+                this,
+                "⏱️ Daily screen time limit reached for this app.",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    /**
      * Pauses YouTube then navigates home to fully remove the blocked video.
-     * Must run on the main thread — dispatched via mainHandler from IO coroutines.
      */
     private fun blockYouTubeVideo() {
         mainHandler.post {
-            // 1. Hit the play/pause button to stop playback
             val root = rootInActiveWindow
             if (root != null) {
                 root.findAccessibilityNodeInfosByViewId(
@@ -666,32 +590,9 @@ class ChildFocusAccessibilityService : AccessibilityService() {
                 ).firstOrNull()?.performAction(AccessibilityNodeInfo.ACTION_CLICK)
                 root.recycle()
             }
-            // 2. After a short delay, go to home screen so the video is off screen
             mainHandler.postDelayed({
                 performGlobalAction(GLOBAL_ACTION_HOME)
             }, 300)
-        }
-    }
-
-    /**
-     * Called when a package has exceeded its configured daily limit.
-     * Sends the user home and shows a toast — you can replace the toast
-     * with a full BlockOverlayService call if preferred.
-     */
-    private fun enforceScreenTimeLimit(packageName: String) {
-        mainHandler.post {
-            // Always kick back to home — runs every time the app is (re)opened
-            performGlobalAction(GLOBAL_ACTION_HOME)
-
-            // Toast shown only once per enforcement session to avoid spam
-            if (!screenTimeLimitEnforced) {
-                screenTimeLimitEnforced = true
-                Toast.makeText(
-                    this,
-                    "⏱️ Daily screen time limit reached for this app.",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
         }
     }
 
@@ -811,7 +712,6 @@ class ChildFocusAccessibilityService : AccessibilityService() {
         val videoId = json.optString("video_id", "unknown")
         println("[CF_SERVICE] $videoId → $label ($score) cached=$cached")
 
-        // ── Pause YouTube immediately when overstimulating content detected ─
         val isBlocked = label.equals("Overstimulating", ignoreCase = true) ||
                 label.equals("Overstimulation",  ignoreCase = true)
         if (isBlocked) {

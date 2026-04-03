@@ -1,29 +1,17 @@
 package com.childfocus
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.Service
+import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.PixelFormat
 import android.net.Uri
-import android.os.IBinder
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.os.*
+import android.view.*
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.app.NotificationCompat
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import android.graphics.BitmapFactory
-import android.os.Handler
-import android.os.Looper
-import android.widget.ImageView
+import kotlinx.coroutines.*
 import java.net.URL
 
 class BlockOverlayService : Service() {
@@ -33,15 +21,19 @@ class BlockOverlayService : Service() {
     private val serviceScope = CoroutineScope(Dispatchers.IO)
     private val mainHandler = Handler(Looper.getMainLooper())
 
+    // Keeps the last ACTION_SHOW extras so onTaskRemoved restart can re-show
+    // the overlay without losing context.
+    private var lastVideoId = ""
+    private var lastLabel   = "Overstimulating"
+    private var lastScore   = 0f
+
     private fun loadThumbnail(videoId: String, imageView: ImageView) {
         serviceScope.launch {
             try {
-                val url = URL("https://i.ytimg.com/vi/$videoId/mqdefault.jpg")
+                val url    = URL("https://i.ytimg.com/vi/$videoId/mqdefault.jpg")
                 val bitmap = BitmapFactory.decodeStream(url.openStream())
                 mainHandler.post { imageView.setImageBitmap(bitmap) }
-            } catch (e: Exception) {
-                // thumbnail load failed silently — no placeholder needed
-            }
+            } catch (_: Exception) {}
         }
     }
 
@@ -58,30 +50,29 @@ class BlockOverlayService : Service() {
         const val EXTRA_LABEL    = "label"
         const val EXTRA_SCORE    = "score"
 
-        // These are verified working video IDs from the educational/neutral channels
         val RECOMMENDED_VIDEOS = listOf(
             // Educational
-            RecommendedVideo("Sesame Street: Do De Rubber Duck",     "KpM6oFHmBBQ", "Educational"),
-            RecommendedVideo("Sesame Street: Elmo's Got the Moves",  "FHmK8aiwXs8", "Educational"),
-            RecommendedVideo("Khan Academy Kids: Adding Numbers",    "gA2B_kelXpg", "Educational"),
-            RecommendedVideo("Numberblocks: One",                    "cpFHMNSPNTk", "Educational"),
-            RecommendedVideo("Alphablocks: A",                       "BJCGMMWpEWo", "Educational"),
-            RecommendedVideo("SciShow Kids: Why Do We Dream?",       "GiBGwFOL8qA", "Educational"),
-            RecommendedVideo("Nat Geo Kids: Amazing Animals",        "iqHLDEMoiKQ", "Educational"),
-            RecommendedVideo("Crash Course Kids: Ecosystems",        "IDV8ou3FbwI", "Educational"),
-            RecommendedVideo("PBS Kids: Curious George",             "g_i_tVYTYp4", "Educational"),
-            RecommendedVideo("Peekaboo Kidz: Solar System",          "mQrlgH97v94", "Educational"),
+            RecommendedVideo("Sesame Street: Do De Rubber Duck",    "KpM6oFHmBBQ", "Educational"),
+            RecommendedVideo("Sesame Street: Elmo's Got the Moves", "FHmK8aiwXs8", "Educational"),
+            RecommendedVideo("Khan Academy Kids: Adding Numbers",   "gA2B_kelXpg", "Educational"),
+            RecommendedVideo("Numberblocks: One",                   "cpFHMNSPNTk", "Educational"),
+            RecommendedVideo("Alphablocks: A",                      "BJCGMMWpEWo", "Educational"),
+            RecommendedVideo("SciShow Kids: Why Do We Dream?",      "GiBGwFOL8qA", "Educational"),
+            RecommendedVideo("Nat Geo Kids: Amazing Animals",       "iqHLDEMoiKQ", "Educational"),
+            RecommendedVideo("Crash Course Kids: Ecosystems",       "IDV8ou3FbwI", "Educational"),
+            RecommendedVideo("PBS Kids: Curious George",            "g_i_tVYTYp4", "Educational"),
+            RecommendedVideo("Peekaboo Kidz: Solar System",         "mQrlgH97v94", "Educational"),
             // Neutral
-            RecommendedVideo("Peppa Pig: Muddy Puddles",             "keXn2HB4MkI", "Neutral"),
-            RecommendedVideo("Peppa Pig: The Playground",            "0SYcr5Qv0mg", "Neutral"),
-            RecommendedVideo("Bluey: Camping",                       "UkH4kGzBPCk", "Neutral"),
-            RecommendedVideo("Bluey: The Pool",                      "Ek5J3rEMjOU", "Neutral"),
-            RecommendedVideo("Paw Patrol: Pups Save Ryder",          "bLzCVIFhZYE", "Neutral"),
-            RecommendedVideo("Thomas & Friends: Go Go Thomas",       "S-b_RmMjqF8", "Neutral"),
-            RecommendedVideo("Mr Bean: Do-It-Yourself Mr Bean",      "b-Kd9MuFMBo", "Neutral"),
-            RecommendedVideo("Shaun the Sheep: Off the Baa",         "YK86H2Mc9kc", "Neutral"),
-            RecommendedVideo("Lego: City Mini Movies",               "L4LqBNKBVgA", "Neutral"),
-            RecommendedVideo("Paw Patrol: Sea Patrol",               "1R3VoAkHPEI", "Neutral"),
+            RecommendedVideo("Peppa Pig: Muddy Puddles",            "keXn2HB4MkI", "Neutral"),
+            RecommendedVideo("Peppa Pig: The Playground",           "0SYcr5Qv0mg", "Neutral"),
+            RecommendedVideo("Bluey: Camping",                      "UkH4kGzBPCk", "Neutral"),
+            RecommendedVideo("Bluey: The Pool",                     "Ek5J3rEMjOU", "Neutral"),
+            RecommendedVideo("Paw Patrol: Pups Save Ryder",         "bLzCVIFhZYE", "Neutral"),
+            RecommendedVideo("Thomas & Friends: Go Go Thomas",      "S-b_RmMjqF8", "Neutral"),
+            RecommendedVideo("Mr Bean: Do-It-Yourself Mr Bean",     "b-Kd9MuFMBo", "Neutral"),
+            RecommendedVideo("Shaun the Sheep: Off the Baa",        "YK86H2Mc9kc", "Neutral"),
+            RecommendedVideo("Lego: City Mini Movies",              "L4LqBNKBVgA", "Neutral"),
+            RecommendedVideo("Paw Patrol: Sea Patrol",              "1R3VoAkHPEI", "Neutral"),
         )
 
         fun show(context: Context, videoId: String, label: String, score: Float) {
@@ -111,29 +102,65 @@ class BlockOverlayService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
             ACTION_SHOW -> {
-                val videoId = intent.getStringExtra(EXTRA_VIDEO_ID) ?: ""
-                val label   = intent.getStringExtra(EXTRA_LABEL)    ?: "Overstimulating"
-                val score   = intent.getFloatExtra(EXTRA_SCORE, 0f)
+                lastVideoId = intent.getStringExtra(EXTRA_VIDEO_ID) ?: ""
+                lastLabel   = intent.getStringExtra(EXTRA_LABEL)    ?: "Overstimulating"
+                lastScore   = intent.getFloatExtra(EXTRA_SCORE, 0f)
                 pauseYouTube()
-                showOverlay(videoId, label, score)
+                showOverlay(lastVideoId, lastLabel, lastScore)
             }
             ACTION_HIDE -> {
                 removeOverlay()
                 stopSelf()
             }
+            // null intent = system restarted us after swipe-kill → re-show last overlay
+            null -> {
+                if (lastVideoId.isNotEmpty()) {
+                    showOverlay(lastVideoId, lastLabel, lastScore)
+                }
+            }
         }
+
+        // START_STICKY → system will restart this service automatically if killed.
+        // stopWithTask="false" in the manifest ensures a swipe-kill does not stop it.
         return START_STICKY
     }
 
-    // Sends a media pause broadcast to stop YouTube playback
+    /**
+     * Called when the user swipes the app away from Recents.
+     * AlarmManager schedules a self-restart ~1 second later so the overlay
+     * reappears even if the system tears down the process.
+     */
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+
+        val restartIntent = Intent(applicationContext, BlockOverlayService::class.java).apply {
+            action = ACTION_SHOW
+            putExtra(EXTRA_VIDEO_ID, lastVideoId)
+            putExtra(EXTRA_LABEL, lastLabel)
+            putExtra(EXTRA_SCORE, lastScore)
+        }
+
+        val pendingIntent = PendingIntent.getService(
+            applicationContext,
+            20,
+            restartIntent,
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        alarmManager.set(
+            AlarmManager.ELAPSED_REALTIME,
+            SystemClock.elapsedRealtime() + 1_000L,
+            pendingIntent
+        )
+    }
+
     private fun pauseYouTube() {
-        // Standard music service pause command
         val pause = Intent("com.android.music.musicservicecommand").apply {
             putExtra("command", "pause")
         }
         sendBroadcast(pause)
 
-        // Media button pause via AudioManager
         val audioManager = getSystemService(Context.AUDIO_SERVICE) as android.media.AudioManager
         val downEvent = android.view.KeyEvent(
             android.view.KeyEvent.ACTION_DOWN,
@@ -162,55 +189,46 @@ class BlockOverlayService : Service() {
             gravity = Gravity.TOP or Gravity.START
         }
 
-        overlayView = LayoutInflater.from(this).inflate(R.layout.overlay_blocked, null)
+        overlayView = android.view.LayoutInflater.from(this)
+            .inflate(R.layout.overlay_blocked, null)
 
         overlayView?.apply {
             findViewById<TextView>(R.id.tvScore)?.text =
                 "Score: ${"%.2f".format(score)} (threshold: 0.20)"
 
-            val container = findViewById<ViewGroup>(R.id.llSuggestions)
+            val container = findViewById<android.widget.LinearLayout>(R.id.llSuggestions)
 
             val picks =
                 RECOMMENDED_VIDEOS.filter { it.category == "Educational" }.shuffled().take(3) +
                         RECOMMENDED_VIDEOS.filter { it.category == "Neutral" }.shuffled().take(3)
 
-
             picks.forEach { video ->
-                val card = LayoutInflater.from(context)
+                val card = android.view.LayoutInflater.from(context)
                     .inflate(R.layout.item_recommendation, container, false)
 
-                card.findViewById<TextView>(R.id.tv_video_title)?.text     = video.title
-                card.findViewById<TextView>(R.id.tv_video_category)?.text  = video.category
-                card.findViewById<ImageView>(R.id.iv_thumbnail)?.let { loadThumbnail(video.videoId, it) }
+                card.findViewById<TextView>(R.id.tv_video_title)?.text    = video.title
+                card.findViewById<TextView>(R.id.tv_video_category)?.text = video.category
+                card.findViewById<ImageView>(R.id.iv_thumbnail)
+                    ?.let { loadThumbnail(video.videoId, it) }
 
                 card.setOnClickListener {
                     removeOverlay()
                     openRecommendedVideoClean(video.title)
                     stopSelf()
                 }
-                container.addView(card)
+                container?.addView(card)
             }
         }
 
         windowManager.addView(overlayView, params)
     }
 
-    /**
-     * 1. Relaunch YouTube with FLAG_ACTIVITY_CLEAR_TASK — nukes the blocked
-     *    video from the entire back stack so Back can never return to it.
-     * 2. After YouTube is back on its home feed, open a search for the
-     *    recommended video title.
-     */
     private fun openRecommendedVideoClean(title: String) {
-        val mainHandler = Handler(Looper.getMainLooper())
-
-        // Step 1 — reset YouTube, wiping back stack
         val resetIntent = packageManager
             .getLaunchIntentForPackage("com.google.android.youtube")
             ?.apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) }
         if (resetIntent != null) startActivity(resetIntent)
 
-        // Step 2 — search for the recommended title after YouTube home loads
         mainHandler.postDelayed({
             val query = Uri.encode("$title for kids")
             val searchIntent = Intent(Intent.ACTION_SEARCH).apply {
@@ -229,7 +247,7 @@ class BlockOverlayService : Service() {
 
     private fun removeOverlay() {
         overlayView?.let {
-            windowManager.removeView(it)
+            try { windowManager.removeView(it) } catch (_: Exception) {}
             overlayView = null
         }
     }
@@ -248,6 +266,7 @@ class BlockOverlayService : Service() {
             .setContentTitle("ChildFocus is active")
             .setContentText("Monitoring YouTube for overstimulating content")
             .setSmallIcon(android.R.drawable.ic_dialog_alert)
+            .setOngoing(true) // Persistent — cannot be dismissed by the user
             .build()
 
         startForeground(1, notification)
@@ -258,5 +277,6 @@ class BlockOverlayService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         removeOverlay()
+        serviceScope.cancel()
     }
 }

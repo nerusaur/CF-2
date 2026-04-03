@@ -5,10 +5,10 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE"
         tools:ignore="ProtectedPermissions"
         xmlns:tools="http://schemas.android.com/tools" />
@@ -36,10 +36,6 @@
         </activity>
 
         <!-- Blocked Web Activity (shown when a site is blocked) -->
-        <!-- launchMode="singleTop" → re-triggers onNewIntent() instead of stacking
-             a second instance when the accessibility service fires again on reopen.
-             excludeFromRecents → user can't swipe back to it from the recents list.
-             showOnLockScreen + turnScreenOn → blocks even when screen was off. -->
         <activity
             android:name=".service.BlockedWebActivity"
             android:exported="true"
@@ -50,6 +46,7 @@
             android:theme="@style/Theme.ChildFocus" />
 
         <!-- ChildFocus YouTube Accessibility Service -->
+        <!-- Accessibility services survive swipe-kill natively; no extra flags needed -->
         <service
             android:name=".service.ChildFocusAccessibilityService"
             android:exported="true"
@@ -77,11 +74,33 @@
                 android:resource="@xml/web_blocker_service_config" />
         </service>
 
-        <!-- Block Overlay Service -->
+        <!-- Block Overlay Service
+             stopWithTask="false" → keeps running after the app is swiped away -->
         <service
             android:name=".BlockOverlayService"
             android:exported="false"
+            android:stopWithTask="false"
             android:foregroundServiceType="specialUse" />
+
+        <!-- Floating Timer Service
+             stopWithTask="false" → keeps counting down after swipe-kill -->
+        <service
+            android:name=".service.FloatingTimerService"
+            android:exported="false"
+            android:stopWithTask="false"
+            android:foregroundServiceType="specialUse" />
+
+        <!-- Boot + restart receiver
+             Restores services after phone reboot or after swipe-kill restart -->
+        <receiver
+            android:name=".service.ServiceRestartReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="com.childfocus.RESTART_SERVICES" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

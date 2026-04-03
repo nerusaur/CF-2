@@ -2,16 +2,20 @@ package com.childfocus.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.childfocus.ui.theme.*
 
 @Composable
 fun ResultScreen(
@@ -21,40 +25,51 @@ fun ResultScreen(
     cached: Boolean,
     onBack: () -> Unit
 ) {
-    val (bgColor, accentColor, emoji) = when (label) {
-        "Overstimulating" -> Triple(Color(0xFF3E1A1A), Color(0xFFEF9A9A), "⛔")
-        "Educational"     -> Triple(Color(0xFF1B3A2A), Color(0xFF81C784), "📚")
-        else              -> Triple(Color(0xFF1E3050), Color(0xFF90CAF9), "✅")
+    // State-driven colors using the unified palette
+    val (cardBg, accentColor, emoji) = when (label) {
+        "Overstimulating" -> Triple(CfRedLight,   CfRed,    "⛔")
+        "Educational"     -> Triple(CfGreenLight, CfGreen,  "📚")
+        else              -> Triple(CfPurpleLight, CfPurple, "✅")
     }
+
+    val bgGradient = Brush.verticalGradient(colors = listOf(CfBgTop, CfBgBottom))
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0D1B2A)),
+            .background(bgGradient)
+            .navigationBarsPadding(),
         contentAlignment = Alignment.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(32.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(32.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+
+            // Result label
             Text(
-                text = "$emoji $label",
-                fontSize = 26.sp,
-                fontWeight = FontWeight.Bold,
-                color = accentColor
+                text       = "$emoji  $label",
+                fontSize   = 26.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color      = accentColor
             )
 
-            Surface(
-                shape = RoundedCornerShape(16.dp),
-                color = bgColor,
+            // Detail card
+            Card(
+                shape    = RoundedCornerShape(16.dp),
+                colors   = CardDefaults.cardColors(containerColor = cardBg),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
                     modifier = Modifier.padding(20.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    ResultRow("Video ID", videoId.take(16) + if (videoId.length > 16) "..." else "")
+                    ResultRow("Video ID", videoId.take(16) + if (videoId.length > 16) "…" else "")
                     ResultRow("OIR Score", "%.4f".format(score))
                     ResultRow("Source", if (cached) "Cache (instant)" else "Live classification")
                 }
@@ -63,42 +78,48 @@ fun ResultScreen(
             // Score bar
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "Overstimulation Index",
-                    color = Color(0xFF90CAF9),
-                    fontSize = 12.sp
+                    text     = "Overstimulation Index",
+                    color    = CfTextSecond,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(modifier = Modifier.height(6.dp))
+                LinearProgressIndicator(
+                    progress    = { score.coerceIn(0f, 1f) },
+                    modifier    = Modifier.fillMaxWidth().height(10.dp),
+                    color       = when {
+                        score >= 0.75f -> CfRed
+                        score <= 0.35f -> CfGreen
+                        else           -> CfAmber
+                    },
+                    trackColor  = CfBorder
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                LinearProgressIndicator(
-                    progress = { score.coerceIn(0f, 1f) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(10.dp),
-                    color = when {
-                        score >= 0.75f -> Color(0xFFEF9A9A)
-                        score <= 0.35f -> Color(0xFF81C784)
-                        else           -> Color(0xFFFFD54F)
-                    },
-                    trackColor = Color(0xFF1E3A5F)
-                )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("Safe", color = Color(0xFF81C784), fontSize = 11.sp)
-                    Text("Neutral", color = Color(0xFFFFD54F), fontSize = 11.sp)
-                    Text("Block", color = Color(0xFFEF9A9A), fontSize = 11.sp)
+                    Text("Safe",    color = CfGreen,   fontSize = 11.sp, fontWeight = FontWeight.Medium)
+                    Text("Neutral", color = CfAmber,   fontSize = 11.sp, fontWeight = FontWeight.Medium)
+                    Text("Block",   color = CfRed,     fontSize = 11.sp, fontWeight = FontWeight.Medium)
                 }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Button(
-                onClick = onBack,
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(26.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4FC3F7))
+                onClick  = onBack,
+                modifier = Modifier.fillMaxWidth().height(54.dp),
+                shape    = RoundedCornerShape(27.dp),
+                colors   = ButtonDefaults.buttonColors(containerColor = CfGreen),
+                elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
             ) {
-                Text("Back", color = Color(0xFF0D1B2A), fontWeight = FontWeight.Bold)
+                Text(
+                    text       = "Back",
+                    color      = CfTextOnDark,
+                    fontWeight = FontWeight.Bold,
+                    fontSize   = 16.sp
+                )
             }
         }
     }
@@ -110,8 +131,14 @@ private fun ResultRow(label: String, value: String) {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(label, color = Color(0xFF78909C), fontSize = 13.sp)
-        Text(value, color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Medium,
-            textAlign = TextAlign.End, modifier = Modifier.weight(1f, fill = false))
+        Text(label, color = CfTextSecond, fontSize = 13.sp)
+        Text(
+            value,
+            color      = CfTextPrimary,
+            fontSize   = 13.sp,
+            fontWeight = FontWeight.SemiBold,
+            textAlign  = TextAlign.End,
+            modifier   = Modifier.weight(1f, fill = false)
+        )
     }
 }

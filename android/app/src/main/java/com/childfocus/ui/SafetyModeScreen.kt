@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.childfocus.viewmodel.ClassifyState
+import com.childfocus.ui.theme.*
 
 // ── Tab definitions ────────────────────────────────────────────────────────────
 
@@ -46,31 +47,26 @@ fun SafetyModeScreen(
     classifyState: ClassifyState,
     onTurnOff: () -> Unit,
     onDismissBlock: () -> Unit,
-    /** Called only after the user correctly enters the PIN in the close dialog */
     onConfirmedClose: () -> Unit = {}
 ) {
-    val context = LocalContext.current
-    val prefs   = context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE)
+    val context   = LocalContext.current
+    val prefs     = context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE)
     val storedPin = prefs.getString(PREFS_PIN_KEY, DEFAULT_PIN) ?: DEFAULT_PIN
 
     val isAuthenticated    = SessionAuthManager.isAuthenticated
     val showingCloseDialog = SessionAuthManager.isShowingCloseConfirm
 
-    // ── Close-confirm PIN dialog ───────────────────────────────────────────────
-    // Shown on top of whatever screen is current when the user tries to
-    // back out / swipe away the app from Recents.
     if (showingCloseDialog) {
         CloseConfirmPinDialog(
-            storedPin = storedPin,
+            storedPin   = storedPin,
             onConfirmed = {
                 SessionAuthManager.confirmClose()
-                onConfirmedClose()          // Activity calls finishAndRemoveTask()
+                onConfirmedClose()
             },
-            onDismiss = { SessionAuthManager.cancelClose() }
+            onDismiss   = { SessionAuthManager.cancelClose() }
         )
     }
 
-    // ── Main auth gate ────────────────────────────────────────────────────────
     AnimatedContent(
         targetState    = isAuthenticated,
         transitionSpec = { fadeIn(tween(300)) togetherWith fadeOut(tween(200)) },
@@ -93,8 +89,6 @@ fun SafetyModeScreen(
 }
 
 // ── Close-confirm PIN dialog ──────────────────────────────────────────────────
-// Shown when the user presses Back or swipes the app away from Recents.
-// They must type the correct PIN to actually close the app.
 
 @Composable
 private fun CloseConfirmPinDialog(
@@ -123,11 +117,11 @@ private fun CloseConfirmPinDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor   = Color(0xFF0D2137),
+        containerColor   = CfDialogBg,
         title = {
             Text(
-                text       = "🔒 Close ChildFocus?",
-                color      = Color(0xFF4FC3F7),
+                text       = "🔒  Close ChildFocus?",
+                color      = CfTextPrimary,
                 fontWeight = FontWeight.Bold,
                 fontSize   = 17.sp
             )
@@ -142,7 +136,7 @@ private fun CloseConfirmPinDialog(
             ) {
                 Text(
                     text      = "Enter your PIN to close the app.\nThis keeps your child protected.",
-                    color     = Color(0xFF90CAF9),
+                    color     = CfTextSecond,
                     fontSize  = 13.sp,
                     textAlign = TextAlign.Center
                 )
@@ -156,9 +150,9 @@ private fun CloseConfirmPinDialog(
                                 .clip(RoundedCornerShape(50))
                                 .background(
                                     when {
-                                        i < pin.length -> Color(0xFF4FC3F7)
-                                        hasError       -> Color(0xFFE63946).copy(alpha = .5f)
-                                        else           -> Color(0xFF1B2D3E)
+                                        i < pin.length -> CfPinDotFilled
+                                        hasError       -> CfRed.copy(alpha = 0.4f)
+                                        else           -> CfPinDotEmpty
                                     }
                                 )
                         )
@@ -166,7 +160,7 @@ private fun CloseConfirmPinDialog(
                 }
 
                 AnimatedVisibility(visible = hasError) {
-                    Text("Incorrect PIN — try again", color = Color(0xFFE63946), fontSize = 12.sp)
+                    Text("Incorrect PIN — try again", color = CfRed, fontSize = 12.sp)
                 }
 
                 // Numpad
@@ -192,12 +186,17 @@ private fun CloseConfirmPinDialog(
                                     }
                                 },
                                 shape    = RoundedCornerShape(50),
-                                color    = if (key.isEmpty()) Color.Transparent else Color(0xFF1B2D3E),
+                                color    = if (key.isEmpty()) Color.Transparent else CfNumpadKey,
                                 modifier = Modifier.size(60.dp)
                             ) {
                                 Box(contentAlignment = Alignment.Center) {
                                     if (key.isNotEmpty()) {
-                                        Text(key, fontSize = 20.sp, color = Color(0xFFF0F4F8), fontWeight = FontWeight.Medium)
+                                        Text(
+                                            key,
+                                            fontSize   = 20.sp,
+                                            color      = CfTextPrimary,
+                                            fontWeight = FontWeight.Medium
+                                        )
                                     }
                                 }
                             }
@@ -207,16 +206,16 @@ private fun CloseConfirmPinDialog(
                 }
             }
         },
-        confirmButton = {},   // PIN entry auto-submits on 4th digit
+        confirmButton = {},
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel", color = Color(0xFF8BA3B8))
+                Text("Cancel", color = CfTextSecond)
             }
         }
     )
 }
 
-// ── Authenticated shell (bottom nav + tabs) ───────────────────────────────────
+// ── Authenticated shell ───────────────────────────────────────────────────────
 
 @Composable
 private fun AuthenticatedSafetyScreen(
@@ -226,15 +225,13 @@ private fun AuthenticatedSafetyScreen(
 ) {
     var selectedTab by remember { mutableStateOf(SafetyTab.HOME) }
 
-    val bgGradient = Brush.verticalGradient(
-        colors = listOf(Color(0xFF0D1B2A), Color(0xFF0A2540))
-    )
+    val bgGradient = Brush.verticalGradient(colors = listOf(CfBgTop, CfBgBottom))
 
     Scaffold(
         containerColor = Color.Transparent,
         bottomBar = {
             NavigationBar(
-                containerColor = Color(0xFF0D1B2A),
+                containerColor = CfNavBg,
                 tonalElevation = 0.dp
             ) {
                 SafetyTab.entries.forEach { tab ->
@@ -247,15 +244,13 @@ private fun AuthenticatedSafetyScreen(
                                 contentDescription = tab.label
                             )
                         },
-                        label = {
-                            Text(text = tab.label, fontSize = 11.sp)
-                        },
+                        label = { Text(text = tab.label, fontSize = 11.sp) },
                         colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor   = Color(0xFF4FC3F7),
-                            selectedTextColor   = Color(0xFF4FC3F7),
-                            unselectedIconColor = Color(0xFF546E7A),
-                            unselectedTextColor = Color(0xFF546E7A),
-                            indicatorColor      = Color(0xFF1E3A5F)
+                            selectedIconColor   = CfNavSelected,
+                            selectedTextColor   = CfNavSelected,
+                            unselectedIconColor = CfNavUnselected,
+                            unselectedTextColor = CfNavUnselected,
+                            indicatorColor      = CfNavIndicator
                         )
                     )
                 }
@@ -292,7 +287,7 @@ private fun HomeTabContent(
     onDismissBlock: () -> Unit
 ) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier         = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -303,19 +298,19 @@ private fun HomeTabContent(
             Icon(
                 imageVector        = Icons.Default.Lock,
                 contentDescription = "Protected",
-                tint               = Color(0xFF4FC3F7),
+                tint               = CfGreen,
                 modifier           = Modifier.size(72.dp)
             )
             Text(
                 text          = "PROTECTED",
                 fontSize      = 28.sp,
-                fontWeight    = FontWeight.Bold,
-                color         = Color(0xFF4FC3F7),
+                fontWeight    = FontWeight.ExtraBold,
+                color         = CfTextPrimary,
                 letterSpacing = 4.sp
             )
             Text(
                 text      = "ChildFocus is actively monitoring\nYouTube for your child",
-                color     = Color(0xFF90CAF9),
+                color     = CfTextSecond,
                 fontSize  = 14.sp,
                 textAlign = TextAlign.Center
             )
@@ -328,9 +323,7 @@ private fun HomeTabContent(
                     .fillMaxWidth()
                     .height(52.dp),
                 shape  = RoundedCornerShape(26.dp),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = Color(0xFFEF9A9A)
-                )
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = CfRed)
             ) {
                 Icon(
                     imageVector        = Icons.Default.LockOpen,
@@ -356,42 +349,18 @@ private fun StatusCard(
     onDismissBlock: () -> Unit
 ) {
     val (bgColor, textColor, title, subtitle) = when (classifyState) {
-        is ClassifyState.Idle -> StatusInfo(
-            bg    = Color(0xFF1E3A5F),
-            text  = Color(0xFF90CAF9),
-            title = "Watching...",
-            sub   = "Waiting for YouTube activity"
-        )
-        is ClassifyState.Analyzing -> StatusInfo(
-            bg    = Color(0xFF1E3A5F),
-            text  = Color(0xFFFFD54F),
-            title = "Analyzing",
-            sub   = classifyState.videoId.take(60)
-        )
-        is ClassifyState.Allowed -> StatusInfo(
-            bg    = Color(0xFF1B3A2A),
-            text  = Color(0xFF81C784),
-            title = "✓ ${classifyState.label}",
-            sub   = "Content is safe"
-        )
-        is ClassifyState.Error -> StatusInfo(
-            bg    = Color(0xFF2A1A3E),
-            text  = Color(0xFFCE93D8),
-            title = "⚠ Classification Error",
-            sub   = classifyState.videoId.take(60)
-        )
-        is ClassifyState.Blocked -> StatusInfo(
-            bg    = Color(0xFF3E1A1A),
-            text  = Color(0xFFEF9A9A),
-            title = "⛔ Overstimulating Content Blocked",
-            sub   = "Score: ${"%.2f".format(classifyState.score)}"
-        )
+        is ClassifyState.Idle      -> StatusInfo(CfIdleBg,      CfIdleText,      "Watching…",                        "Waiting for YouTube activity")
+        is ClassifyState.Analyzing -> StatusInfo(CfAnalyzingBg, CfAnalyzingText, "Analyzing",                        classifyState.videoId.take(60))
+        is ClassifyState.Allowed   -> StatusInfo(CfAllowedBg,   CfAllowedText,   "✓ ${classifyState.label}",         "Content is safe")
+        is ClassifyState.Error     -> StatusInfo(CfErrorBg,     CfErrorText,     "⚠ Classification Error",           classifyState.videoId.take(60))
+        is ClassifyState.Blocked   -> StatusInfo(CfBlockedBg,   CfBlockedText,   "⛔ Overstimulating Content Blocked","Score: ${"%.2f".format(classifyState.score)}")
     }
 
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape    = RoundedCornerShape(16.dp),
-        color    = bgColor
+    Card(
+        modifier  = Modifier.fillMaxWidth(),
+        shape     = RoundedCornerShape(16.dp),
+        colors    = CardDefaults.cardColors(containerColor = bgColor),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier            = Modifier.padding(20.dp),
@@ -416,7 +385,7 @@ private fun StatusCard(
             if (classifyState is ClassifyState.Blocked) {
                 Spacer(modifier = Modifier.height(4.dp))
                 TextButton(onClick = onDismissBlock) {
-                    Text("Dismiss", color = Color(0xFFEF9A9A))
+                    Text("Dismiss", color = CfRed, fontWeight = FontWeight.SemiBold)
                 }
             }
         }

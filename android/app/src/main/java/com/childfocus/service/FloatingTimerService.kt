@@ -1,7 +1,6 @@
 package com.childfocus.service
 
 import android.app.*
-import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.*
@@ -79,10 +78,12 @@ class FloatingTimerService : Service() {
 
         val notification = NotificationCompat.Builder(this, channelId)
             .setContentTitle("Screen Time Running")
+            .setContentText("ChildFocus is monitoring screen time")
             .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
+            .setOngoing(true) // Persistent — cannot be dismissed by the user
             .build()
 
-        startForeground(1, notification)
+        startForeground(2, notification)
     }
 
     private fun showBlockOverlay() {
@@ -106,23 +107,54 @@ class FloatingTimerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val minutes = intent?.getIntExtra("limit", 1) ?: 1
-
-        timeLeftMillis = if (minutes == -1) {
-            10_000L
-        } else {
-            minutes * 60 * 1000L
+        // Only read the extra when it's a fresh start, not a system restart.
+        // On system restart (intent == null), timeLeftMillis stays at whatever
+        // it was before — ideally you'd persist it to SharedPreferences for
+        // a perfect resume, but this prevents an instant crash-restart loop.
+        intent?.let {
+            val minutes = it.getIntExtra("limit", 1)
+            timeLeftMillis = if (minutes == -1) 10_000L else minutes * 60 * 1000L
         }
 
+        handler.removeCallbacks(updateRunnable)
         handler.post(updateRunnable)
 
-        return START_NOT_STICKY
+        // START_STICKY → Android will restart this service automatically if
+        // the system kills it (e.g. low memory). Combined with stopWithTask="false"
+        // in the manifest this also survives swipe-kill.
+        return START_STICKY
+    }
+
+    /**
+     * Called when the user swipes the app away from Recents.
+     * We schedule a self-restart via AlarmManager so the timer
+     * picks back up ~1 second after the swipe.
+     */
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+
+        val restartIntent = Intent(applicationContext, FloatingTimerService::class.java)
+        val pendingIntent = PendingIntent.getService(
+            applicationContext,
+            10,
+            restartIntent,
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        alarmManager.set(
+            AlarmManager.ELAPSED_REALTIME,
+            SystemClock.elapsedRealtime() + 1_000L,
+            pendingIntent
+        )
     }
 
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacks(updateRunnable)
-        if (::timerView.isInitialized) windowManager.removeView(timerView)
+        if (::timerView.isInitialized) {
+            try { windowManager.removeView(timerView) } catch (_: Exception) {}
+        }
     }
 
     override fun onBind(intent: Intent?) = null

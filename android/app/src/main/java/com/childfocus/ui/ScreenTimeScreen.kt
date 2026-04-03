@@ -1,4 +1,5 @@
 package com.childfocus.ui
+
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,12 +14,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.childfocus.ui.theme.*
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
@@ -29,21 +31,21 @@ private data class AppLimit(
 )
 
 private val TRACKED_APPS = listOf(
-    AppLimit("YouTube",       "com.google.android.youtube",       "▶"),
-    AppLimit("TikTok",        "com.zhiliaoapp.musically",         "♪"),
-    AppLimit("Instagram",     "com.instagram.android",            "📷"),
-    AppLimit("Facebook",      "com.facebook.katana",              "f"),
-    AppLimit("Roblox",        "com.roblox.client",                "🎮"),
-    AppLimit("Chrome",        "com.android.chrome",               "🌐"),
-    AppLimit("Netflix",       "com.netflix.mediaclient",          "N"),
-    AppLimit("Snapchat",      "com.snapchat.android",             "👻"),
+    AppLimit("YouTube",   "com.google.android.youtube",  "▶"),
+    AppLimit("TikTok",    "com.zhiliaoapp.musically",    "♪"),
+    AppLimit("Instagram", "com.instagram.android",       "📷"),
+    AppLimit("Facebook",  "com.facebook.katana",         "f"),
+    AppLimit("Roblox",    "com.roblox.client",           "🎮"),
+    AppLimit("Chrome",    "com.android.chrome",          "🌐"),
+    AppLimit("Netflix",   "com.netflix.mediaclient",     "N"),
+    AppLimit("Snapchat",  "com.snapchat.android",        "👻"),
 )
 
 private const val SCREEN_TIME_PREFS_NAME = "screen_time_prefs"
 private const val KEY_TOTAL_LIMIT        = "total_daily_limit_minutes"
 
-private fun limitKey(pkg: String)    = "limit_$pkg"
-private fun enabledKey(pkg: String)  = "enabled_$pkg"
+private fun limitKey(pkg: String)   = "limit_$pkg"
+private fun enabledKey(pkg: String) = "enabled_$pkg"
 
 private fun getPrefs(context: Context) =
     context.getSharedPreferences(SCREEN_TIME_PREFS_NAME, Context.MODE_PRIVATE)
@@ -67,13 +69,8 @@ private fun setAppLimitEnabled(context: Context, pkg: String, enabled: Boolean) 
     getPrefs(context).edit().putBoolean(enabledKey(pkg), enabled).apply()
 
 private fun formatMinutes(minutes: Int): String {
-    val h = minutes / 60
-    val m = minutes % 60
-    return when {
-        h == 0 -> "${m}m"
-        m == 0 -> "${h}h"
-        else   -> "${h}h ${m}m"
-    }
+    val h = minutes / 60; val m = minutes % 60
+    return when { h == 0 -> "${m}m"; m == 0 -> "${h}h"; else -> "${h}h ${m}m" }
 }
 
 // ── Screen ────────────────────────────────────────────────────────────────────
@@ -85,7 +82,6 @@ fun ScreenTimeScreen() {
     var totalLimitMinutes by remember { mutableIntStateOf(getTotalLimit(context)) }
     var showTotalDialog   by remember { mutableStateOf(false) }
 
-    // Per-app state: enabled flag + limit in minutes
     val appEnabled = remember {
         mutableStateMapOf<String, Boolean>().also { map ->
             TRACKED_APPS.forEach { map[it.packageName] = isAppLimitEnabled(context, it.packageName) }
@@ -98,61 +94,64 @@ fun ScreenTimeScreen() {
     }
     var editingApp by remember { mutableStateOf<AppLimit?>(null) }
 
+    val bgGradient = Brush.verticalGradient(colors = listOf(CfBgTop, CfBgBottom))
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0D1B2A))
+            .background(bgGradient)
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         // Header
         item {
             Text(
-                text       = "⏱️ Screen Time",
+                text       = "⏱️  Screen Time",
                 fontSize   = 22.sp,
                 fontWeight = FontWeight.Bold,
-                color      = Color(0xFF4FC3F7)
+                color      = CfTextPrimary
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text     = "Set daily limits for apps on this device.",
-                color    = Color(0xFF78909C),
+                color    = CfTextSecond,
                 fontSize = 13.sp
             )
         }
 
         // Total daily limit card
         item {
-            Surface(
-                shape  = RoundedCornerShape(16.dp),
-                color  = Color(0xFF1E3A5F),
-                modifier = Modifier.fillMaxWidth()
+            Card(
+                shape     = RoundedCornerShape(16.dp),
+                colors    = CardDefaults.cardColors(containerColor = CfPurpleLight),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                modifier  = Modifier.fillMaxWidth()
             ) {
                 Row(
-                    modifier            = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
-                    verticalAlignment   = Alignment.CenterVertically,
+                    modifier              = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
+                    verticalAlignment     = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column {
                         Text(
                             text       = "Total Daily Limit",
-                            color      = Color(0xFF90CAF9),
+                            color      = CfIdleText,
                             fontWeight = FontWeight.SemiBold,
                             fontSize   = 14.sp
                         )
                         Text(
-                            text     = formatMinutes(totalLimitMinutes),
-                            color    = Color(0xFF4FC3F7),
-                            fontSize = 26.sp,
+                            text       = formatMinutes(totalLimitMinutes),
+                            color      = CfPurple,
+                            fontSize   = 26.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
                     Button(
                         onClick = { showTotalDialog = true },
-                        shape  = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4FC3F7))
+                        shape   = RoundedCornerShape(12.dp),
+                        colors  = ButtonDefaults.buttonColors(containerColor = CfPurple)
                     ) {
-                        Text("Edit", color = Color(0xFF0D1B2A), fontWeight = FontWeight.Bold)
+                        Text("Edit", color = CfTextOnDark, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -162,7 +161,7 @@ fun ScreenTimeScreen() {
         item {
             Text(
                 text       = "Per-App Limits",
-                color      = Color(0xFF78909C),
+                color      = CfTextSecond,
                 fontSize   = 12.sp,
                 fontWeight = FontWeight.SemiBold
             )
@@ -170,16 +169,15 @@ fun ScreenTimeScreen() {
 
         // App rows
         items(TRACKED_APPS, key = { it.packageName }) { app ->
-            val enabled = appEnabled[app.packageName] == true
+            val enabled  = appEnabled[app.packageName] == true
             val limitMin = appLimits[app.packageName] ?: 60
-
             AppLimitRow(
-                app      = app,
-                enabled  = enabled,
-                limitMin = limitMin,
-                onToggle = { checked ->
-                    appEnabled[app.packageName] = checked
-                    setAppLimitEnabled(context, app.packageName, checked)
+                app         = app,
+                enabled     = enabled,
+                limitMin    = limitMin,
+                onToggle    = {
+                    appEnabled[app.packageName] = it
+                    setAppLimitEnabled(context, app.packageName, it)
                 },
                 onEditClick = { editingApp = app }
             )
@@ -188,30 +186,22 @@ fun ScreenTimeScreen() {
         item { Spacer(modifier = Modifier.height(8.dp)) }
     }
 
-    // ── Total limit dialog ────────────────────────────────────────────────────
+    // Total limit dialog
     if (showTotalDialog) {
         LimitPickerDialog(
             title      = "Total Daily Limit",
             currentMin = totalLimitMinutes,
-            onConfirm  = { minutes ->
-                totalLimitMinutes = minutes
-                setTotalLimit(context, minutes)
-                showTotalDialog = false
-            },
+            onConfirm  = { minutes -> totalLimitMinutes = minutes; setTotalLimit(context, minutes); showTotalDialog = false },
             onDismiss  = { showTotalDialog = false }
         )
     }
 
-    // ── Per-app limit dialog ──────────────────────────────────────────────────
+    // Per-app limit dialog
     editingApp?.let { app ->
         LimitPickerDialog(
             title      = "${app.label} Daily Limit",
             currentMin = appLimits[app.packageName] ?: 60,
-            onConfirm  = { minutes ->
-                appLimits[app.packageName] = minutes
-                setAppLimitMinutes(context, app.packageName, minutes)
-                editingApp = null
-            },
+            onConfirm  = { minutes -> appLimits[app.packageName] = minutes; setAppLimitMinutes(context, app.packageName, minutes); editingApp = null },
             onDismiss  = { editingApp = null }
         )
     }
@@ -227,19 +217,25 @@ private fun AppLimitRow(
     onToggle: (Boolean) -> Unit,
     onEditClick: () -> Unit
 ) {
-    Surface(
+    Card(
         shape    = RoundedCornerShape(12.dp),
-        color    = if (enabled) Color(0xFF1E3A5F) else Color(0xFF162030),
+        colors   = CardDefaults.cardColors(
+            containerColor = if (enabled) CfSurface else CfSurfaceMuted
+        ),
+        border   = androidx.compose.foundation.BorderStroke(
+            width = 1.dp,
+            color = if (enabled) CfPurple.copy(alpha = 0.2f) else CfBorder
+        ),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
             modifier          = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // App icon placeholder
+            // App icon
             Surface(
-                shape  = RoundedCornerShape(8.dp),
-                color  = Color(0xFF0D2137),
+                shape    = RoundedCornerShape(8.dp),
+                color    = if (enabled) CfPurpleLight else CfSurfaceMuted,
                 modifier = Modifier.size(40.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
@@ -253,43 +249,39 @@ private fun AppLimitRow(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text       = app.label,
-                    color      = if (enabled) Color.White else Color(0xFF546E7A),
+                    color      = if (enabled) CfTextPrimary else CfTextSecond,
                     fontWeight = FontWeight.SemiBold,
                     fontSize   = 14.sp
                 )
                 if (enabled) {
                     Row(
-                        verticalAlignment    = Alignment.CenterVertically,
+                        verticalAlignment     = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Icon(
                             imageVector        = Icons.Default.Timer,
                             contentDescription = null,
-                            tint               = Color(0xFF4FC3F7),
+                            tint               = CfPurple,
                             modifier           = Modifier.size(12.dp)
                         )
                         Text(
                             text     = formatMinutes(limitMin) + " / day",
-                            color    = Color(0xFF4FC3F7),
+                            color    = CfPurple,
                             fontSize = 12.sp
                         )
                     }
                 } else {
-                    Text(
-                        text     = "No limit",
-                        color    = Color(0xFF3D5A73),
-                        fontSize = 12.sp
-                    )
+                    Text(text = "No limit", color = CfTextHint, fontSize = 12.sp)
                 }
             }
 
-            // Edit button (only when enabled)
+            // Edit button
             if (enabled) {
                 TextButton(
-                    onClick      = onEditClick,
+                    onClick        = onEditClick,
                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
                 ) {
-                    Text("Edit", color = Color(0xFF4FC3F7), fontSize = 12.sp)
+                    Text("Edit", color = CfPurple, fontSize = 12.sp)
                 }
             }
 
@@ -298,10 +290,10 @@ private fun AppLimitRow(
                 checked         = enabled,
                 onCheckedChange = onToggle,
                 colors          = SwitchDefaults.colors(
-                    checkedThumbColor   = Color(0xFF0D1B2A),
-                    checkedTrackColor   = Color(0xFF4FC3F7),
-                    uncheckedThumbColor = Color(0xFF546E7A),
-                    uncheckedTrackColor = Color(0xFF1E2D3D)
+                    checkedThumbColor   = CfTextOnDark,
+                    checkedTrackColor   = CfGreen,
+                    uncheckedThumbColor = CfTextHint,
+                    uncheckedTrackColor = CfBorder
                 )
             )
         }
@@ -317,65 +309,50 @@ private fun LimitPickerDialog(
     onConfirm: (Int) -> Unit,
     onDismiss: () -> Unit
 ) {
-    // Preset options in minutes
     val presets = listOf(-1, 15, 30, 45, 60, 90, 120, 180, 240)
-
     var selected by remember {
-        mutableIntStateOf(
-            if (currentMin in presets) currentMin else presets[4]
-        )
+        mutableIntStateOf(if (currentMin in presets) currentMin else presets[4])
     }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor   = Color(0xFF0D2137),
+        containerColor   = CfDialogBg,
         title = {
             Text(
                 text       = title,
-                color      = Color(0xFF4FC3F7),
+                color      = CfTextPrimary,
                 fontWeight = FontWeight.Bold,
                 fontSize   = 16.sp
             )
         },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(
-                    text     = "Choose a daily time limit:",
-                    color    = Color(0xFF90CAF9),
-                    fontSize = 13.sp
-                )
+                Text(text = "Choose a daily time limit:", color = CfTextSecond, fontSize = 13.sp)
                 Spacer(modifier = Modifier.height(4.dp))
-
-                // Grid of preset chips
                 presets.chunked(4).forEach { row ->
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.fillMaxWidth()
+                        modifier              = Modifier.fillMaxWidth()
                     ) {
                         row.forEach { preset ->
                             val isSelected = selected == preset
-
                             Surface(
                                 onClick  = { selected = preset },
                                 shape    = RoundedCornerShape(8.dp),
-                                color    = if (isSelected) Color(0xFF4FC3F7) else Color(0xFF1E3A5F),
+                                color    = if (isSelected) CfPurple else CfPurpleLight,
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Text(
-                                    text = if (preset == -1) "10s" else formatMinutes(preset),
-                                    color = if (isSelected) Color(0xFF0D1B2A) else Color(0xFF90CAF9),
-                                    fontSize = 12.sp,
+                                    text       = if (preset == -1) "10s" else formatMinutes(preset),
+                                    color      = if (isSelected) CfTextOnDark else CfIdleText,
+                                    fontSize   = 12.sp,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                    textAlign = TextAlign.Center,
-                                    modifier = Modifier.padding(vertical = 10.dp)
+                                    textAlign  = TextAlign.Center,
+                                    modifier   = Modifier.padding(vertical = 10.dp)
                                 )
                             }
                         }
-
-                        // pad last row if needed
-                        repeat(4 - row.size) {
-                            Spacer(modifier = Modifier.weight(1f))
-                        }
+                        repeat(4 - row.size) { Spacer(modifier = Modifier.weight(1f)) }
                     }
                 }
             }
@@ -383,21 +360,21 @@ private fun LimitPickerDialog(
         confirmButton = {
             Button(
                 onClick = { onConfirm(selected) },
-                colors  = ButtonDefaults.buttonColors(containerColor = Color(0xFF4FC3F7))
+                colors  = ButtonDefaults.buttonColors(containerColor = CfGreen)
             ) {
                 Icon(
                     imageVector        = Icons.Default.CheckCircle,
                     contentDescription = null,
-                    tint               = Color(0xFF0D1B2A),
+                    tint               = CfTextOnDark,
                     modifier           = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(6.dp))
-                Text("Set Limit", color = Color(0xFF0D1B2A), fontWeight = FontWeight.Bold)
+                Text("Set Limit", color = CfTextOnDark, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel", color = Color(0xFF78909C))
+                Text("Cancel", color = CfTextSecond)
             }
         }
     )
