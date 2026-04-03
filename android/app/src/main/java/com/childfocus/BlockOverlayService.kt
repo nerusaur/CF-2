@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory
 import android.graphics.PixelFormat
 import android.net.Uri
 import android.os.*
+import android.provider.Settings
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
@@ -105,7 +106,7 @@ class BlockOverlayService : Service() {
                 lastVideoId = intent.getStringExtra(EXTRA_VIDEO_ID) ?: ""
                 lastLabel   = intent.getStringExtra(EXTRA_LABEL)    ?: "Overstimulating"
                 lastScore   = intent.getFloatExtra(EXTRA_SCORE, 0f)
-                pauseYouTube()
+                closeYouTube()
                 showOverlay(lastVideoId, lastLabel, lastScore)
             }
             ACTION_HIDE -> {
@@ -155,27 +156,35 @@ class BlockOverlayService : Service() {
         )
     }
 
-    private fun pauseYouTube() {
-        val pause = Intent("com.android.music.musicservicecommand").apply {
-            putExtra("command", "pause")
+    private fun closeYouTube() {
+        // 1. Send YouTube to background by going home first
+        val homeIntent = Intent(Intent.ACTION_MAIN).apply {
+            addCategory(Intent.CATEGORY_HOME)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
-        sendBroadcast(pause)
+        startActivity(homeIntent)
 
-        val audioManager = getSystemService(Context.AUDIO_SERVICE) as android.media.AudioManager
-        val downEvent = android.view.KeyEvent(
-            android.view.KeyEvent.ACTION_DOWN,
-            android.view.KeyEvent.KEYCODE_MEDIA_PAUSE
-        )
-        val upEvent = android.view.KeyEvent(
-            android.view.KeyEvent.ACTION_UP,
-            android.view.KeyEvent.KEYCODE_MEDIA_PAUSE
-        )
-        audioManager.dispatchMediaKeyEvent(downEvent)
-        audioManager.dispatchMediaKeyEvent(upEvent)
+        // 2. Force-stop YouTube after a brief delay (gives HOME intent time to fire)
+        mainHandler.postDelayed({
+            val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as android.app.ActivityManager
+            activityManager.killBackgroundProcesses("com.google.android.youtube")
+        }, 300)
     }
 
     private fun showOverlay(videoId: String, label: String, score: Float) {
         if (overlayView != null) return
+
+        // ── FIX: guard against missing SYSTEM_ALERT_WINDOW permission ──────
+        // TYPE_APPLICATION_OVERLAY requires the user to grant "Draw over other
+        // apps" permission at runtime. Without this check, addView() throws a
+        // WindowManager$BadTokenException and the overlay silently never appears.
+        // If permission is missing, log it and bail — OverlayPermissionHelper
+        // in MainActivity should have already prompted the user for this.
+        if (!Settings.canDrawOverlays(this)) {
+            println("[BlockOverlay] ✗ SYSTEM_ALERT_WINDOW not granted — overlay skipped. " +
+                    "Ensure OverlayPermissionHelper.requestIfNeeded() is called from MainActivity.")
+            return
+        }
 
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
@@ -220,7 +229,15 @@ class BlockOverlayService : Service() {
             }
         }
 
-        windowManager.addView(overlayView, params)
+        try {
+            windowManager.addView(overlayView, params)
+        } catch (e: Exception) {
+            // Catch any remaining WindowManager exceptions (e.g. permission
+            // revoked between the check above and addView()) so the service
+            // doesn't crash the whole app.
+            println("[BlockOverlay] ✗ addView failed: ${e.message}")
+            overlayView = null
+        }
     }
 
     private fun openRecommendedVideoClean(title: String) {
