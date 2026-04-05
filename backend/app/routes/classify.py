@@ -80,14 +80,30 @@ def _fetch_metadata_only(video_url: str) -> dict:
         with yt_dlp.YoutubeDL({"quiet": True, "no_warnings": True,
                                 "skip_download": True}) as ydl:
             info = ydl.extract_info(video_url, download=False)
-        return {
-            "title":       info.get("title", ""),
-            "tags":        info.get("tags", []) or [],
-            "description": info.get("description", "") or "",
-        }
+        ydlp_tags = info.get("tags", []) or []
     except Exception as e:
-        print(f"[META] ✗ {e}")
-        return {"title": "", "tags": [], "description": ""}
+        print(f"[META] ✗ yt-dlp failed: {e}")
+        info      = {}
+        ydlp_tags = []
+
+    # Scrape ytInitialData for hidden keywords — often richer than yt-dlp tags
+    try:
+        from app.modules.youtube_api import scrape_ytInitialData_keywords, _merge_tags
+        vid_id        = extract_video_id(video_url)
+        scraped_tags  = scrape_ytInitialData_keywords(vid_id)
+        merged_tags   = _merge_tags(ydlp_tags, scraped_tags)
+        if scraped_tags:
+            added = len(merged_tags) - len(ydlp_tags)
+            print(f"[META] ytInitialData: {len(ydlp_tags)} yt-dlp tags + {added} new scraped = {len(merged_tags)} total")
+    except Exception as e:
+        print(f"[META] ✗ Keyword scrape failed: {e}")
+        merged_tags = ydlp_tags
+
+    return {
+        "title":       info.get("title", ""),
+        "tags":        merged_tags,
+        "description": info.get("description", "") or "",
+    }
 
 
 def _save_to_db(result: dict):
