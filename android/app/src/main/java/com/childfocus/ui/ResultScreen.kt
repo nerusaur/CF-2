@@ -17,6 +17,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.childfocus.ui.theme.*
 
+// ── Backend thresholds — MUST stay in sync with classify.py ──────────────────
+// classify.py: THRESHOLD_BLOCK = 0.20, THRESHOLD_ALLOW = 0.18
+// The score bar color must reflect the same boundaries used by the backend
+// to decide the label, so the visual feedback matches what was actually decided.
+private const val SCORE_BLOCK = 0.20f   // >= 0.20 → Overstimulating (Red)
+private const val SCORE_ALLOW = 0.18f   // <= 0.18 → Educational      (Green)
+// 0.18 < score < 0.20 → Neutral (Amber)
+
 @Composable
 fun ResultScreen(
     videoId: String,
@@ -76,6 +84,11 @@ fun ResultScreen(
             }
 
             // Score bar
+            // FIX: bar color thresholds now match backend classify.py exactly.
+            // Old values (0.75 / 0.35) were from the original thesis config —
+            // the current backend uses 0.20 (block) / 0.18 (allow).
+            // A video blocked by the backend (score >= 0.20) now shows RED,
+            // not misleadingly green or amber.
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text     = "Overstimulation Index",
@@ -88,9 +101,9 @@ fun ResultScreen(
                     progress    = { score.coerceIn(0f, 1f) },
                     modifier    = Modifier.fillMaxWidth().height(10.dp),
                     color       = when {
-                        score >= 0.75f -> CfRed
-                        score <= 0.35f -> CfGreen
-                        else           -> CfAmber
+                        score >= SCORE_BLOCK -> CfRed    // Overstimulating (>= 0.20)
+                        score <= SCORE_ALLOW -> CfGreen  // Educational     (<= 0.18)
+                        else                 -> CfAmber  // Neutral         (0.18–0.20)
                     },
                     trackColor  = CfBorder
                 )
@@ -99,9 +112,9 @@ fun ResultScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("Safe",    color = CfGreen,   fontSize = 11.sp, fontWeight = FontWeight.Medium)
-                    Text("Neutral", color = CfAmber,   fontSize = 11.sp, fontWeight = FontWeight.Medium)
-                    Text("Block",   color = CfRed,     fontSize = 11.sp, fontWeight = FontWeight.Medium)
+                    Text("Safe (≤0.18)",    color = CfGreen, fontSize = 11.sp, fontWeight = FontWeight.Medium)
+                    Text("Neutral",         color = CfAmber, fontSize = 11.sp, fontWeight = FontWeight.Medium)
+                    Text("Block (≥0.20)",   color = CfRed,   fontSize = 11.sp, fontWeight = FontWeight.Medium)
                 }
             }
 

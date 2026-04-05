@@ -1073,7 +1073,9 @@
 │   │   │   │       │   │   │       ├── internal-name-to-source.tab.keystream
 │   │   │   │       │   │   │       ├── internal-name-to-source.tab.keystream.len
 │   │   │   │       │   │   │       ├── internal-name-to-source.tab.len
+│   │   │   │       │   │   │       ├── internal-name-to-source.tab.values
 │   │   │   │       │   │   │       ├── internal-name-to-source.tab.values.at
+│   │   │   │       │   │   │       ├── internal-name-to-source.tab.values.s
 │   │   │   │       │   │   │       ├── package-parts.tab
 │   │   │   │       │   │   │       ├── package-parts.tab_i
 │   │   │   │       │   │   │       ├── package-parts.tab_i.len
@@ -1096,7 +1098,9 @@
 │   │   │   │       │   │   │       ├── source-to-classes.tab.keystream
 │   │   │   │       │   │   │       ├── source-to-classes.tab.keystream.len
 │   │   │   │       │   │   │       ├── source-to-classes.tab.len
+│   │   │   │       │   │   │       ├── source-to-classes.tab.values
 │   │   │   │       │   │   │       ├── source-to-classes.tab.values.at
+│   │   │   │       │   │   │       ├── source-to-classes.tab.values.s
 │   │   │   │       │   │   │       ├── subtypes.tab
 │   │   │   │       │   │   │       ├── subtypes.tab_i
 │   │   │   │       │   │   │       ├── subtypes.tab_i.len
@@ -2668,4 +2672,4 @@
 ├── setup.sh
 └── structure.txt
 
-585 directories, 2084 files
+585 directories, 2088 files

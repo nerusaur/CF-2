@@ -1,5 +1,5 @@
 ChildFocus — Full Hybrid Evaluation Report  (v4 — test_clean, enriched NB)
-Generated   : 2026-04-06 04:12:10.053922
+Generated   : 2026-04-06 06:42:09.364814
 Source      : test_clean.csv (NB held-out split, no contamination)
 Fusion      : v3 confidence-gated (matches classify.py)
 BASE_ALPHA  : 0.4 (when NB conf >= 0.4)

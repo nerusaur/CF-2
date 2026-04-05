@@ -35,7 +35,8 @@ class ChildFocusAccessibilityService : AccessibilityService() {
         //        private const val FLASK_PORT = 443
         private const val FLASK_HOST = "192.168.100.228"
         private const val FLASK_PORT = 5000
-        private const val BASE_URL   = "https://$FLASK_HOST"
+        private const val BASE_URL = "http://$FLASK_HOST:$FLASK_PORT"
+
         private const val TITLE_RESET_MS = 5 * 60 * 1000L
         private const val DEBOUNCE_MS = 1500L
 

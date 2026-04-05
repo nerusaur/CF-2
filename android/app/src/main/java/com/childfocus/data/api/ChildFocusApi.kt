@@ -2,6 +2,7 @@ package com.childfocus.data.api
 
 import retrofit2.http.Body
 import retrofit2.http.POST
+import com.google.gson.annotations.SerializedName
 
 // ── Response models ───────────────────────────────────────────────────────────
 
@@ -31,9 +32,16 @@ data class HeuristicDetails(
 )
 
 data class NbDetails(
+    // FIX: backend sends key "predicted", not "predicted_label"
+    // Without @SerializedName, Gson looks for "predicted_label" in the JSON
+    // and always returns the default empty string.
+    @SerializedName("predicted")
     val predicted_label: String             = "",
-    val score_nb:        Float              = 0f,
     val confidence:      Float              = 0f,
+    // NOTE: backend classify_full sends score_nb at the top level of the
+    // response, not inside nb_details. probabilities is only present in
+    // the NB-only fallback path. Both fields are safe to keep as defaults.
+    val score_nb:        Float              = 0f,
     val probabilities:   Map<String, Float> = emptyMap(),
 )
 
@@ -55,6 +63,9 @@ data class FullAnalysisResponse(
 // ── API interface ─────────────────────────────────────────────────────────────
 
 interface ChildFocusApi {
+    // classifyFast body stays Map<String, String> — VideoRepository joins
+    // tags as a space-separated string before building the map so the type
+    // stays Map<String, String> throughout (see VideoRepository.classifyFast).
     @POST("classify_fast")
     suspend fun classifyFast(@Body body: Map<String, String>): ClassifyResponse
 
