@@ -41,6 +41,10 @@ class VideoRepository {
     /**
      * Quick metadata-only classification (title / tags / description).
      * Returns near-instantly — good for a pre-check before calling classifyFull.
+     *
+     * Tags are now included in the request body so the backend's build_nb_text()
+     * receives the same inputs used during training (title × 3 + tags + description[:300]).
+     * This makes Score_NB fully deterministic: same video → same label, every time.
      */
     suspend fun classifyFast(
         title: String,
@@ -50,6 +54,7 @@ class VideoRepository {
         mapOf(
             "title"       to title,
             "description" to description,
+            "tags"        to tags,          // ← tags now sent to match training formula
         )
     )
 

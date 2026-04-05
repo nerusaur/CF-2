@@ -1,0 +1,2669 @@
+.
+├── android
+│   ├── app
+│   │   ├── build
+│   │   │   ├── generated
+│   │   │   │   └── res
+│   │   │   │       ├── pngs
+│   │   │   │       │   └── debug
+│   │   │   │       └── resValues
+│   │   │   │           └── debug
+│   │   │   ├── intermediates
+│   │   │   │   ├── aar_metadata_check
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── checkDebugAarMetadata
+│   │   │   │   ├── annotation_processor_list
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── javaPreCompileDebug
+│   │   │   │   │           └── annotationProcessors.json
+│   │   │   │   ├── apk
+│   │   │   │   │   └── debug
+│   │   │   │   │       ├── app-debug.apk
+│   │   │   │   │       └── output-metadata.json
+│   │   │   │   ├── apk_ide_redirect_file
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── createDebugApkListingFileRedirect
+│   │   │   │   │           └── redirect.txt
+│   │   │   │   ├── app_metadata
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── writeDebugAppMetadata
+│   │   │   │   │           └── app-metadata.properties
+│   │   │   │   ├── assets
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── mergeDebugAssets
+│   │   │   │   │           └── nb_model.tflite
+│   │   │   │   ├── compatible_screen_manifest
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── createDebugCompatibleScreenManifests
+│   │   │   │   │           └── output-metadata.json
+│   │   │   │   ├── compile_and_runtime_not_namespaced_r_class_jar
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── processDebugResources
+│   │   │   │   │           └── R.jar
+│   │   │   │   ├── compressed_assets
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── compressDebugAssets
+│   │   │   │   │           └── out
+│   │   │   │   │               └── assets
+│   │   │   │   │                   └── nb_model.tflite.jar
+│   │   │   │   ├── data_binding_layout_info_type_merge
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── mergeDebugResources
+│   │   │   │   │           └── out
+│   │   │   │   ├── data_binding_layout_info_type_package
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── packageDebugResources
+│   │   │   │   │           └── out
+│   │   │   │   ├── desugar_graph
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── dexBuilderDebug
+│   │   │   │   │           └── out
+│   │   │   │   │               ├── currentProject
+│   │   │   │   │               │   ├── dirs_bucket_0
+│   │   │   │   │               │   │   └── graph.bin
+│   │   │   │   │               │   ├── dirs_bucket_1
+│   │   │   │   │               │   │   └── graph.bin
+│   │   │   │   │               │   ├── jar_71115146c19b2bc0096c3d6afc16f96b3b72ad44e474237ce03c6363635e783e_bucket_0
+│   │   │   │   │               │   │   └── graph.bin
+│   │   │   │   │               │   └── jar_71115146c19b2bc0096c3d6afc16f96b3b72ad44e474237ce03c6363635e783e_bucket_1
+│   │   │   │   │               │       └── graph.bin
+│   │   │   │   │               ├── externalLibs
+│   │   │   │   │               ├── mixedScopes
+│   │   │   │   │               └── otherProjects
+│   │   │   │   ├── dex
+│   │   │   │   │   └── debug
+│   │   │   │   │       ├── mergeExtDexDebug
+│   │   │   │   │       │   ├── classes2.dex
+│   │   │   │   │       │   └── classes.dex
+│   │   │   │   │       ├── mergeLibDexDebug
+│   │   │   │   │       │   ├── 0
+│   │   │   │   │       │   ├── 1
+│   │   │   │   │       │   ├── 10
+│   │   │   │   │       │   ├── 11
+│   │   │   │   │       │   ├── 12
+│   │   │   │   │       │   ├── 13
+│   │   │   │   │       │   ├── 14
+│   │   │   │   │       │   ├── 15
+│   │   │   │   │       │   ├── 2
+│   │   │   │   │       │   ├── 3
+│   │   │   │   │       │   ├── 4
+│   │   │   │   │       │   ├── 5
+│   │   │   │   │       │   ├── 6
+│   │   │   │   │       │   ├── 7
+│   │   │   │   │       │   ├── 8
+│   │   │   │   │       │   └── 9
+│   │   │   │   │       └── mergeProjectDexDebug
+│   │   │   │   │           ├── 0
+│   │   │   │   │           │   └── classes.dex
+│   │   │   │   │           ├── 1
+│   │   │   │   │           ├── 10
+│   │   │   │   │           ├── 11
+│   │   │   │   │           │   └── classes.dex
+│   │   │   │   │           ├── 12
+│   │   │   │   │           │   └── classes.dex
+│   │   │   │   │           ├── 13
+│   │   │   │   │           │   └── classes.dex
+│   │   │   │   │           ├── 14
+│   │   │   │   │           ├── 15
+│   │   │   │   │           │   └── classes.dex
+│   │   │   │   │           ├── 2
+│   │   │   │   │           ├── 3
+│   │   │   │   │           │   └── classes.dex
+│   │   │   │   │           ├── 4
+│   │   │   │   │           ├── 5
+│   │   │   │   │           ├── 6
+│   │   │   │   │           │   └── classes.dex
+│   │   │   │   │           ├── 7
+│   │   │   │   │           │   └── classes.dex
+│   │   │   │   │           ├── 8
+│   │   │   │   │           └── 9
+│   │   │   │   │               └── classes.dex
+│   │   │   │   ├── dex_archive_input_jar_hashes
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── dexBuilderDebug
+│   │   │   │   │           └── out
+│   │   │   │   ├── dex_number_of_buckets_file
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── dexBuilderDebug
+│   │   │   │   │           └── out
+│   │   │   │   ├── duplicate_classes_check
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── checkDebugDuplicateClasses
+│   │   │   │   ├── external_file_lib_dex_archives
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── desugarDebugFileDependencies
+│   │   │   │   ├── external_libs_dex_archive
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── dexBuilderDebug
+│   │   │   │   │           └── out
+│   │   │   │   ├── external_libs_dex_archive_with_artifact_transforms
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── dexBuilderDebug
+│   │   │   │   │           └── out
+│   │   │   │   ├── global_synthetics_dex
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── mergeDebugGlobalSynthetics
+│   │   │   │   ├── global_synthetics_external_lib
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── dexBuilderDebug
+│   │   │   │   │           └── out
+│   │   │   │   ├── global_synthetics_external_libs_artifact_transform
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── dexBuilderDebug
+│   │   │   │   │           └── out
+│   │   │   │   ├── global_synthetics_file_lib
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── desugarDebugFileDependencies
+│   │   │   │   ├── global_synthetics_mixed_scope
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── dexBuilderDebug
+│   │   │   │   │           └── out
+│   │   │   │   ├── global_synthetics_project
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── dexBuilderDebug
+│   │   │   │   │           └── out
+│   │   │   │   ├── global_synthetics_subproject
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── dexBuilderDebug
+│   │   │   │   │           └── out
+│   │   │   │   ├── incremental
+│   │   │   │   │   ├── debug
+│   │   │   │   │   │   ├── mergeDebugResources
+│   │   │   │   │   │   │   ├── compile-file-map.properties
+│   │   │   │   │   │   │   ├── merged.dir
+│   │   │   │   │   │   │   │   ├── values
+│   │   │   │   │   │   │   │   │   └── values.xml
+│   │   │   │   │   │   │   │   ├── values-af
+│   │   │   │   │   │   │   │   │   └── values-af.xml
+│   │   │   │   │   │   │   │   ├── values-am
+│   │   │   │   │   │   │   │   │   └── values-am.xml
+│   │   │   │   │   │   │   │   ├── values-ar
+│   │   │   │   │   │   │   │   │   └── values-ar.xml
+│   │   │   │   │   │   │   │   ├── values-as
+│   │   │   │   │   │   │   │   │   └── values-as.xml
+│   │   │   │   │   │   │   │   ├── values-az
+│   │   │   │   │   │   │   │   │   └── values-az.xml
+│   │   │   │   │   │   │   │   ├── values-be
+│   │   │   │   │   │   │   │   │   └── values-be.xml
+│   │   │   │   │   │   │   │   ├── values-bg
+│   │   │   │   │   │   │   │   │   └── values-bg.xml
+│   │   │   │   │   │   │   │   ├── values-bn
+│   │   │   │   │   │   │   │   │   └── values-bn.xml
+│   │   │   │   │   │   │   │   ├── values-bs
+│   │   │   │   │   │   │   │   │   └── values-bs.xml
+│   │   │   │   │   │   │   │   ├── values-b+sr+Latn
+│   │   │   │   │   │   │   │   │   └── values-b+sr+Latn.xml
+│   │   │   │   │   │   │   │   ├── values-ca
+│   │   │   │   │   │   │   │   │   └── values-ca.xml
+│   │   │   │   │   │   │   │   ├── values-cs
+│   │   │   │   │   │   │   │   │   └── values-cs.xml
+│   │   │   │   │   │   │   │   ├── values-da
+│   │   │   │   │   │   │   │   │   └── values-da.xml
+│   │   │   │   │   │   │   │   ├── values-de
+│   │   │   │   │   │   │   │   │   └── values-de.xml
+│   │   │   │   │   │   │   │   ├── values-el
+│   │   │   │   │   │   │   │   │   └── values-el.xml
+│   │   │   │   │   │   │   │   ├── values-en-rAU
+│   │   │   │   │   │   │   │   │   └── values-en-rAU.xml
+│   │   │   │   │   │   │   │   ├── values-en-rCA
+│   │   │   │   │   │   │   │   │   └── values-en-rCA.xml
+│   │   │   │   │   │   │   │   ├── values-en-rGB
+│   │   │   │   │   │   │   │   │   └── values-en-rGB.xml
+│   │   │   │   │   │   │   │   ├── values-en-rIN
+│   │   │   │   │   │   │   │   │   └── values-en-rIN.xml
+│   │   │   │   │   │   │   │   ├── values-en-rXC
+│   │   │   │   │   │   │   │   │   └── values-en-rXC.xml
+│   │   │   │   │   │   │   │   ├── values-es
+│   │   │   │   │   │   │   │   │   └── values-es.xml
+│   │   │   │   │   │   │   │   ├── values-es-rUS
+│   │   │   │   │   │   │   │   │   └── values-es-rUS.xml
+│   │   │   │   │   │   │   │   ├── values-et
+│   │   │   │   │   │   │   │   │   └── values-et.xml
+│   │   │   │   │   │   │   │   ├── values-eu
+│   │   │   │   │   │   │   │   │   └── values-eu.xml
+│   │   │   │   │   │   │   │   ├── values-fa
+│   │   │   │   │   │   │   │   │   └── values-fa.xml
+│   │   │   │   │   │   │   │   ├── values-fi
+│   │   │   │   │   │   │   │   │   └── values-fi.xml
+│   │   │   │   │   │   │   │   ├── values-fr
+│   │   │   │   │   │   │   │   │   └── values-fr.xml
+│   │   │   │   │   │   │   │   ├── values-fr-rCA
+│   │   │   │   │   │   │   │   │   └── values-fr-rCA.xml
+│   │   │   │   │   │   │   │   ├── values-gl
+│   │   │   │   │   │   │   │   │   └── values-gl.xml
+│   │   │   │   │   │   │   │   ├── values-gu
+│   │   │   │   │   │   │   │   │   └── values-gu.xml
+│   │   │   │   │   │   │   │   ├── values-hi
+│   │   │   │   │   │   │   │   │   └── values-hi.xml
+│   │   │   │   │   │   │   │   ├── values-hr
+│   │   │   │   │   │   │   │   │   └── values-hr.xml
+│   │   │   │   │   │   │   │   ├── values-hu
+│   │   │   │   │   │   │   │   │   └── values-hu.xml
+│   │   │   │   │   │   │   │   ├── values-hy
+│   │   │   │   │   │   │   │   │   └── values-hy.xml
+│   │   │   │   │   │   │   │   ├── values-in
+│   │   │   │   │   │   │   │   │   └── values-in.xml
+│   │   │   │   │   │   │   │   ├── values-is
+│   │   │   │   │   │   │   │   │   └── values-is.xml
+│   │   │   │   │   │   │   │   ├── values-it
+│   │   │   │   │   │   │   │   │   └── values-it.xml
+│   │   │   │   │   │   │   │   ├── values-iw
+│   │   │   │   │   │   │   │   │   └── values-iw.xml
+│   │   │   │   │   │   │   │   ├── values-ja
+│   │   │   │   │   │   │   │   │   └── values-ja.xml
+│   │   │   │   │   │   │   │   ├── values-ka
+│   │   │   │   │   │   │   │   │   └── values-ka.xml
+│   │   │   │   │   │   │   │   ├── values-kk
+│   │   │   │   │   │   │   │   │   └── values-kk.xml
+│   │   │   │   │   │   │   │   ├── values-km
+│   │   │   │   │   │   │   │   │   └── values-km.xml
+│   │   │   │   │   │   │   │   ├── values-kn
+│   │   │   │   │   │   │   │   │   └── values-kn.xml
+│   │   │   │   │   │   │   │   ├── values-ko
+│   │   │   │   │   │   │   │   │   └── values-ko.xml
+│   │   │   │   │   │   │   │   ├── values-ky
+│   │   │   │   │   │   │   │   │   └── values-ky.xml
+│   │   │   │   │   │   │   │   ├── values-lo
+│   │   │   │   │   │   │   │   │   └── values-lo.xml
+│   │   │   │   │   │   │   │   ├── values-lt
+│   │   │   │   │   │   │   │   │   └── values-lt.xml
+│   │   │   │   │   │   │   │   ├── values-lv
+│   │   │   │   │   │   │   │   │   └── values-lv.xml
+│   │   │   │   │   │   │   │   ├── values-mk
+│   │   │   │   │   │   │   │   │   └── values-mk.xml
+│   │   │   │   │   │   │   │   ├── values-ml
+│   │   │   │   │   │   │   │   │   └── values-ml.xml
+│   │   │   │   │   │   │   │   ├── values-mn
+│   │   │   │   │   │   │   │   │   └── values-mn.xml
+│   │   │   │   │   │   │   │   ├── values-mr
+│   │   │   │   │   │   │   │   │   └── values-mr.xml
+│   │   │   │   │   │   │   │   ├── values-ms
+│   │   │   │   │   │   │   │   │   └── values-ms.xml
+│   │   │   │   │   │   │   │   ├── values-my
+│   │   │   │   │   │   │   │   │   └── values-my.xml
+│   │   │   │   │   │   │   │   ├── values-nb
+│   │   │   │   │   │   │   │   │   └── values-nb.xml
+│   │   │   │   │   │   │   │   ├── values-ne
+│   │   │   │   │   │   │   │   │   └── values-ne.xml
+│   │   │   │   │   │   │   │   ├── values-nl
+│   │   │   │   │   │   │   │   │   └── values-nl.xml
+│   │   │   │   │   │   │   │   ├── values-or
+│   │   │   │   │   │   │   │   │   └── values-or.xml
+│   │   │   │   │   │   │   │   ├── values-pa
+│   │   │   │   │   │   │   │   │   └── values-pa.xml
+│   │   │   │   │   │   │   │   ├── values-pl
+│   │   │   │   │   │   │   │   │   └── values-pl.xml
+│   │   │   │   │   │   │   │   ├── values-pt
+│   │   │   │   │   │   │   │   │   └── values-pt.xml
+│   │   │   │   │   │   │   │   ├── values-pt-rBR
+│   │   │   │   │   │   │   │   │   └── values-pt-rBR.xml
+│   │   │   │   │   │   │   │   ├── values-pt-rPT
+│   │   │   │   │   │   │   │   │   └── values-pt-rPT.xml
+│   │   │   │   │   │   │   │   ├── values-ro
+│   │   │   │   │   │   │   │   │   └── values-ro.xml
+│   │   │   │   │   │   │   │   ├── values-ru
+│   │   │   │   │   │   │   │   │   └── values-ru.xml
+│   │   │   │   │   │   │   │   ├── values-si
+│   │   │   │   │   │   │   │   │   └── values-si.xml
+│   │   │   │   │   │   │   │   ├── values-sk
+│   │   │   │   │   │   │   │   │   └── values-sk.xml
+│   │   │   │   │   │   │   │   ├── values-sl
+│   │   │   │   │   │   │   │   │   └── values-sl.xml
+│   │   │   │   │   │   │   │   ├── values-sq
+│   │   │   │   │   │   │   │   │   └── values-sq.xml
+│   │   │   │   │   │   │   │   ├── values-sr
+│   │   │   │   │   │   │   │   │   └── values-sr.xml
+│   │   │   │   │   │   │   │   ├── values-sv
+│   │   │   │   │   │   │   │   │   └── values-sv.xml
+│   │   │   │   │   │   │   │   ├── values-sw
+│   │   │   │   │   │   │   │   │   └── values-sw.xml
+│   │   │   │   │   │   │   │   ├── values-ta
+│   │   │   │   │   │   │   │   │   └── values-ta.xml
+│   │   │   │   │   │   │   │   ├── values-te
+│   │   │   │   │   │   │   │   │   └── values-te.xml
+│   │   │   │   │   │   │   │   ├── values-th
+│   │   │   │   │   │   │   │   │   └── values-th.xml
+│   │   │   │   │   │   │   │   ├── values-tl
+│   │   │   │   │   │   │   │   │   └── values-tl.xml
+│   │   │   │   │   │   │   │   ├── values-tr
+│   │   │   │   │   │   │   │   │   └── values-tr.xml
+│   │   │   │   │   │   │   │   ├── values-uk
+│   │   │   │   │   │   │   │   │   └── values-uk.xml
+│   │   │   │   │   │   │   │   ├── values-ur
+│   │   │   │   │   │   │   │   │   └── values-ur.xml
+│   │   │   │   │   │   │   │   ├── values-uz
+│   │   │   │   │   │   │   │   │   └── values-uz.xml
+│   │   │   │   │   │   │   │   ├── values-v16
+│   │   │   │   │   │   │   │   │   └── values-v16.xml
+│   │   │   │   │   │   │   │   ├── values-v21
+│   │   │   │   │   │   │   │   │   └── values-v21.xml
+│   │   │   │   │   │   │   │   ├── values-vi
+│   │   │   │   │   │   │   │   │   └── values-vi.xml
+│   │   │   │   │   │   │   │   ├── values-zh-rCN
+│   │   │   │   │   │   │   │   │   └── values-zh-rCN.xml
+│   │   │   │   │   │   │   │   ├── values-zh-rHK
+│   │   │   │   │   │   │   │   │   └── values-zh-rHK.xml
+│   │   │   │   │   │   │   │   ├── values-zh-rTW
+│   │   │   │   │   │   │   │   │   └── values-zh-rTW.xml
+│   │   │   │   │   │   │   │   └── values-zu
+│   │   │   │   │   │   │   │       └── values-zu.xml
+│   │   │   │   │   │   │   ├── merger.xml
+│   │   │   │   │   │   │   └── stripped.dir
+│   │   │   │   │   │   └── packageDebugResources
+│   │   │   │   │   │       ├── compile-file-map.properties
+│   │   │   │   │   │       ├── merged.dir
+│   │   │   │   │   │       ├── merger.xml
+│   │   │   │   │   │       └── stripped.dir
+│   │   │   │   │   ├── debug-mergeJavaRes
+│   │   │   │   │   │   ├── merge-state
+│   │   │   │   │   │   └── zip-cache
+│   │   │   │   │   │       ├── 0++Zt33mHMzLf62bopmRgk1V7Q4=
+│   │   │   │   │   │       ├── 18jBy3WkomFOZpfZtV9o949Ut9w=
+│   │   │   │   │   │       ├── 1Lhvxm5mU60MEYMakfGoENNimXk=
+│   │   │   │   │   │       ├── 1vd9v6SodT0O_sCpdLfCA2uKCIw=
+│   │   │   │   │   │       ├── 2ff2CGdJeCOOpiRplFGBz_IK9w4=
+│   │   │   │   │   │       ├── 46FkK6943H4aB+rWHXpOiRl6zuo=
+│   │   │   │   │   │       ├── 4Awyi5b0qJyOVpsg34Iz9Xyr_P8=
+│   │   │   │   │   │       ├── 5Ei7K9_EBhBBQzpqxfQHlGKe9PE=
+│   │   │   │   │   │       ├── 6MYIpsjqr9_6ja2yiMXhM+dsepw=
+│   │   │   │   │   │       ├── 6pLNlmqTKfqGRME1ammik5SKsyQ=
+│   │   │   │   │   │       ├── 8LdRn_+BJnBr7Xk_6T0cz+Kd9rU=
+│   │   │   │   │   │       ├── 8sgx_ztOqfa1i6e+Crpli8oeEL4=
+│   │   │   │   │   │       ├── 9lRU22XyCrZhT0+NLS0uCKVwkLw=
+│   │   │   │   │   │       ├── A9dVmtHt6UAvGUgx0hb_BaNkzbs=
+│   │   │   │   │   │       ├── B1RiyoqiSYCSoijm++1sRdEeYq4=
+│   │   │   │   │   │       ├── C0TgTUhGVM1vGFT3ZEBZNvMkpfQ=
+│   │   │   │   │   │       ├── c2W6JI7L63hmu+ab05XFGfLw0oQ=
+│   │   │   │   │   │       ├── cj+FFOWNzvyRo3z2YHCP6P5PeUg=
+│   │   │   │   │   │       ├── cVALi2W26uFJbar_+yygk_16dic=
+│   │   │   │   │   │       ├── cX_Ml17xhEPX9k5YSvN0WQGXAUE=
+│   │   │   │   │   │       ├── eflnZFAxDlGF3RSKVbNT+utPn2I=
+│   │   │   │   │   │       ├── EFRjAdYz2YNKI_DPxOFM996bIio=
+│   │   │   │   │   │       ├── eOvV1+ivtQWeQ0Jc6RscvGUhxzo=
+│   │   │   │   │   │       ├── EvKvtJSIUzntUrzsUhgRUMaFu_o=
+│   │   │   │   │   │       ├── ew8GfUJbNaCUlBMN5A1igjZiv_E=
+│   │   │   │   │   │       ├── f0aFb3kIIjCBzNhk9NDGI9mHQoc=
+│   │   │   │   │   │       ├── FzufVmoDviEhb0uh5TBhkPdtbIU=
+│   │   │   │   │   │       ├── GOACkELzkod3lLvG5BMVJFQpjis=
+│   │   │   │   │   │       ├── gqb7YngIyhjmvYM0V5v3pGQi3fc=
+│   │   │   │   │   │       ├── GrPW56to7ZygdccVRYRcIY1_xmI=
+│   │   │   │   │   │       ├── h_DfRKGpi_ZiyjWQTzRqCGlM7os=
+│   │   │   │   │   │       ├── i3eHyfdBH9CSKiB_fRn33_FUMxQ=
+│   │   │   │   │   │       ├── i543oa_XNRyEptSPxzWq71pUmKw=
+│   │   │   │   │   │       ├── iuJW70R44BJgMTsyrSdhN33QmpY=
+│   │   │   │   │   │       ├── J7MEU98xCB6vv1_pv7uX+kBNMLo=
+│   │   │   │   │   │       ├── JhY2H90obnZ1hlYUz1FvmGN221U=
+│   │   │   │   │   │       ├── JulC6SlKJEmMCiWQanJzQMmwnYI=
+│   │   │   │   │   │       ├── KS5wIBg9xvvMk+pVp6hn1AxUitw=
+│   │   │   │   │   │       ├── LqztFtX3gsqmyruzYICdL8aiWpA=
+│   │   │   │   │   │       ├── M2tuAFfcYxDxxQxlcrvhKhiDnsY=
+│   │   │   │   │   │       ├── mNKWfnx6AvTLaogXOw0yd1lT36I=
+│   │   │   │   │   │       ├── nIhVFaBCsGO_syKWXsRfYINE_Vg=
+│   │   │   │   │   │       ├── +o6kwD3RYWkhg1wxsXyRaxqeybI=
+│   │   │   │   │   │       ├── O9qyLqPeNQdFjehV_2BDq7YF8fY=
+│   │   │   │   │   │       ├── omI0iugyHwp4nq4vVXFHGuOEVAU=
+│   │   │   │   │   │       ├── OmWvpKHHeBdk4fJmrFdxklct8cA=
+│   │   │   │   │   │       ├── ONIyOdpC0yOxBXx50DFFPhT0f5Y=
+│   │   │   │   │   │       ├── OoSquCOErkpdAzkZNSiVnHkTHik=
+│   │   │   │   │   │       ├── p6d+DxfzxrZ+r5kxsL+r73oCfKE=
+│   │   │   │   │   │       ├── pFvHIixwF0dk8Ry7sxhM4h7_hyg=
+│   │   │   │   │   │       ├── pPKHeykIxMc9DcuXKP1GVnyCyH4=
+│   │   │   │   │   │       ├── PYsAu+_0FLJtAe26AxehQvw9SG8=
+│   │   │   │   │   │       ├── q_mE6f7Q9i8_ZBnUfSodln8Zwzo=
+│   │   │   │   │   │       ├── QSsszXzhzsPYfaFX6jU6HNIqOpk=
+│   │   │   │   │   │       ├── rhZIPhm5Am1SUDGv6fpbGMRFzjQ=
+│   │   │   │   │   │       ├── rqRmLk9flEEiJveONDBDotHp7pQ=
+│   │   │   │   │   │       ├── sfOCq7tWYq_ii0kbF256gPGnoPE=
+│   │   │   │   │   │       ├── Syp9kQViyr483Tx4nRLK12vFNaA=
+│   │   │   │   │   │       ├── TaAMb4GuWJoYsv0CxodEeR5l4uo=
+│   │   │   │   │   │       ├── tD0D8mM5YZLlTydwaoKWJQp3Jus=
+│   │   │   │   │   │       ├── U_e7TM1XEMDiHXiAnHMrgp_Sjaw=
+│   │   │   │   │   │       ├── V1yLW7zscIfgq7kiMLmyt+ld4GI=
+│   │   │   │   │   │       ├── V6NKpbXf0a8cSNZ38ZADWrJTP4g=
+│   │   │   │   │   │       ├── V7KazVrB5GyJ3pFKv9K+WJh1Z5c=
+│   │   │   │   │   │       ├── vdiq+ZPevhNn4sErzEYHvybpNUY=
+│   │   │   │   │   │       ├── vSUj65CAeG2IberlO4r46oMQqQw=
+│   │   │   │   │   │       ├── +W02z1LGSoxTiOlsgHIRDSBbwcw=
+│   │   │   │   │   │       ├── wNQ9PiYnIgRbSzsjaEHO8ny3Upo=
+│   │   │   │   │   │       ├── WUeYvG5xfpDy0ZB+wr3n7i97TAo=
+│   │   │   │   │   │       ├── wyMpXmemJdsdPZOd9MKGgUXosQM=
+│   │   │   │   │   │       ├── xBN6gA6uzlgh9Mda4zqOc7mNPhQ=
+│   │   │   │   │   │       ├── xLhJKz2E36XU8mjBJsv857mnhCw=
+│   │   │   │   │   │       ├── xPa3BMPdXN6Qz3sZMZjymo9YQs4=
+│   │   │   │   │   │       ├── xsjAOaZPcL7g1H_xVUlG5W7j2IQ=
+│   │   │   │   │   │       ├── YE0AprM6M4IMiyb5hHL+j29b5zA=
+│   │   │   │   │   │       ├── yGsVCLub7PJ16uYeAt4VtqCpTXw=
+│   │   │   │   │   │       └── yU1w2+U_OfRIN3U9cPNb4d2qtLk=
+│   │   │   │   │   ├── mergeDebugAssets
+│   │   │   │   │   │   └── merger.xml
+│   │   │   │   │   ├── mergeDebugJniLibFolders
+│   │   │   │   │   │   └── merger.xml
+│   │   │   │   │   ├── mergeDebugShaders
+│   │   │   │   │   │   └── merger.xml
+│   │   │   │   │   └── packageDebug
+│   │   │   │   │       └── tmp
+│   │   │   │   │           └── debug
+│   │   │   │   │               ├── dex-renamer-state.txt
+│   │   │   │   │               └── zip-cache
+│   │   │   │   │                   ├── androidResources
+│   │   │   │   │                   └── javaResources0
+│   │   │   │   ├── java_res
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── processDebugJavaRes
+│   │   │   │   │           └── out
+│   │   │   │   │               ├── com
+│   │   │   │   │               │   └── childfocus
+│   │   │   │   │               │       ├── data
+│   │   │   │   │               │       │   ├── api
+│   │   │   │   │               │       │   └── local
+│   │   │   │   │               │       ├── model
+│   │   │   │   │               │       ├── overlay
+│   │   │   │   │               │       ├── service
+│   │   │   │   │               │       ├── ui
+│   │   │   │   │               │       │   └── theme
+│   │   │   │   │               │       └── viewmodel
+│   │   │   │   │               └── META-INF
+│   │   │   │   │                   └── app_debug.kotlin_module
+│   │   │   │   ├── linked_resources_binary_format
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── processDebugResources
+│   │   │   │   │           ├── linked-resources-binary-format-debug.ap_
+│   │   │   │   │           └── output-metadata.json
+│   │   │   │   ├── local_only_symbol_list
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── parseDebugLocalResources
+│   │   │   │   │           └── R-def.txt
+│   │   │   │   ├── manifest_merge_blame_file
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── processDebugMainManifest
+│   │   │   │   │           └── manifest-merger-blame-debug-report.txt
+│   │   │   │   ├── merged_java_res
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── mergeDebugJavaResource
+│   │   │   │   │           └── base.jar
+│   │   │   │   ├── merged_jni_libs
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── mergeDebugJniLibFolders
+│   │   │   │   │           └── out
+│   │   │   │   ├── merged_manifest
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── processDebugMainManifest
+│   │   │   │   │           └── AndroidManifest.xml
+│   │   │   │   ├── merged_manifests
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── processDebugManifest
+│   │   │   │   │           ├── AndroidManifest.xml
+│   │   │   │   │           └── output-metadata.json
+│   │   │   │   ├── merged_res
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── mergeDebugResources
+│   │   │   │   │           ├── drawable_bg_url_pill.xml.flat
+│   │   │   │   │           ├── drawable_circle_dot.xml.flat
+│   │   │   │   │           ├── drawable_ic_childfocus_shield.xml.flat
+│   │   │   │   │           ├── drawable_ic_launcher_background.xml.flat
+│   │   │   │   │           ├── drawable_ic_launcher_foreground.xml.flat
+│   │   │   │   │           ├── layout_activity_blocked_web.xml.flat
+│   │   │   │   │           ├── layout_item_recommendation.xml.flat
+│   │   │   │   │           ├── layout_overlay_banner_stage2.xml.flat
+│   │   │   │   │           ├── layout_overlay_blocked.xml.flat
+│   │   │   │   │           ├── mipmap-anydpi-v26_ic_launcher_round.xml.flat
+│   │   │   │   │           ├── mipmap-anydpi-v26_ic_launcher.xml.flat
+│   │   │   │   │           ├── mipmap-hdpi_ic_launcher_foreground.webp.flat
+│   │   │   │   │           ├── mipmap-hdpi_ic_launcher_round.webp.flat
+│   │   │   │   │           ├── mipmap-hdpi_ic_launcher.webp.flat
+│   │   │   │   │           ├── mipmap-mdpi_ic_launcher_foreground.webp.flat
+│   │   │   │   │           ├── mipmap-mdpi_ic_launcher_round.webp.flat
+│   │   │   │   │           ├── mipmap-mdpi_ic_launcher.webp.flat
+│   │   │   │   │           ├── mipmap-xhdpi_ic_launcher_foreground.webp.flat
+│   │   │   │   │           ├── mipmap-xhdpi_ic_launcher_round.webp.flat
+│   │   │   │   │           ├── mipmap-xhdpi_ic_launcher.webp.flat
+│   │   │   │   │           ├── mipmap-xxhdpi_ic_launcher_foreground.webp.flat
+│   │   │   │   │           ├── mipmap-xxhdpi_ic_launcher_round.webp.flat
+│   │   │   │   │           ├── mipmap-xxhdpi_ic_launcher.webp.flat
+│   │   │   │   │           ├── mipmap-xxxhdpi_ic_launcher_foreground.webp.flat
+│   │   │   │   │           ├── mipmap-xxxhdpi_ic_launcher_round.webp.flat
+│   │   │   │   │           ├── mipmap-xxxhdpi_ic_launcher.webp.flat
+│   │   │   │   │           ├── values-af_values-af.arsc.flat
+│   │   │   │   │           ├── values-am_values-am.arsc.flat
+│   │   │   │   │           ├── values-ar_values-ar.arsc.flat
+│   │   │   │   │           ├── values-as_values-as.arsc.flat
+│   │   │   │   │           ├── values-az_values-az.arsc.flat
+│   │   │   │   │           ├── values-be_values-be.arsc.flat
+│   │   │   │   │           ├── values-bg_values-bg.arsc.flat
+│   │   │   │   │           ├── values-bn_values-bn.arsc.flat
+│   │   │   │   │           ├── values-b+sr+Latn_values-b+sr+Latn.arsc.flat
+│   │   │   │   │           ├── values-bs_values-bs.arsc.flat
+│   │   │   │   │           ├── values-ca_values-ca.arsc.flat
+│   │   │   │   │           ├── values-cs_values-cs.arsc.flat
+│   │   │   │   │           ├── values-da_values-da.arsc.flat
+│   │   │   │   │           ├── values-de_values-de.arsc.flat
+│   │   │   │   │           ├── values-el_values-el.arsc.flat
+│   │   │   │   │           ├── values-en-rAU_values-en-rAU.arsc.flat
+│   │   │   │   │           ├── values-en-rCA_values-en-rCA.arsc.flat
+│   │   │   │   │           ├── values-en-rGB_values-en-rGB.arsc.flat
+│   │   │   │   │           ├── values-en-rIN_values-en-rIN.arsc.flat
+│   │   │   │   │           ├── values-en-rXC_values-en-rXC.arsc.flat
+│   │   │   │   │           ├── values-es-rUS_values-es-rUS.arsc.flat
+│   │   │   │   │           ├── values-es_values-es.arsc.flat
+│   │   │   │   │           ├── values-et_values-et.arsc.flat
+│   │   │   │   │           ├── values-eu_values-eu.arsc.flat
+│   │   │   │   │           ├── values-fa_values-fa.arsc.flat
+│   │   │   │   │           ├── values-fi_values-fi.arsc.flat
+│   │   │   │   │           ├── values-fr-rCA_values-fr-rCA.arsc.flat
+│   │   │   │   │           ├── values-fr_values-fr.arsc.flat
+│   │   │   │   │           ├── values-gl_values-gl.arsc.flat
+│   │   │   │   │           ├── values-gu_values-gu.arsc.flat
+│   │   │   │   │           ├── values-hi_values-hi.arsc.flat
+│   │   │   │   │           ├── values-hr_values-hr.arsc.flat
+│   │   │   │   │           ├── values-hu_values-hu.arsc.flat
+│   │   │   │   │           ├── values-hy_values-hy.arsc.flat
+│   │   │   │   │           ├── values-in_values-in.arsc.flat
+│   │   │   │   │           ├── values-is_values-is.arsc.flat
+│   │   │   │   │           ├── values-it_values-it.arsc.flat
+│   │   │   │   │           ├── values-iw_values-iw.arsc.flat
+│   │   │   │   │           ├── values-ja_values-ja.arsc.flat
+│   │   │   │   │           ├── values-ka_values-ka.arsc.flat
+│   │   │   │   │           ├── values-kk_values-kk.arsc.flat
+│   │   │   │   │           ├── values-km_values-km.arsc.flat
+│   │   │   │   │           ├── values-kn_values-kn.arsc.flat
+│   │   │   │   │           ├── values-ko_values-ko.arsc.flat
+│   │   │   │   │           ├── values-ky_values-ky.arsc.flat
+│   │   │   │   │           ├── values-lo_values-lo.arsc.flat
+│   │   │   │   │           ├── values-lt_values-lt.arsc.flat
+│   │   │   │   │           ├── values-lv_values-lv.arsc.flat
+│   │   │   │   │           ├── values-mk_values-mk.arsc.flat
+│   │   │   │   │           ├── values-ml_values-ml.arsc.flat
+│   │   │   │   │           ├── values-mn_values-mn.arsc.flat
+│   │   │   │   │           ├── values-mr_values-mr.arsc.flat
+│   │   │   │   │           ├── values-ms_values-ms.arsc.flat
+│   │   │   │   │           ├── values-my_values-my.arsc.flat
+│   │   │   │   │           ├── values-nb_values-nb.arsc.flat
+│   │   │   │   │           ├── values-ne_values-ne.arsc.flat
+│   │   │   │   │           ├── values-nl_values-nl.arsc.flat
+│   │   │   │   │           ├── values-or_values-or.arsc.flat
+│   │   │   │   │           ├── values-pa_values-pa.arsc.flat
+│   │   │   │   │           ├── values-pl_values-pl.arsc.flat
+│   │   │   │   │           ├── values-pt-rBR_values-pt-rBR.arsc.flat
+│   │   │   │   │           ├── values-pt-rPT_values-pt-rPT.arsc.flat
+│   │   │   │   │           ├── values-pt_values-pt.arsc.flat
+│   │   │   │   │           ├── values-ro_values-ro.arsc.flat
+│   │   │   │   │           ├── values-ru_values-ru.arsc.flat
+│   │   │   │   │           ├── values-si_values-si.arsc.flat
+│   │   │   │   │           ├── values-sk_values-sk.arsc.flat
+│   │   │   │   │           ├── values-sl_values-sl.arsc.flat
+│   │   │   │   │           ├── values-sq_values-sq.arsc.flat
+│   │   │   │   │           ├── values-sr_values-sr.arsc.flat
+│   │   │   │   │           ├── values-sv_values-sv.arsc.flat
+│   │   │   │   │           ├── values-sw_values-sw.arsc.flat
+│   │   │   │   │           ├── values-ta_values-ta.arsc.flat
+│   │   │   │   │           ├── values-te_values-te.arsc.flat
+│   │   │   │   │           ├── values-th_values-th.arsc.flat
+│   │   │   │   │           ├── values-tl_values-tl.arsc.flat
+│   │   │   │   │           ├── values-tr_values-tr.arsc.flat
+│   │   │   │   │           ├── values-uk_values-uk.arsc.flat
+│   │   │   │   │           ├── values-ur_values-ur.arsc.flat
+│   │   │   │   │           ├── values-uz_values-uz.arsc.flat
+│   │   │   │   │           ├── values-v16_values-v16.arsc.flat
+│   │   │   │   │           ├── values-v21_values-v21.arsc.flat
+│   │   │   │   │           ├── values_values.arsc.flat
+│   │   │   │   │           ├── values-vi_values-vi.arsc.flat
+│   │   │   │   │           ├── values-zh-rCN_values-zh-rCN.arsc.flat
+│   │   │   │   │           ├── values-zh-rHK_values-zh-rHK.arsc.flat
+│   │   │   │   │           ├── values-zh-rTW_values-zh-rTW.arsc.flat
+│   │   │   │   │           ├── values-zu_values-zu.arsc.flat
+│   │   │   │   │           ├── xml_accessibility_service_config.xml.flat
+│   │   │   │   │           ├── xml_backup_rules.xml.flat
+│   │   │   │   │           ├── xml_data_extraction_rules.xml.flat
+│   │   │   │   │           ├── xml_network_security_config.xml.flat
+│   │   │   │   │           └── xml_web_blocker_service_config.xml.flat
+│   │   │   │   ├── merged_res_blame_folder
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── mergeDebugResources
+│   │   │   │   │           └── out
+│   │   │   │   │               ├── multi-v2
+│   │   │   │   │               │   ├── mergeDebugResources.json
+│   │   │   │   │               │   ├── values-af.json
+│   │   │   │   │               │   ├── values-am.json
+│   │   │   │   │               │   ├── values-ar.json
+│   │   │   │   │               │   ├── values-as.json
+│   │   │   │   │               │   ├── values-az.json
+│   │   │   │   │               │   ├── values-be.json
+│   │   │   │   │               │   ├── values-bg.json
+│   │   │   │   │               │   ├── values-bn.json
+│   │   │   │   │               │   ├── values-bs.json
+│   │   │   │   │               │   ├── values-b+sr+Latn.json
+│   │   │   │   │               │   ├── values-ca.json
+│   │   │   │   │               │   ├── values-cs.json
+│   │   │   │   │               │   ├── values-da.json
+│   │   │   │   │               │   ├── values-de.json
+│   │   │   │   │               │   ├── values-el.json
+│   │   │   │   │               │   ├── values-en-rAU.json
+│   │   │   │   │               │   ├── values-en-rCA.json
+│   │   │   │   │               │   ├── values-en-rGB.json
+│   │   │   │   │               │   ├── values-en-rIN.json
+│   │   │   │   │               │   ├── values-en-rXC.json
+│   │   │   │   │               │   ├── values-es.json
+│   │   │   │   │               │   ├── values-es-rUS.json
+│   │   │   │   │               │   ├── values-et.json
+│   │   │   │   │               │   ├── values-eu.json
+│   │   │   │   │               │   ├── values-fa.json
+│   │   │   │   │               │   ├── values-fi.json
+│   │   │   │   │               │   ├── values-fr.json
+│   │   │   │   │               │   ├── values-fr-rCA.json
+│   │   │   │   │               │   ├── values-gl.json
+│   │   │   │   │               │   ├── values-gu.json
+│   │   │   │   │               │   ├── values-hi.json
+│   │   │   │   │               │   ├── values-hr.json
+│   │   │   │   │               │   ├── values-hu.json
+│   │   │   │   │               │   ├── values-hy.json
+│   │   │   │   │               │   ├── values-in.json
+│   │   │   │   │               │   ├── values-is.json
+│   │   │   │   │               │   ├── values-it.json
+│   │   │   │   │               │   ├── values-iw.json
+│   │   │   │   │               │   ├── values-ja.json
+│   │   │   │   │               │   ├── values.json
+│   │   │   │   │               │   ├── values-ka.json
+│   │   │   │   │               │   ├── values-kk.json
+│   │   │   │   │               │   ├── values-km.json
+│   │   │   │   │               │   ├── values-kn.json
+│   │   │   │   │               │   ├── values-ko.json
+│   │   │   │   │               │   ├── values-ky.json
+│   │   │   │   │               │   ├── values-lo.json
+│   │   │   │   │               │   ├── values-lt.json
+│   │   │   │   │               │   ├── values-lv.json
+│   │   │   │   │               │   ├── values-mk.json
+│   │   │   │   │               │   ├── values-ml.json
+│   │   │   │   │               │   ├── values-mn.json
+│   │   │   │   │               │   ├── values-mr.json
+│   │   │   │   │               │   ├── values-ms.json
+│   │   │   │   │               │   ├── values-my.json
+│   │   │   │   │               │   ├── values-nb.json
+│   │   │   │   │               │   ├── values-ne.json
+│   │   │   │   │               │   ├── values-nl.json
+│   │   │   │   │               │   ├── values-or.json
+│   │   │   │   │               │   ├── values-pa.json
+│   │   │   │   │               │   ├── values-pl.json
+│   │   │   │   │               │   ├── values-pt.json
+│   │   │   │   │               │   ├── values-pt-rBR.json
+│   │   │   │   │               │   ├── values-pt-rPT.json
+│   │   │   │   │               │   ├── values-ro.json
+│   │   │   │   │               │   ├── values-ru.json
+│   │   │   │   │               │   ├── values-si.json
+│   │   │   │   │               │   ├── values-sk.json
+│   │   │   │   │               │   ├── values-sl.json
+│   │   │   │   │               │   ├── values-sq.json
+│   │   │   │   │               │   ├── values-sr.json
+│   │   │   │   │               │   ├── values-sv.json
+│   │   │   │   │               │   ├── values-sw.json
+│   │   │   │   │               │   ├── values-ta.json
+│   │   │   │   │               │   ├── values-te.json
+│   │   │   │   │               │   ├── values-th.json
+│   │   │   │   │               │   ├── values-tl.json
+│   │   │   │   │               │   ├── values-tr.json
+│   │   │   │   │               │   ├── values-uk.json
+│   │   │   │   │               │   ├── values-ur.json
+│   │   │   │   │               │   ├── values-uz.json
+│   │   │   │   │               │   ├── values-v16.json
+│   │   │   │   │               │   ├── values-v21.json
+│   │   │   │   │               │   ├── values-vi.json
+│   │   │   │   │               │   ├── values-zh-rCN.json
+│   │   │   │   │               │   ├── values-zh-rHK.json
+│   │   │   │   │               │   ├── values-zh-rTW.json
+│   │   │   │   │               │   └── values-zu.json
+│   │   │   │   │               └── single
+│   │   │   │   │                   └── mergeDebugResources.json
+│   │   │   │   ├── merged_shaders
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── mergeDebugShaders
+│   │   │   │   │           └── out
+│   │   │   │   ├── mixed_scope_dex_archive
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── dexBuilderDebug
+│   │   │   │   │           └── out
+│   │   │   │   ├── navigation_json
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── extractDeepLinksDebug
+│   │   │   │   │           └── navigation.json
+│   │   │   │   ├── nested_resources_validation_report
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── generateDebugResources
+│   │   │   │   │           └── nestedResourcesValidationReport.txt
+│   │   │   │   ├── packaged_manifests
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── processDebugManifestForPackage
+│   │   │   │   │           ├── AndroidManifest.xml
+│   │   │   │   │           └── output-metadata.json
+│   │   │   │   ├── packaged_res
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── packageDebugResources
+│   │   │   │   │           ├── drawable
+│   │   │   │   │           │   ├── bg_url_pill.xml
+│   │   │   │   │           │   ├── circle_dot.xml
+│   │   │   │   │           │   ├── ic_childfocus_shield.xml
+│   │   │   │   │           │   ├── ic_launcher_background.xml
+│   │   │   │   │           │   └── ic_launcher_foreground.xml
+│   │   │   │   │           ├── layout
+│   │   │   │   │           │   ├── activity_blocked_web.xml
+│   │   │   │   │           │   ├── item_recommendation.xml
+│   │   │   │   │           │   ├── overlay_banner_stage2.xml
+│   │   │   │   │           │   └── overlay_blocked.xml
+│   │   │   │   │           ├── mipmap-anydpi-v26
+│   │   │   │   │           │   ├── ic_launcher_round.xml
+│   │   │   │   │           │   └── ic_launcher.xml
+│   │   │   │   │           ├── mipmap-anydpi-v4
+│   │   │   │   │           ├── mipmap-hdpi-v4
+│   │   │   │   │           │   ├── ic_launcher_foreground.webp
+│   │   │   │   │           │   ├── ic_launcher_round.webp
+│   │   │   │   │           │   └── ic_launcher.webp
+│   │   │   │   │           ├── mipmap-mdpi-v4
+│   │   │   │   │           │   ├── ic_launcher_foreground.webp
+│   │   │   │   │           │   ├── ic_launcher_round.webp
+│   │   │   │   │           │   └── ic_launcher.webp
+│   │   │   │   │           ├── mipmap-xhdpi-v4
+│   │   │   │   │           │   ├── ic_launcher_foreground.webp
+│   │   │   │   │           │   ├── ic_launcher_round.webp
+│   │   │   │   │           │   └── ic_launcher.webp
+│   │   │   │   │           ├── mipmap-xxhdpi-v4
+│   │   │   │   │           │   ├── ic_launcher_foreground.webp
+│   │   │   │   │           │   ├── ic_launcher_round.webp
+│   │   │   │   │           │   └── ic_launcher.webp
+│   │   │   │   │           ├── mipmap-xxxhdpi-v4
+│   │   │   │   │           │   ├── ic_launcher_foreground.webp
+│   │   │   │   │           │   ├── ic_launcher_round.webp
+│   │   │   │   │           │   └── ic_launcher.webp
+│   │   │   │   │           ├── values
+│   │   │   │   │           │   └── values.xml
+│   │   │   │   │           └── xml
+│   │   │   │   │               ├── accessibility_service_config.xml
+│   │   │   │   │               ├── backup_rules.xml
+│   │   │   │   │               ├── data_extraction_rules.xml
+│   │   │   │   │               ├── network_security_config.xml
+│   │   │   │   │               └── web_blocker_service_config.xml
+│   │   │   │   ├── project_dex_archive
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── dexBuilderDebug
+│   │   │   │   │           └── out
+│   │   │   │   │               ├── 5e3b0ce22c4a33d6a121b7e85ac40fd7069206d388dc9fe7c80c22510c110bca_0.jar
+│   │   │   │   │               ├── 5e3b0ce22c4a33d6a121b7e85ac40fd7069206d388dc9fe7c80c22510c110bca_1.jar
+│   │   │   │   │               └── com
+│   │   │   │   │                   └── childfocus
+│   │   │   │   │                       ├── BlockOverlayService$Companion.dex
+│   │   │   │   │                       ├── BlockOverlayService$loadThumbnail$1.dex
+│   │   │   │   │                       ├── BlockOverlayService$RecommendedVideo.dex
+│   │   │   │   │                       ├── BlockOverlayService.dex
+│   │   │   │   │                       ├── ChildFocusApp.dex
+│   │   │   │   │                       ├── ComposableSingletons$MainActivityKt$lambda-1$1.dex
+│   │   │   │   │                       ├── ComposableSingletons$MainActivityKt$lambda-2$1.dex
+│   │   │   │   │                       ├── ComposableSingletons$MainActivityKt$lambda-3$1.dex
+│   │   │   │   │                       ├── ComposableSingletons$MainActivityKt$lambda-4$1.dex
+│   │   │   │   │                       ├── ComposableSingletons$MainActivityKt$lambda-5$1.dex
+│   │   │   │   │                       ├── ComposableSingletons$MainActivityKt$lambda-6$1.dex
+│   │   │   │   │                       ├── ComposableSingletons$MainActivityKt.dex
+│   │   │   │   │                       ├── data
+│   │   │   │   │                       │   ├── api
+│   │   │   │   │                       │   │   ├── ChildFocusApi.dex
+│   │   │   │   │                       │   │   ├── ClassifyResponse.dex
+│   │   │   │   │                       │   │   ├── FullAnalysisResponse.dex
+│   │   │   │   │                       │   │   ├── HeuristicDetails.dex
+│   │   │   │   │                       │   │   ├── NbDetails.dex
+│   │   │   │   │                       │   │   └── SegmentDetail.dex
+│   │   │   │   │                       │   ├── local
+│   │   │   │   │                       │   │   ├── AppDatabase.dex
+│   │   │   │   │                       │   │   ├── LogDao.dex
+│   │   │   │   │                       │   │   ├── LogEntity.dex
+│   │   │   │   │                       │   │   ├── SegmentEntity.dex
+│   │   │   │   │                       │   │   ├── UserEntity.dex
+│   │   │   │   │                       │   │   ├── VideoDao.dex
+│   │   │   │   │                       │   │   └── VideoEntity.dex
+│   │   │   │   │                       │   ├── VideoRepository$Companion.dex
+│   │   │   │   │                       │   └── VideoRepository.dex
+│   │   │   │   │                       ├── MainActivity$classificationReceiver$1.dex
+│   │   │   │   │                       ├── MainActivity$Companion.dex
+│   │   │   │   │                       ├── MainActivity$onCreate$2.dex
+│   │   │   │   │                       ├── MainActivity$onCreate$3$1.dex
+│   │   │   │   │                       ├── MainActivity$onCreate$3.dex
+│   │   │   │   │                       ├── MainActivity$special$$inlined$viewModels$default$1.dex
+│   │   │   │   │                       ├── MainActivity$special$$inlined$viewModels$default$2.dex
+│   │   │   │   │                       ├── MainActivity$special$$inlined$viewModels$default$3.dex
+│   │   │   │   │                       ├── MainActivity.dex
+│   │   │   │   │                       ├── MainActivityKt$ChildFocusApp$1.dex
+│   │   │   │   │                       ├── MainActivityKt$ChildFocusApp$2$1$1$1$1.dex
+│   │   │   │   │                       ├── MainActivityKt$ChildFocusApp$2$1$1$1$2.dex
+│   │   │   │   │                       ├── MainActivityKt$ChildFocusApp$2$1$1$1$3.dex
+│   │   │   │   │                       ├── MainActivityKt$ChildFocusApp$2.dex
+│   │   │   │   │                       ├── MainActivityKt$ChildFocusBottomBar$1$1$2.dex
+│   │   │   │   │                       ├── MainActivityKt$ChildFocusBottomBar$1$1$3.dex
+│   │   │   │   │                       ├── MainActivityKt$ChildFocusBottomBar$1.dex
+│   │   │   │   │                       ├── MainActivityKt.dex
+│   │   │   │   │                       ├── model
+│   │   │   │   │                       │   ├── ClassificationResult.dex
+│   │   │   │   │                       │   ├── FastClassificationResult.dex
+│   │   │   │   │                       │   ├── HeuristicDetails.dex
+│   │   │   │   │                       │   ├── NbDetails.dex
+│   │   │   │   │                       │   ├── Segment.dex
+│   │   │   │   │                       │   ├── Video.dex
+│   │   │   │   │                       │   └── VideoMetadata.dex
+│   │   │   │   │                       ├── overlay
+│   │   │   │   │                       │   ├── OverlayPermissionHelper$Companion.dex
+│   │   │   │   │                       │   └── OverlayPermissionHelper.dex
+│   │   │   │   │                       ├── Screen$Home.dex
+│   │   │   │   │                       ├── Screen$Safety.dex
+│   │   │   │   │                       ├── Screen$ScreenTime.dex
+│   │   │   │   │                       ├── Screen$Settings.dex
+│   │   │   │   │                       ├── Screen$WebBlocker.dex
+│   │   │   │   │                       ├── Screen.dex
+│   │   │   │   │                       ├── service
+│   │   │   │   │                       │   ├── BlockedWebActivity$Companion.dex
+│   │   │   │   │                       │   ├── BlockedWebActivity$onCreate$2.dex
+│   │   │   │   │                       │   ├── BlockedWebActivity.dex
+│   │   │   │   │                       │   ├── BlockedWebActivityKt$BlockedScreen$1$1$1$2.dex
+│   │   │   │   │                       │   ├── BlockedWebActivityKt$BlockedScreen$1$1.dex
+│   │   │   │   │                       │   ├── BlockedWebActivityKt.dex
+│   │   │   │   │                       │   ├── ChildFocusAccessibilityService$Companion.dex
+│   │   │   │   │                       │   ├── ChildFocusAccessibilityService$doDispatchTitle$1.dex
+│   │   │   │   │                       │   ├── ChildFocusAccessibilityService$extractShortsInfo$$inlined$sortedByDescending$1.dex
+│   │   │   │   │                       │   ├── ChildFocusAccessibilityService$onAccessibilityEvent$1.dex
+│   │   │   │   │                       │   ├── ChildFocusAccessibilityService$onAccessibilityEvent$2.dex
+│   │   │   │   │                       │   ├── ChildFocusAccessibilityService$onAccessibilityEvent$3.dex
+│   │   │   │   │                       │   ├── ChildFocusAccessibilityService$onAccessibilityEvent$4.dex
+│   │   │   │   │                       │   ├── ChildFocusAccessibilityService$onAccessibilityEvent$5.dex
+│   │   │   │   │                       │   ├── ChildFocusAccessibilityService$onAccessibilityEvent$6.dex
+│   │   │   │   │                       │   ├── ChildFocusAccessibilityService$screenTimeTicker$1.dex
+│   │   │   │   │                       │   ├── ChildFocusAccessibilityService$ShortsInfo.dex
+│   │   │   │   │                       │   ├── ChildFocusAccessibilityService$startJob$1.dex
+│   │   │   │   │                       │   ├── ChildFocusAccessibilityService$TextNode.dex
+│   │   │   │   │                       │   ├── ChildFocusAccessibilityService.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$BlockedWebActivityKt$lambda-1$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$BlockedWebActivityKt$lambda-2$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$BlockedWebActivityKt.dex
+│   │   │   │   │                       │   ├── FloatingTimerService$Companion.dex
+│   │   │   │   │                       │   ├── FloatingTimerService$updateRunnable$1.dex
+│   │   │   │   │                       │   ├── FloatingTimerService.dex
+│   │   │   │   │                       │   ├── ScreenTimeManager.dex
+│   │   │   │   │                       │   ├── ServiceRestartReceiver.dex
+│   │   │   │   │                       │   ├── WebBlockerAccessibilityService$Companion.dex
+│   │   │   │   │                       │   ├── WebBlockerAccessibilityService$watchdogRunnable$1.dex
+│   │   │   │   │                       │   ├── WebBlockerAccessibilityService.dex
+│   │   │   │   │                       │   └── WebBlockerManager.dex
+│   │   │   │   │                       ├── ui
+│   │   │   │   │                       │   ├── AppLimit.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$LandingScreenKt$lambda-1$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$LandingScreenKt.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$ResultScreenKt$lambda-1$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$ResultScreenKt.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$SafetyModeScreenKt$lambda-1$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$SafetyModeScreenKt$lambda-2$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$SafetyModeScreenKt$lambda-3$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$SafetyModeScreenKt$lambda-4$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$SafetyModeScreenKt$lambda-5$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$SafetyModeScreenKt$lambda-6$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$SafetyModeScreenKt.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$ScreenTimeScreenKt$lambda-1$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$ScreenTimeScreenKt$lambda-2$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$ScreenTimeScreenKt$lambda-3$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$ScreenTimeScreenKt$lambda-4$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$ScreenTimeScreenKt$lambda-5$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$ScreenTimeScreenKt$lambda-6$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$ScreenTimeScreenKt$lambda-7$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$ScreenTimeScreenKt.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$SettingsScreenKt$lambda-1$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$SettingsScreenKt$lambda-2$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$SettingsScreenKt$lambda-3$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$SettingsScreenKt$lambda-4$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$SettingsScreenKt$lambda-5$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$SettingsScreenKt.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$WebBlockerScreenKt$lambda-1$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$WebBlockerScreenKt$lambda-10$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$WebBlockerScreenKt$lambda-2$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$WebBlockerScreenKt$lambda-3$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$WebBlockerScreenKt$lambda-4$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$WebBlockerScreenKt$lambda-5$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$WebBlockerScreenKt$lambda-6$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$WebBlockerScreenKt$lambda-7$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$WebBlockerScreenKt$lambda-8$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$WebBlockerScreenKt$lambda-9$1.dex
+│   │   │   │   │                       │   ├── ComposableSingletons$WebBlockerScreenKt.dex
+│   │   │   │   │                       │   ├── LandingScreenKt$LandingScreen$2$1$1$1.dex
+│   │   │   │   │                       │   ├── LandingScreenKt$LandingScreen$2$1$2.dex
+│   │   │   │   │                       │   ├── LandingScreenKt.dex
+│   │   │   │   │                       │   ├── Preset.dex
+│   │   │   │   │                       │   ├── ResultScreenKt$ResultScreen$1$1$1.dex
+│   │   │   │   │                       │   ├── ResultScreenKt.dex
+│   │   │   │   │                       │   ├── SafetyModeScreenKt$AuthenticatedSafetyScreen$1$1$1$2.dex
+│   │   │   │   │                       │   ├── SafetyModeScreenKt$AuthenticatedSafetyScreen$1$1$1$3.dex
+│   │   │   │   │                       │   ├── SafetyModeScreenKt$AuthenticatedSafetyScreen$1$1.dex
+│   │   │   │   │                       │   ├── SafetyModeScreenKt$AuthenticatedSafetyScreen$1.dex
+│   │   │   │   │                       │   ├── SafetyModeScreenKt$AuthenticatedSafetyScreen$2$WhenMappings.dex
+│   │   │   │   │                       │   ├── SafetyModeScreenKt$AuthenticatedSafetyScreen$2.dex
+│   │   │   │   │                       │   ├── SafetyModeScreenKt$CloseConfirmPinDialog$1$1.dex
+│   │   │   │   │                       │   ├── SafetyModeScreenKt$CloseConfirmPinDialog$2.dex
+│   │   │   │   │                       │   ├── SafetyModeScreenKt$CloseConfirmPinDialog$3$1$2$1$1$2.dex
+│   │   │   │   │                       │   ├── SafetyModeScreenKt$CloseConfirmPinDialog$3.dex
+│   │   │   │   │                       │   ├── SafetyModeScreenKt$SafetyModeScreen$5.dex
+│   │   │   │   │                       │   ├── SafetyModeScreenKt$StatusCard$1.dex
+│   │   │   │   │                       │   ├── SafetyModeScreenKt.dex
+│   │   │   │   │                       │   ├── SafetyTab.dex
+│   │   │   │   │                       │   ├── ScreenTimeScreenKt$AppLimitRow$1$1$1.dex
+│   │   │   │   │                       │   ├── ScreenTimeScreenKt$AppLimitRow$1.dex
+│   │   │   │   │                       │   ├── ScreenTimeScreenKt$LimitPickerDialog$1.dex
+│   │   │   │   │                       │   ├── ScreenTimeScreenKt$LimitPickerDialog$2.dex
+│   │   │   │   │                       │   ├── ScreenTimeScreenKt$LimitPickerDialog$3.dex
+│   │   │   │   │                       │   ├── ScreenTimeScreenKt$LimitPickerDialog$4$1$1$1$1$2.dex
+│   │   │   │   │                       │   ├── ScreenTimeScreenKt$LimitPickerDialog$4.dex
+│   │   │   │   │                       │   ├── ScreenTimeScreenKt$ScreenTimeScreen$1$1$1$1.dex
+│   │   │   │   │                       │   ├── ScreenTimeScreenKt$ScreenTimeScreen$1$1$1.dex
+│   │   │   │   │                       │   ├── ScreenTimeScreenKt$ScreenTimeScreen$1$1$3$1$1.dex
+│   │   │   │   │                       │   ├── ScreenTimeScreenKt$ScreenTimeScreen$1$1$3$2$1.dex
+│   │   │   │   │                       │   ├── ScreenTimeScreenKt$ScreenTimeScreen$lambda$20$lambda$19$$inlined$items$default$1.dex
+│   │   │   │   │                       │   ├── ScreenTimeScreenKt$ScreenTimeScreen$lambda$20$lambda$19$$inlined$items$default$2.dex
+│   │   │   │   │                       │   ├── ScreenTimeScreenKt$ScreenTimeScreen$lambda$20$lambda$19$$inlined$items$default$3.dex
+│   │   │   │   │                       │   ├── ScreenTimeScreenKt$ScreenTimeScreen$lambda$20$lambda$19$$inlined$items$default$4.dex
+│   │   │   │   │                       │   ├── ScreenTimeScreenKt.dex
+│   │   │   │   │                       │   ├── SessionAuthManager.dex
+│   │   │   │   │                       │   ├── SettingsScreenKt$PermissionCard$1.dex
+│   │   │   │   │                       │   ├── SettingsScreenKt$SettingsScreen$3$1.dex
+│   │   │   │   │                       │   ├── SettingsScreenKt$SettingsScreen$3.dex
+│   │   │   │   │                       │   ├── SettingsScreenKt$SettingsScreen$4.dex
+│   │   │   │   │                       │   ├── SettingsScreenKt$SettingsScreen$lambda$14$lambda$13$$inlined$onDispose$1.dex
+│   │   │   │   │                       │   ├── SettingsScreenKt.dex
+│   │   │   │   │                       │   ├── StatusInfo.dex
+│   │   │   │   │                       │   ├── theme
+│   │   │   │   │                       │   │   ├── ColorKt.dex
+│   │   │   │   │                       │   │   ├── ThemeKt.dex
+│   │   │   │   │                       │   │   └── TypeKt.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$BlockedSiteRow$1$1$1.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$BlockedSiteRow$1.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$ChangePinDialog$1.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$ChangePinDialog$2.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$ChangePinDialog$3.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$PinGateScreen$1$1.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$PinGateScreen$2$1$2$1$1$2.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$PinTextField$1.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$PresetChip$1.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$WebBlockerDashboard$1$1.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$WebBlockerDashboard$4$1$1.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$WebBlockerDashboard$4$1$2$1.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$WebBlockerDashboard$4$1$2.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$WebBlockerDashboard$4$1$3.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$WebBlockerDashboard$4$1$4.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$WebBlockerDashboard$4$1$5$1$1.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$WebBlockerDashboard$4$1$5.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$WebBlockerDashboard$4$1$6.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$WebBlockerDashboard$4$1$8$1$1.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$WebBlockerDashboard$lambda$32$lambda$31$$inlined$items$default$1.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$WebBlockerDashboard$lambda$32$lambda$31$$inlined$items$default$2.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$WebBlockerDashboard$lambda$32$lambda$31$$inlined$items$default$3.dex
+│   │   │   │   │                       │   ├── WebBlockerScreenKt$WebBlockerDashboard$lambda$32$lambda$31$$inlined$items$default$4.dex
+│   │   │   │   │                       │   └── WebBlockerScreenKt.dex
+│   │   │   │   │                       └── viewmodel
+│   │   │   │   │                           ├── ClassifyState$Allowed.dex
+│   │   │   │   │                           ├── ClassifyState$Analyzing.dex
+│   │   │   │   │                           ├── ClassifyState$Blocked.dex
+│   │   │   │   │                           ├── ClassifyState$Error.dex
+│   │   │   │   │                           ├── ClassifyState$Idle.dex
+│   │   │   │   │                           ├── ClassifyState.dex
+│   │   │   │   │                           └── SafetyViewModel.dex
+│   │   │   │   ├── runtime_symbol_list
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── processDebugResources
+│   │   │   │   │           └── R.txt
+│   │   │   │   ├── signing_config_versions
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── writeDebugSigningConfigVersions
+│   │   │   │   │           └── signing-config-versions.json
+│   │   │   │   ├── source_set_path_map
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── mapDebugSourceSetPaths
+│   │   │   │   │           └── file-map.txt
+│   │   │   │   ├── stable_resource_ids_file
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── processDebugResources
+│   │   │   │   │           └── stableIds.txt
+│   │   │   │   ├── sub_project_dex_archive
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── dexBuilderDebug
+│   │   │   │   │           └── out
+│   │   │   │   ├── symbol_list_with_package_name
+│   │   │   │   │   └── debug
+│   │   │   │   │       └── processDebugResources
+│   │   │   │   │           └── package-aware-r.txt
+│   │   │   │   └── validate_signing_config
+│   │   │   │       └── debug
+│   │   │   │           └── validateSigningDebug
+│   │   │   ├── kotlin
+│   │   │   │   └── compileDebugKotlin
+│   │   │   │       ├── cacheable
+│   │   │   │       │   ├── caches-jvm
+│   │   │   │       │   │   ├── inputs
+│   │   │   │       │   │   │   ├── source-to-output.tab
+│   │   │   │       │   │   │   ├── source-to-output.tab_i
+│   │   │   │       │   │   │   ├── source-to-output.tab_i.len
+│   │   │   │       │   │   │   ├── source-to-output.tab.keystream
+│   │   │   │       │   │   │   ├── source-to-output.tab.keystream.len
+│   │   │   │       │   │   │   ├── source-to-output.tab.len
+│   │   │   │       │   │   │   ├── source-to-output.tab.values
+│   │   │   │       │   │   │   ├── source-to-output.tab.values.at
+│   │   │   │       │   │   │   └── source-to-output.tab.values.s
+│   │   │   │       │   │   ├── jvm
+│   │   │   │       │   │   │   └── kotlin
+│   │   │   │       │   │   │       ├── class-attributes.tab
+│   │   │   │       │   │   │       ├── class-attributes.tab_i
+│   │   │   │       │   │   │       ├── class-attributes.tab_i.len
+│   │   │   │       │   │   │       ├── class-attributes.tab.keystream
+│   │   │   │       │   │   │       ├── class-attributes.tab.keystream.len
+│   │   │   │       │   │   │       ├── class-attributes.tab.len
+│   │   │   │       │   │   │       ├── class-attributes.tab.values.at
+│   │   │   │       │   │   │       ├── class-fq-name-to-source.tab
+│   │   │   │       │   │   │       ├── class-fq-name-to-source.tab_i
+│   │   │   │       │   │   │       ├── class-fq-name-to-source.tab_i.len
+│   │   │   │       │   │   │       ├── class-fq-name-to-source.tab.keystream
+│   │   │   │       │   │   │       ├── class-fq-name-to-source.tab.keystream.len
+│   │   │   │       │   │   │       ├── class-fq-name-to-source.tab.len
+│   │   │   │       │   │   │       ├── class-fq-name-to-source.tab.values.at
+│   │   │   │       │   │   │       ├── constants.tab
+│   │   │   │       │   │   │       ├── constants.tab_i
+│   │   │   │       │   │   │       ├── constants.tab_i.len
+│   │   │   │       │   │   │       ├── constants.tab.keystream
+│   │   │   │       │   │   │       ├── constants.tab.keystream.len
+│   │   │   │       │   │   │       ├── constants.tab.len
+│   │   │   │       │   │   │       ├── constants.tab.values.at
+│   │   │   │       │   │   │       ├── internal-name-to-source.tab
+│   │   │   │       │   │   │       ├── internal-name-to-source.tab_i
+│   │   │   │       │   │   │       ├── internal-name-to-source.tab_i.len
+│   │   │   │       │   │   │       ├── internal-name-to-source.tab.keystream
+│   │   │   │       │   │   │       ├── internal-name-to-source.tab.keystream.len
+│   │   │   │       │   │   │       ├── internal-name-to-source.tab.len
+│   │   │   │       │   │   │       ├── internal-name-to-source.tab.values.at
+│   │   │   │       │   │   │       ├── package-parts.tab
+│   │   │   │       │   │   │       ├── package-parts.tab_i
+│   │   │   │       │   │   │       ├── package-parts.tab_i.len
+│   │   │   │       │   │   │       ├── package-parts.tab.keystream
+│   │   │   │       │   │   │       ├── package-parts.tab.keystream.len
+│   │   │   │       │   │   │       ├── package-parts.tab.len
+│   │   │   │       │   │   │       ├── package-parts.tab.values.at
+│   │   │   │       │   │   │       ├── proto.tab
+│   │   │   │       │   │   │       ├── proto.tab_i
+│   │   │   │       │   │   │       ├── proto.tab_i.len
+│   │   │   │       │   │   │       ├── proto.tab.keystream
+│   │   │   │       │   │   │       ├── proto.tab.keystream.len
+│   │   │   │       │   │   │       ├── proto.tab.len
+│   │   │   │       │   │   │       ├── proto.tab.values
+│   │   │   │       │   │   │       ├── proto.tab.values.at
+│   │   │   │       │   │   │       ├── proto.tab.values.s
+│   │   │   │       │   │   │       ├── source-to-classes.tab
+│   │   │   │       │   │   │       ├── source-to-classes.tab_i
+│   │   │   │       │   │   │       ├── source-to-classes.tab_i.len
+│   │   │   │       │   │   │       ├── source-to-classes.tab.keystream
+│   │   │   │       │   │   │       ├── source-to-classes.tab.keystream.len
+│   │   │   │       │   │   │       ├── source-to-classes.tab.len
+│   │   │   │       │   │   │       ├── source-to-classes.tab.values.at
+│   │   │   │       │   │   │       ├── subtypes.tab
+│   │   │   │       │   │   │       ├── subtypes.tab_i
+│   │   │   │       │   │   │       ├── subtypes.tab_i.len
+│   │   │   │       │   │   │       ├── subtypes.tab.keystream
+│   │   │   │       │   │   │       ├── subtypes.tab.keystream.len
+│   │   │   │       │   │   │       ├── subtypes.tab.len
+│   │   │   │       │   │   │       ├── subtypes.tab.values.at
+│   │   │   │       │   │   │       ├── supertypes.tab
+│   │   │   │       │   │   │       ├── supertypes.tab_i
+│   │   │   │       │   │   │       ├── supertypes.tab_i.len
+│   │   │   │       │   │   │       ├── supertypes.tab.keystream
+│   │   │   │       │   │   │       ├── supertypes.tab.keystream.len
+│   │   │   │       │   │   │       ├── supertypes.tab.len
+│   │   │   │       │   │   │       └── supertypes.tab.values.at
+│   │   │   │       │   │   └── lookups
+│   │   │   │       │   │       ├── counters.tab
+│   │   │   │       │   │       ├── file-to-id.tab
+│   │   │   │       │   │       ├── file-to-id.tab_i
+│   │   │   │       │   │       ├── file-to-id.tab_i.len
+│   │   │   │       │   │       ├── file-to-id.tab.keystream
+│   │   │   │       │   │       ├── file-to-id.tab.keystream.len
+│   │   │   │       │   │       ├── file-to-id.tab.len
+│   │   │   │       │   │       ├── file-to-id.tab.values.at
+│   │   │   │       │   │       ├── id-to-file.tab
+│   │   │   │       │   │       ├── id-to-file.tab_i
+│   │   │   │       │   │       ├── id-to-file.tab_i.len
+│   │   │   │       │   │       ├── id-to-file.tab.keystream
+│   │   │   │       │   │       ├── id-to-file.tab.keystream.len
+│   │   │   │       │   │       ├── id-to-file.tab.len
+│   │   │   │       │   │       ├── id-to-file.tab.values.at
+│   │   │   │       │   │       ├── lookups.tab
+│   │   │   │       │   │       ├── lookups.tab_i
+│   │   │   │       │   │       ├── lookups.tab_i.len
+│   │   │   │       │   │       ├── lookups.tab.keystream
+│   │   │   │       │   │       ├── lookups.tab.keystream.len
+│   │   │   │       │   │       ├── lookups.tab.len
+│   │   │   │       │   │       ├── lookups.tab.values
+│   │   │   │       │   │       ├── lookups.tab.values.at
+│   │   │   │       │   │       └── lookups.tab.values.s
+│   │   │   │       │   └── last-build.bin
+│   │   │   │       ├── classpath-snapshot
+│   │   │   │       │   └── shrunk-classpath-snapshot.bin
+│   │   │   │       └── local-state
+│   │   │   │           └── build-history.bin
+│   │   │   ├── outputs
+│   │   │   │   └── logs
+│   │   │   │       └── manifest-merger-debug-report.txt
+│   │   │   └── tmp
+│   │   │       └── kotlin-classes
+│   │   │           └── debug
+│   │   │               ├── com
+│   │   │               │   └── childfocus
+│   │   │               │       ├── BlockOverlayService$Companion.class
+│   │   │               │       ├── BlockOverlayService$loadThumbnail$1.class
+│   │   │               │       ├── BlockOverlayService$RecommendedVideo.class
+│   │   │               │       ├── BlockOverlayService.class
+│   │   │               │       ├── ChildFocusApp.class
+│   │   │               │       ├── ComposableSingletons$MainActivityKt$lambda-1$1.class
+│   │   │               │       ├── ComposableSingletons$MainActivityKt$lambda-2$1.class
+│   │   │               │       ├── ComposableSingletons$MainActivityKt$lambda-3$1.class
+│   │   │               │       ├── ComposableSingletons$MainActivityKt$lambda-4$1.class
+│   │   │               │       ├── ComposableSingletons$MainActivityKt$lambda-5$1.class
+│   │   │               │       ├── ComposableSingletons$MainActivityKt$lambda-6$1.class
+│   │   │               │       ├── ComposableSingletons$MainActivityKt.class
+│   │   │               │       ├── data
+│   │   │               │       │   ├── api
+│   │   │               │       │   │   ├── ChildFocusApi.class
+│   │   │               │       │   │   ├── ClassifyResponse.class
+│   │   │               │       │   │   ├── FullAnalysisResponse.class
+│   │   │               │       │   │   ├── HeuristicDetails.class
+│   │   │               │       │   │   ├── NbDetails.class
+│   │   │               │       │   │   └── SegmentDetail.class
+│   │   │               │       │   ├── local
+│   │   │               │       │   │   ├── AppDatabase.class
+│   │   │               │       │   │   ├── LogDao.class
+│   │   │               │       │   │   ├── LogEntity.class
+│   │   │               │       │   │   ├── SegmentEntity.class
+│   │   │               │       │   │   ├── UserEntity.class
+│   │   │               │       │   │   ├── VideoDao.class
+│   │   │               │       │   │   └── VideoEntity.class
+│   │   │               │       │   ├── VideoRepository$Companion.class
+│   │   │               │       │   └── VideoRepository.class
+│   │   │               │       ├── MainActivity$classificationReceiver$1.class
+│   │   │               │       ├── MainActivity$Companion.class
+│   │   │               │       ├── MainActivity$onCreate$2.class
+│   │   │               │       ├── MainActivity$onCreate$3$1.class
+│   │   │               │       ├── MainActivity$onCreate$3.class
+│   │   │               │       ├── MainActivity$special$$inlined$viewModels$default$1.class
+│   │   │               │       ├── MainActivity$special$$inlined$viewModels$default$2.class
+│   │   │               │       ├── MainActivity$special$$inlined$viewModels$default$3.class
+│   │   │               │       ├── MainActivity.class
+│   │   │               │       ├── MainActivityKt$ChildFocusApp$1.class
+│   │   │               │       ├── MainActivityKt$ChildFocusApp$2$1$1$1$1.class
+│   │   │               │       ├── MainActivityKt$ChildFocusApp$2$1$1$1$2.class
+│   │   │               │       ├── MainActivityKt$ChildFocusApp$2$1$1$1$3.class
+│   │   │               │       ├── MainActivityKt$ChildFocusApp$2.class
+│   │   │               │       ├── MainActivityKt$ChildFocusBottomBar$1$1$2.class
+│   │   │               │       ├── MainActivityKt$ChildFocusBottomBar$1$1$3.class
+│   │   │               │       ├── MainActivityKt$ChildFocusBottomBar$1.class
+│   │   │               │       ├── MainActivityKt.class
+│   │   │               │       ├── model
+│   │   │               │       │   ├── ClassificationResult.class
+│   │   │               │       │   ├── FastClassificationResult.class
+│   │   │               │       │   ├── HeuristicDetails.class
+│   │   │               │       │   ├── NbDetails.class
+│   │   │               │       │   ├── Segment.class
+│   │   │               │       │   ├── Video.class
+│   │   │               │       │   └── VideoMetadata.class
+│   │   │               │       ├── overlay
+│   │   │               │       │   ├── OverlayPermissionHelper$Companion.class
+│   │   │               │       │   └── OverlayPermissionHelper.class
+│   │   │               │       ├── Screen$Home.class
+│   │   │               │       ├── Screen$Safety.class
+│   │   │               │       ├── Screen$ScreenTime.class
+│   │   │               │       ├── Screen$Settings.class
+│   │   │               │       ├── Screen$WebBlocker.class
+│   │   │               │       ├── Screen.class
+│   │   │               │       ├── service
+│   │   │               │       │   ├── BlockedWebActivity$Companion.class
+│   │   │               │       │   ├── BlockedWebActivity$onCreate$2.class
+│   │   │               │       │   ├── BlockedWebActivity.class
+│   │   │               │       │   ├── BlockedWebActivityKt$BlockedScreen$1$1$1$2.class
+│   │   │               │       │   ├── BlockedWebActivityKt$BlockedScreen$1$1.class
+│   │   │               │       │   ├── BlockedWebActivityKt.class
+│   │   │               │       │   ├── ChildFocusAccessibilityService$Companion.class
+│   │   │               │       │   ├── ChildFocusAccessibilityService$doDispatchTitle$1.class
+│   │   │               │       │   ├── ChildFocusAccessibilityService$extractShortsInfo$$inlined$sortedByDescending$1.class
+│   │   │               │       │   ├── ChildFocusAccessibilityService$onAccessibilityEvent$1.class
+│   │   │               │       │   ├── ChildFocusAccessibilityService$onAccessibilityEvent$2.class
+│   │   │               │       │   ├── ChildFocusAccessibilityService$onAccessibilityEvent$3.class
+│   │   │               │       │   ├── ChildFocusAccessibilityService$onAccessibilityEvent$4.class
+│   │   │               │       │   ├── ChildFocusAccessibilityService$onAccessibilityEvent$5.class
+│   │   │               │       │   ├── ChildFocusAccessibilityService$onAccessibilityEvent$6.class
+│   │   │               │       │   ├── ChildFocusAccessibilityService$screenTimeTicker$1.class
+│   │   │               │       │   ├── ChildFocusAccessibilityService$ShortsInfo.class
+│   │   │               │       │   ├── ChildFocusAccessibilityService$startJob$1.class
+│   │   │               │       │   ├── ChildFocusAccessibilityService$TextNode.class
+│   │   │               │       │   ├── ChildFocusAccessibilityService.class
+│   │   │               │       │   ├── ComposableSingletons$BlockedWebActivityKt$lambda-1$1.class
+│   │   │               │       │   ├── ComposableSingletons$BlockedWebActivityKt$lambda-2$1.class
+│   │   │               │       │   ├── ComposableSingletons$BlockedWebActivityKt.class
+│   │   │               │       │   ├── FloatingTimerService$Companion.class
+│   │   │               │       │   ├── FloatingTimerService$updateRunnable$1.class
+│   │   │               │       │   ├── FloatingTimerService.class
+│   │   │               │       │   ├── ScreenTimeManager.class
+│   │   │               │       │   ├── ServiceRestartReceiver.class
+│   │   │               │       │   ├── WebBlockerAccessibilityService$Companion.class
+│   │   │               │       │   ├── WebBlockerAccessibilityService$watchdogRunnable$1.class
+│   │   │               │       │   ├── WebBlockerAccessibilityService.class
+│   │   │               │       │   └── WebBlockerManager.class
+│   │   │               │       ├── ui
+│   │   │               │       │   ├── AppLimit.class
+│   │   │               │       │   ├── ComposableSingletons$LandingScreenKt$lambda-1$1.class
+│   │   │               │       │   ├── ComposableSingletons$LandingScreenKt.class
+│   │   │               │       │   ├── ComposableSingletons$ResultScreenKt$lambda-1$1.class
+│   │   │               │       │   ├── ComposableSingletons$ResultScreenKt.class
+│   │   │               │       │   ├── ComposableSingletons$SafetyModeScreenKt$lambda-1$1.class
+│   │   │               │       │   ├── ComposableSingletons$SafetyModeScreenKt$lambda-2$1.class
+│   │   │               │       │   ├── ComposableSingletons$SafetyModeScreenKt$lambda-3$1.class
+│   │   │               │       │   ├── ComposableSingletons$SafetyModeScreenKt$lambda-4$1.class
+│   │   │               │       │   ├── ComposableSingletons$SafetyModeScreenKt$lambda-5$1.class
+│   │   │               │       │   ├── ComposableSingletons$SafetyModeScreenKt$lambda-6$1.class
+│   │   │               │       │   ├── ComposableSingletons$SafetyModeScreenKt.class
+│   │   │               │       │   ├── ComposableSingletons$ScreenTimeScreenKt$lambda-1$1.class
+│   │   │               │       │   ├── ComposableSingletons$ScreenTimeScreenKt$lambda-2$1.class
+│   │   │               │       │   ├── ComposableSingletons$ScreenTimeScreenKt$lambda-3$1.class
+│   │   │               │       │   ├── ComposableSingletons$ScreenTimeScreenKt$lambda-4$1.class
+│   │   │               │       │   ├── ComposableSingletons$ScreenTimeScreenKt$lambda-5$1.class
+│   │   │               │       │   ├── ComposableSingletons$ScreenTimeScreenKt$lambda-6$1.class
+│   │   │               │       │   ├── ComposableSingletons$ScreenTimeScreenKt$lambda-7$1.class
+│   │   │               │       │   ├── ComposableSingletons$ScreenTimeScreenKt.class
+│   │   │               │       │   ├── ComposableSingletons$SettingsScreenKt$lambda-1$1.class
+│   │   │               │       │   ├── ComposableSingletons$SettingsScreenKt$lambda-2$1.class
+│   │   │               │       │   ├── ComposableSingletons$SettingsScreenKt$lambda-3$1.class
+│   │   │               │       │   ├── ComposableSingletons$SettingsScreenKt$lambda-4$1.class
+│   │   │               │       │   ├── ComposableSingletons$SettingsScreenKt$lambda-5$1.class
+│   │   │               │       │   ├── ComposableSingletons$SettingsScreenKt.class
+│   │   │               │       │   ├── ComposableSingletons$WebBlockerScreenKt$lambda-1$1.class
+│   │   │               │       │   ├── ComposableSingletons$WebBlockerScreenKt$lambda-10$1.class
+│   │   │               │       │   ├── ComposableSingletons$WebBlockerScreenKt$lambda-2$1.class
+│   │   │               │       │   ├── ComposableSingletons$WebBlockerScreenKt$lambda-3$1.class
+│   │   │               │       │   ├── ComposableSingletons$WebBlockerScreenKt$lambda-4$1.class
+│   │   │               │       │   ├── ComposableSingletons$WebBlockerScreenKt$lambda-5$1.class
+│   │   │               │       │   ├── ComposableSingletons$WebBlockerScreenKt$lambda-6$1.class
+│   │   │               │       │   ├── ComposableSingletons$WebBlockerScreenKt$lambda-7$1.class
+│   │   │               │       │   ├── ComposableSingletons$WebBlockerScreenKt$lambda-8$1.class
+│   │   │               │       │   ├── ComposableSingletons$WebBlockerScreenKt$lambda-9$1.class
+│   │   │               │       │   ├── ComposableSingletons$WebBlockerScreenKt.class
+│   │   │               │       │   ├── LandingScreenKt$LandingScreen$2$1$1$1.class
+│   │   │               │       │   ├── LandingScreenKt$LandingScreen$2$1$2.class
+│   │   │               │       │   ├── LandingScreenKt.class
+│   │   │               │       │   ├── Preset.class
+│   │   │               │       │   ├── ResultScreenKt$ResultScreen$1$1$1.class
+│   │   │               │       │   ├── ResultScreenKt.class
+│   │   │               │       │   ├── SafetyModeScreenKt$AuthenticatedSafetyScreen$1$1$1$2.class
+│   │   │               │       │   ├── SafetyModeScreenKt$AuthenticatedSafetyScreen$1$1$1$3.class
+│   │   │               │       │   ├── SafetyModeScreenKt$AuthenticatedSafetyScreen$1$1.class
+│   │   │               │       │   ├── SafetyModeScreenKt$AuthenticatedSafetyScreen$1.class
+│   │   │               │       │   ├── SafetyModeScreenKt$AuthenticatedSafetyScreen$2$WhenMappings.class
+│   │   │               │       │   ├── SafetyModeScreenKt$AuthenticatedSafetyScreen$2.class
+│   │   │               │       │   ├── SafetyModeScreenKt$CloseConfirmPinDialog$1$1.class
+│   │   │               │       │   ├── SafetyModeScreenKt$CloseConfirmPinDialog$2.class
+│   │   │               │       │   ├── SafetyModeScreenKt$CloseConfirmPinDialog$3$1$2$1$1$2.class
+│   │   │               │       │   ├── SafetyModeScreenKt$CloseConfirmPinDialog$3.class
+│   │   │               │       │   ├── SafetyModeScreenKt$SafetyModeScreen$5.class
+│   │   │               │       │   ├── SafetyModeScreenKt$StatusCard$1.class
+│   │   │               │       │   ├── SafetyModeScreenKt.class
+│   │   │               │       │   ├── SafetyTab.class
+│   │   │               │       │   ├── ScreenTimeScreenKt$AppLimitRow$1$1$1.class
+│   │   │               │       │   ├── ScreenTimeScreenKt$AppLimitRow$1.class
+│   │   │               │       │   ├── ScreenTimeScreenKt$LimitPickerDialog$1.class
+│   │   │               │       │   ├── ScreenTimeScreenKt$LimitPickerDialog$2.class
+│   │   │               │       │   ├── ScreenTimeScreenKt$LimitPickerDialog$3.class
+│   │   │               │       │   ├── ScreenTimeScreenKt$LimitPickerDialog$4$1$1$1$1$2.class
+│   │   │               │       │   ├── ScreenTimeScreenKt$LimitPickerDialog$4.class
+│   │   │               │       │   ├── ScreenTimeScreenKt$ScreenTimeScreen$1$1$1$1.class
+│   │   │               │       │   ├── ScreenTimeScreenKt$ScreenTimeScreen$1$1$1.class
+│   │   │               │       │   ├── ScreenTimeScreenKt$ScreenTimeScreen$1$1$3$1$1.class
+│   │   │               │       │   ├── ScreenTimeScreenKt$ScreenTimeScreen$1$1$3$2$1.class
+│   │   │               │       │   ├── ScreenTimeScreenKt$ScreenTimeScreen$lambda$20$lambda$19$$inlined$items$default$1.class
+│   │   │               │       │   ├── ScreenTimeScreenKt$ScreenTimeScreen$lambda$20$lambda$19$$inlined$items$default$2.class
+│   │   │               │       │   ├── ScreenTimeScreenKt$ScreenTimeScreen$lambda$20$lambda$19$$inlined$items$default$3.class
+│   │   │               │       │   ├── ScreenTimeScreenKt$ScreenTimeScreen$lambda$20$lambda$19$$inlined$items$default$4.class
+│   │   │               │       │   ├── ScreenTimeScreenKt.class
+│   │   │               │       │   ├── SessionAuthManager.class
+│   │   │               │       │   ├── SettingsScreenKt$PermissionCard$1.class
+│   │   │               │       │   ├── SettingsScreenKt$SettingsScreen$3$1.class
+│   │   │               │       │   ├── SettingsScreenKt$SettingsScreen$3.class
+│   │   │               │       │   ├── SettingsScreenKt$SettingsScreen$4.class
+│   │   │               │       │   ├── SettingsScreenKt$SettingsScreen$lambda$14$lambda$13$$inlined$onDispose$1.class
+│   │   │               │       │   ├── SettingsScreenKt.class
+│   │   │               │       │   ├── StatusInfo.class
+│   │   │               │       │   ├── theme
+│   │   │               │       │   │   ├── ColorKt.class
+│   │   │               │       │   │   ├── ThemeKt.class
+│   │   │               │       │   │   └── TypeKt.class
+│   │   │               │       │   ├── WebBlockerScreenKt$BlockedSiteRow$1$1$1.class
+│   │   │               │       │   ├── WebBlockerScreenKt$BlockedSiteRow$1.class
+│   │   │               │       │   ├── WebBlockerScreenKt$ChangePinDialog$1.class
+│   │   │               │       │   ├── WebBlockerScreenKt$ChangePinDialog$2.class
+│   │   │               │       │   ├── WebBlockerScreenKt$ChangePinDialog$3.class
+│   │   │               │       │   ├── WebBlockerScreenKt$PinGateScreen$1$1.class
+│   │   │               │       │   ├── WebBlockerScreenKt$PinGateScreen$2$1$2$1$1$2.class
+│   │   │               │       │   ├── WebBlockerScreenKt$PinTextField$1.class
+│   │   │               │       │   ├── WebBlockerScreenKt$PresetChip$1.class
+│   │   │               │       │   ├── WebBlockerScreenKt$WebBlockerDashboard$1$1.class
+│   │   │               │       │   ├── WebBlockerScreenKt$WebBlockerDashboard$4$1$1.class
+│   │   │               │       │   ├── WebBlockerScreenKt$WebBlockerDashboard$4$1$2$1.class
+│   │   │               │       │   ├── WebBlockerScreenKt$WebBlockerDashboard$4$1$2.class
+│   │   │               │       │   ├── WebBlockerScreenKt$WebBlockerDashboard$4$1$3.class
+│   │   │               │       │   ├── WebBlockerScreenKt$WebBlockerDashboard$4$1$4.class
+│   │   │               │       │   ├── WebBlockerScreenKt$WebBlockerDashboard$4$1$5$1$1.class
+│   │   │               │       │   ├── WebBlockerScreenKt$WebBlockerDashboard$4$1$5.class
+│   │   │               │       │   ├── WebBlockerScreenKt$WebBlockerDashboard$4$1$6.class
+│   │   │               │       │   ├── WebBlockerScreenKt$WebBlockerDashboard$4$1$8$1$1.class
+│   │   │               │       │   ├── WebBlockerScreenKt$WebBlockerDashboard$lambda$32$lambda$31$$inlined$items$default$1.class
+│   │   │               │       │   ├── WebBlockerScreenKt$WebBlockerDashboard$lambda$32$lambda$31$$inlined$items$default$2.class
+│   │   │               │       │   ├── WebBlockerScreenKt$WebBlockerDashboard$lambda$32$lambda$31$$inlined$items$default$3.class
+│   │   │               │       │   ├── WebBlockerScreenKt$WebBlockerDashboard$lambda$32$lambda$31$$inlined$items$default$4.class
+│   │   │               │       │   └── WebBlockerScreenKt.class
+│   │   │               │       └── viewmodel
+│   │   │               │           ├── ClassifyState$Allowed.class
+│   │   │               │           ├── ClassifyState$Analyzing.class
+│   │   │               │           ├── ClassifyState$Blocked.class
+│   │   │               │           ├── ClassifyState$Error.class
+│   │   │               │           ├── ClassifyState$Idle.class
+│   │   │               │           ├── ClassifyState.class
+│   │   │               │           └── SafetyViewModel.class
+│   │   │               └── META-INF
+│   │   │                   └── app_debug.kotlin_module
+│   │   ├── build.gradle
+│   │   ├── build.gradle.kts
+│   │   ├── proguard-rules.pro
+│   │   └── src
+│   │       ├── androidTest
+│   │       │   └── java
+│   │       │       └── com
+│   │       │           └── childfocus
+│   │       │               └── ExampleInstrumentedTest.kt
+│   │       ├── main
+│   │       │   ├── AndroidManifest.xml
+│   │       │   ├── assets
+│   │       │   │   └── nb_model.tflite
+│   │       │   ├── ic_launcher-playstore.png
+│   │       │   ├── java
+│   │       │   │   └── com
+│   │       │   │       └── childfocus
+│   │       │   │           ├── BlockOverlayService.kt
+│   │       │   │           ├── ChildFocusApp.kt
+│   │       │   │           ├── data
+│   │       │   │           │   ├── api
+│   │       │   │           │   │   ├── ChildFocusApi.kt
+│   │       │   │           │   │   └── YouTubeApi.kt
+│   │       │   │           │   ├── local
+│   │       │   │           │   │   ├── AppDatabase.kt
+│   │       │   │           │   │   ├── LogDao.kt
+│   │       │   │           │   │   ├── LogEntity.kt
+│   │       │   │           │   │   ├── SegmentEntity.kt
+│   │       │   │           │   │   ├── UserEntity.kt
+│   │       │   │           │   │   ├── VideoDao.kt
+│   │       │   │           │   │   └── VideoEntity.kt
+│   │       │   │           │   └── VideoRepository.kt
+│   │       │   │           ├── MainActivity.kt
+│   │       │   │           ├── model
+│   │       │   │           │   ├── ClassificationResult.kt
+│   │       │   │           │   ├── Segment.kt
+│   │       │   │           │   └── Video.kt
+│   │       │   │           ├── OverlayPermissionHelper.kt
+│   │       │   │           ├── service
+│   │       │   │           │   ├── BlockedWebActivity.kt
+│   │       │   │           │   ├── ChildFocusAccessibilityService.kt
+│   │       │   │           │   ├── FloatingTimerService.kt
+│   │       │   │           │   ├── ScreenTimeManager.kt
+│   │       │   │           │   ├── ServiceRestartReceiver.kt
+│   │       │   │           │   ├── WebBlockerAccessibilityService.kt
+│   │       │   │           │   └── WebBlockerManager.kt
+│   │       │   │           ├── ui
+│   │       │   │           │   ├── LandingScreen.kt
+│   │       │   │           │   ├── ResultScreen.kt
+│   │       │   │           │   ├── SafetyModeScreen.kt
+│   │       │   │           │   ├── ScreenTimeScreen.kt
+│   │       │   │           │   ├── SessionAuthManager.kt
+│   │       │   │           │   ├── SettingsScreen.kt
+│   │       │   │           │   ├── theme
+│   │       │   │           │   │   ├── Color.kt
+│   │       │   │           │   │   ├── Theme.kt
+│   │       │   │           │   │   └── Type.kt
+│   │       │   │           │   └── WebBlockerScreen.kt
+│   │       │   │           └── viewmodel
+│   │       │   │               └── SafetyViewModel.kt
+│   │       │   └── res
+│   │       │       ├── drawable
+│   │       │       │   ├── bg_url_pill.xml
+│   │       │       │   ├── circle_dot.xml
+│   │       │       │   ├── ic_childfocus_shield.xml
+│   │       │       │   ├── ic_launcher_background.xml
+│   │       │       │   └── ic_launcher_foreground.xml
+│   │       │       ├── layout
+│   │       │       │   ├── activity_blocked_web.xml
+│   │       │       │   ├── item_recommendation.xml
+│   │       │       │   ├── overlay_banner_stage2.xml
+│   │       │       │   └── overlay_blocked.xml
+│   │       │       ├── mipmap-anydpi-v26
+│   │       │       │   ├── ic_launcher_round.xml
+│   │       │       │   └── ic_launcher.xml
+│   │       │       ├── mipmap-hdpi
+│   │       │       │   ├── ic_launcher_foreground.webp
+│   │       │       │   ├── ic_launcher_round.webp
+│   │       │       │   └── ic_launcher.webp
+│   │       │       ├── mipmap-mdpi
+│   │       │       │   ├── ic_launcher_foreground.webp
+│   │       │       │   ├── ic_launcher_round.webp
+│   │       │       │   └── ic_launcher.webp
+│   │       │       ├── mipmap-xhdpi
+│   │       │       │   ├── ic_launcher_foreground.webp
+│   │       │       │   ├── ic_launcher_round.webp
+│   │       │       │   └── ic_launcher.webp
+│   │       │       ├── mipmap-xxhdpi
+│   │       │       │   ├── ic_launcher_foreground.webp
+│   │       │       │   ├── ic_launcher_round.webp
+│   │       │       │   └── ic_launcher.webp
+│   │       │       ├── mipmap-xxxhdpi
+│   │       │       │   ├── ic_launcher_foreground.webp
+│   │       │       │   ├── ic_launcher_round.webp
+│   │       │       │   └── ic_launcher.webp
+│   │       │       ├── values
+│   │       │       │   ├── colors.xml
+│   │       │       │   ├── strings.xml
+│   │       │       │   └── themes.xml
+│   │       │       └── xml
+│   │       │           ├── accessibility_service_config.xml
+│   │       │           ├── backup_rules.xml
+│   │       │           ├── data_extraction_rules.xml
+│   │       │           ├── network_security_config.xml
+│   │       │           └── web_blocker_service_config.xml
+│   │       └── test
+│   │           └── java
+│   │               └── com
+│   │                   └── childfocus
+│   │                       └── ExampleUnitTest.kt
+│   ├── build.gradle.kts
+│   ├── google-services.json
+│   ├── gradle
+│   │   ├── gradle-daemon-jvm.properties
+│   │   ├── libs.versions.toml
+│   │   └── wrapper
+│   │       ├── gradle-wrapper.jar
+│   │       └── gradle-wrapper.properties
+│   ├── gradle.properties
+│   ├── gradlew
+│   ├── gradlew.bat
+│   ├── local.properties
+│   └── settings.gradle.kts
+├── backend
+│   ├── #
+│   ├── app
+│   │   ├── config.py
+│   │   ├── __init__.py
+│   │   ├── models
+│   │   │   ├── nb_model.pkl
+│   │   │   └── vectorizer.pkl
+│   │   ├── modules
+│   │   │   ├── frame_sampler_old2.py
+│   │   │   ├── frame_sampler_old3_working_noerrors_slowprocessing.py
+│   │   │   ├── frame_sampler_old4_Alternativeffmpeg_or_Audio
+│   │   │   ├── frame_sampler_old5_shorts-handler.py
+│   │   │   ├── frame_sampler_old6_DLonlysegments.py
+│   │   │   ├── frame_sampler_old.py
+│   │   │   ├── frame_sampler.py
+│   │   │   ├── heuristic.py
+│   │   │   ├── hybrid_fusion.py
+│   │   │   ├── __init__.py
+│   │   │   ├── naive_bayes.py
+│   │   │   ├── __pycache__
+│   │   │   │   ├── frame_sampler.cpython-313.pyc
+│   │   │   │   ├── heuristic.cpython-313.pyc
+│   │   │   │   ├── hybrid_fusion.cpython-313.pyc
+│   │   │   │   ├── __init__.cpython-313.pyc
+│   │   │   │   ├── naive_bayes.cpython-313.pyc
+│   │   │   │   ├── text_builder.cpython-313.pyc
+│   │   │   │   └── youtube_api.cpython-313.pyc
+│   │   │   ├── text_builder.py
+│   │   │   ├── youtube_api_old.05.03.26.py
+│   │   │   └── youtube_api.py
+│   │   ├── __pycache__
+│   │   │   ├── config.cpython-313.pyc
+│   │   │   └── __init__.cpython-313.pyc
+│   │   ├── routes
+│   │   │   ├── classify_oldAndroidStudionotworking.py
+│   │   │   ├── classify.py
+│   │   │   ├── __init__.py
+│   │   │   ├── metadata.py
+│   │   │   └── __pycache__
+│   │   │       ├── classify.cpython-313.pyc
+│   │   │       ├── __init__.cpython-313.pyc
+│   │   │       └── metadata.cpython-313.pyc
+│   │   └── utils
+│   │       ├── logger.py
+│   │       ├── __pycache__
+│   │       │   └── validators.cpython-313.pyc
+│   │       └── validators.py
+│   ├── atts
+│   ├── check_ranges.py
+│   ├── conn
+│   ├── conn.close()
+│   ├── cookies.txt
+│   ├── csvs
+│   ├── curl
+│   ├── -d
+│   ├── else
+│   ├── fcrs
+│   ├── -H
+│   ├── if
+│   ├── import
+│   ├── logs
+│   │   └── childfocus.log
+│   ├── print(f'ATT
+│   ├── print(f'CSV
+│   ├── print(f'FCR
+│   ├── print('No
+│   ├── py
+│   ├── python
+│   ├── requirements_old2.txt
+│   ├── requirements_old.txt
+│   ├── requirements.txt
+│   ├── rows
+│   ├── run.py
+│   ├── tests
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-313.pyc
+│   │   │   └── test_heuristic_eval.cpython-313-pytest-9.0.2.pyc
+│   │   ├── test_heuristic_eval.py
+│   │   ├── test_heuristic.py
+│   │   ├── test_hybrid.py
+│   │   └── test_naive_bayes.py
+│   └── venv
+│       ├── bin
+│       │   ├── activate
+│       │   ├── activate.csh
+│       │   ├── activate.fish
+│       │   ├── Activate.ps1
+│       │   ├── pip
+│       │   ├── pip3
+│       │   ├── pip3.13
+│       │   ├── python -> python3.13
+│       │   ├── python3 -> python3.13
+│       │   └── python3.13 -> /usr/bin/python3.13
+│       ├── include
+│       │   └── python3.13
+│       ├── lib
+│       │   └── python3.13
+│       │       └── site-packages
+│       │           ├── pip
+│       │           │   ├── __init__.py
+│       │           │   ├── _internal
+│       │           │   │   ├── build_env.py
+│       │           │   │   ├── cache.py
+│       │           │   │   ├── cli
+│       │           │   │   │   ├── autocompletion.py
+│       │           │   │   │   ├── base_command.py
+│       │           │   │   │   ├── cmdoptions.py
+│       │           │   │   │   ├── command_context.py
+│       │           │   │   │   ├── index_command.py
+│       │           │   │   │   ├── __init__.py
+│       │           │   │   │   ├── main_parser.py
+│       │           │   │   │   ├── main.py
+│       │           │   │   │   ├── parser.py
+│       │           │   │   │   ├── progress_bars.py
+│       │           │   │   │   ├── __pycache__
+│       │           │   │   │   │   ├── autocompletion.cpython-313.pyc
+│       │           │   │   │   │   ├── base_command.cpython-313.pyc
+│       │           │   │   │   │   ├── cmdoptions.cpython-313.pyc
+│       │           │   │   │   │   ├── command_context.cpython-313.pyc
+│       │           │   │   │   │   ├── index_command.cpython-313.pyc
+│       │           │   │   │   │   ├── __init__.cpython-313.pyc
+│       │           │   │   │   │   ├── main.cpython-313.pyc
+│       │           │   │   │   │   ├── main_parser.cpython-313.pyc
+│       │           │   │   │   │   ├── parser.cpython-313.pyc
+│       │           │   │   │   │   ├── progress_bars.cpython-313.pyc
+│       │           │   │   │   │   ├── req_command.cpython-313.pyc
+│       │           │   │   │   │   ├── spinners.cpython-313.pyc
+│       │           │   │   │   │   └── status_codes.cpython-313.pyc
+│       │           │   │   │   ├── req_command.py
+│       │           │   │   │   ├── spinners.py
+│       │           │   │   │   └── status_codes.py
+│       │           │   │   ├── commands
+│       │           │   │   │   ├── cache.py
+│       │           │   │   │   ├── check.py
+│       │           │   │   │   ├── completion.py
+│       │           │   │   │   ├── configuration.py
+│       │           │   │   │   ├── debug.py
+│       │           │   │   │   ├── download.py
+│       │           │   │   │   ├── freeze.py
+│       │           │   │   │   ├── hash.py
+│       │           │   │   │   ├── help.py
+│       │           │   │   │   ├── index.py
+│       │           │   │   │   ├── __init__.py
+│       │           │   │   │   ├── inspect.py
+│       │           │   │   │   ├── install.py
+│       │           │   │   │   ├── list.py
+│       │           │   │   │   ├── lock.py
+│       │           │   │   │   ├── __pycache__
+│       │           │   │   │   │   ├── cache.cpython-313.pyc
+│       │           │   │   │   │   ├── check.cpython-313.pyc
+│       │           │   │   │   │   ├── completion.cpython-313.pyc
+│       │           │   │   │   │   ├── configuration.cpython-313.pyc
+│       │           │   │   │   │   ├── debug.cpython-313.pyc
+│       │           │   │   │   │   ├── download.cpython-313.pyc
+│       │           │   │   │   │   ├── freeze.cpython-313.pyc
+│       │           │   │   │   │   ├── hash.cpython-313.pyc
+│       │           │   │   │   │   ├── help.cpython-313.pyc
+│       │           │   │   │   │   ├── index.cpython-313.pyc
+│       │           │   │   │   │   ├── __init__.cpython-313.pyc
+│       │           │   │   │   │   ├── inspect.cpython-313.pyc
+│       │           │   │   │   │   ├── install.cpython-313.pyc
+│       │           │   │   │   │   ├── list.cpython-313.pyc
+│       │           │   │   │   │   ├── lock.cpython-313.pyc
+│       │           │   │   │   │   ├── search.cpython-313.pyc
+│       │           │   │   │   │   ├── show.cpython-313.pyc
+│       │           │   │   │   │   ├── uninstall.cpython-313.pyc
+│       │           │   │   │   │   └── wheel.cpython-313.pyc
+│       │           │   │   │   ├── search.py
+│       │           │   │   │   ├── show.py
+│       │           │   │   │   ├── uninstall.py
+│       │           │   │   │   └── wheel.py
+│       │           │   │   ├── configuration.py
+│       │           │   │   ├── distributions
+│       │           │   │   │   ├── base.py
+│       │           │   │   │   ├── __init__.py
+│       │           │   │   │   ├── installed.py
+│       │           │   │   │   ├── __pycache__
+│       │           │   │   │   │   ├── base.cpython-313.pyc
+│       │           │   │   │   │   ├── __init__.cpython-313.pyc
+│       │           │   │   │   │   ├── installed.cpython-313.pyc
+│       │           │   │   │   │   ├── sdist.cpython-313.pyc
+│       │           │   │   │   │   └── wheel.cpython-313.pyc
+│       │           │   │   │   ├── sdist.py
+│       │           │   │   │   └── wheel.py
+│       │           │   │   ├── exceptions.py
+│       │           │   │   ├── index
+│       │           │   │   │   ├── collector.py
+│       │           │   │   │   ├── __init__.py
+│       │           │   │   │   ├── package_finder.py
+│       │           │   │   │   ├── __pycache__
+│       │           │   │   │   │   ├── collector.cpython-313.pyc
+│       │           │   │   │   │   ├── __init__.cpython-313.pyc
+│       │           │   │   │   │   ├── package_finder.cpython-313.pyc
+│       │           │   │   │   │   └── sources.cpython-313.pyc
+│       │           │   │   │   └── sources.py
+│       │           │   │   ├── __init__.py
+│       │           │   │   ├── locations
+│       │           │   │   │   ├── base.py
+│       │           │   │   │   ├── _distutils.py
+│       │           │   │   │   ├── __init__.py
+│       │           │   │   │   ├── __pycache__
+│       │           │   │   │   │   ├── base.cpython-313.pyc
+│       │           │   │   │   │   ├── _distutils.cpython-313.pyc
+│       │           │   │   │   │   ├── __init__.cpython-313.pyc
+│       │           │   │   │   │   └── _sysconfig.cpython-313.pyc
+│       │           │   │   │   └── _sysconfig.py
+│       │           │   │   ├── main.py
+│       │           │   │   ├── metadata
+│       │           │   │   │   ├── base.py
+│       │           │   │   │   ├── importlib
+│       │           │   │   │   │   ├── _compat.py
+│       │           │   │   │   │   ├── _dists.py
+│       │           │   │   │   │   ├── _envs.py
+│       │           │   │   │   │   ├── __init__.py
+│       │           │   │   │   │   └── __pycache__
+│       │           │   │   │   │       ├── _compat.cpython-313.pyc
+│       │           │   │   │   │       ├── _dists.cpython-313.pyc
+│       │           │   │   │   │       ├── _envs.cpython-313.pyc
+│       │           │   │   │   │       └── __init__.cpython-313.pyc
+│       │           │   │   │   ├── __init__.py
+│       │           │   │   │   ├── _json.py
+│       │           │   │   │   ├── pkg_resources.py
+│       │           │   │   │   └── __pycache__
+│       │           │   │   │       ├── base.cpython-313.pyc
+│       │           │   │   │       ├── __init__.cpython-313.pyc
+│       │           │   │   │       ├── _json.cpython-313.pyc
+│       │           │   │   │       └── pkg_resources.cpython-313.pyc
+│       │           │   │   ├── models
+│       │           │   │   │   ├── candidate.py
+│       │           │   │   │   ├── direct_url.py
+│       │           │   │   │   ├── format_control.py
+│       │           │   │   │   ├── index.py
+│       │           │   │   │   ├── __init__.py
+│       │           │   │   │   ├── installation_report.py
+│       │           │   │   │   ├── link.py
+│       │           │   │   │   ├── __pycache__
+│       │           │   │   │   │   ├── candidate.cpython-313.pyc
+│       │           │   │   │   │   ├── direct_url.cpython-313.pyc
+│       │           │   │   │   │   ├── format_control.cpython-313.pyc
+│       │           │   │   │   │   ├── index.cpython-313.pyc
+│       │           │   │   │   │   ├── __init__.cpython-313.pyc
+│       │           │   │   │   │   ├── installation_report.cpython-313.pyc
+│       │           │   │   │   │   ├── link.cpython-313.pyc
+│       │           │   │   │   │   ├── pylock.cpython-313.pyc
+│       │           │   │   │   │   ├── scheme.cpython-313.pyc
+│       │           │   │   │   │   ├── search_scope.cpython-313.pyc
+│       │           │   │   │   │   ├── selection_prefs.cpython-313.pyc
+│       │           │   │   │   │   ├── target_python.cpython-313.pyc
+│       │           │   │   │   │   └── wheel.cpython-313.pyc
+│       │           │   │   │   ├── pylock.py
+│       │           │   │   │   ├── scheme.py
+│       │           │   │   │   ├── search_scope.py
+│       │           │   │   │   ├── selection_prefs.py
+│       │           │   │   │   ├── target_python.py
+│       │           │   │   │   └── wheel.py
+│       │           │   │   ├── network
+│       │           │   │   │   ├── auth.py
+│       │           │   │   │   ├── cache.py
+│       │           │   │   │   ├── download.py
+│       │           │   │   │   ├── __init__.py
+│       │           │   │   │   ├── lazy_wheel.py
+│       │           │   │   │   ├── __pycache__
+│       │           │   │   │   │   ├── auth.cpython-313.pyc
+│       │           │   │   │   │   ├── cache.cpython-313.pyc
+│       │           │   │   │   │   ├── download.cpython-313.pyc
+│       │           │   │   │   │   ├── __init__.cpython-313.pyc
+│       │           │   │   │   │   ├── lazy_wheel.cpython-313.pyc
+│       │           │   │   │   │   ├── session.cpython-313.pyc
+│       │           │   │   │   │   ├── utils.cpython-313.pyc
+│       │           │   │   │   │   └── xmlrpc.cpython-313.pyc
+│       │           │   │   │   ├── session.py
+│       │           │   │   │   ├── utils.py
+│       │           │   │   │   └── xmlrpc.py
+│       │           │   │   ├── operations
+│       │           │   │   │   ├── build
+│       │           │   │   │   │   ├── build_tracker.py
+│       │           │   │   │   │   ├── __init__.py
+│       │           │   │   │   │   ├── metadata_editable.py
+│       │           │   │   │   │   ├── metadata.py
+│       │           │   │   │   │   ├── __pycache__
+│       │           │   │   │   │   │   ├── build_tracker.cpython-313.pyc
+│       │           │   │   │   │   │   ├── __init__.cpython-313.pyc
+│       │           │   │   │   │   │   ├── metadata.cpython-313.pyc
+│       │           │   │   │   │   │   ├── metadata_editable.cpython-313.pyc
+│       │           │   │   │   │   │   ├── wheel.cpython-313.pyc
+│       │           │   │   │   │   │   └── wheel_editable.cpython-313.pyc
+│       │           │   │   │   │   ├── wheel_editable.py
+│       │           │   │   │   │   └── wheel.py
+│       │           │   │   │   ├── check.py
+│       │           │   │   │   ├── freeze.py
+│       │           │   │   │   ├── __init__.py
+│       │           │   │   │   ├── install
+│       │           │   │   │   │   ├── __init__.py
+│       │           │   │   │   │   ├── __pycache__
+│       │           │   │   │   │   │   ├── __init__.cpython-313.pyc
+│       │           │   │   │   │   │   └── wheel.cpython-313.pyc
+│       │           │   │   │   │   └── wheel.py
+│       │           │   │   │   ├── prepare.py
+│       │           │   │   │   └── __pycache__
+│       │           │   │   │       ├── check.cpython-313.pyc
+│       │           │   │   │       ├── freeze.cpython-313.pyc
+│       │           │   │   │       ├── __init__.cpython-313.pyc
+│       │           │   │   │       └── prepare.cpython-313.pyc
+│       │           │   │   ├── __pycache__
+│       │           │   │   │   ├── build_env.cpython-313.pyc
+│       │           │   │   │   ├── cache.cpython-313.pyc
+│       │           │   │   │   ├── configuration.cpython-313.pyc
+│       │           │   │   │   ├── exceptions.cpython-313.pyc
+│       │           │   │   │   ├── __init__.cpython-313.pyc
+│       │           │   │   │   ├── main.cpython-313.pyc
+│       │           │   │   │   ├── pyproject.cpython-313.pyc
+│       │           │   │   │   ├── self_outdated_check.cpython-313.pyc
+│       │           │   │   │   └── wheel_builder.cpython-313.pyc
+│       │           │   │   ├── pyproject.py
+│       │           │   │   ├── req
+│       │           │   │   │   ├── constructors.py
+│       │           │   │   │   ├── __init__.py
+│       │           │   │   │   ├── __pycache__
+│       │           │   │   │   │   ├── constructors.cpython-313.pyc
+│       │           │   │   │   │   ├── __init__.cpython-313.pyc
+│       │           │   │   │   │   ├── req_dependency_group.cpython-313.pyc
+│       │           │   │   │   │   ├── req_file.cpython-313.pyc
+│       │           │   │   │   │   ├── req_install.cpython-313.pyc
+│       │           │   │   │   │   ├── req_set.cpython-313.pyc
+│       │           │   │   │   │   └── req_uninstall.cpython-313.pyc
+│       │           │   │   │   ├── req_dependency_group.py
+│       │           │   │   │   ├── req_file.py
+│       │           │   │   │   ├── req_install.py
+│       │           │   │   │   ├── req_set.py
+│       │           │   │   │   └── req_uninstall.py
+│       │           │   │   ├── resolution
+│       │           │   │   │   ├── base.py
+│       │           │   │   │   ├── __init__.py
+│       │           │   │   │   ├── legacy
+│       │           │   │   │   │   ├── __init__.py
+│       │           │   │   │   │   ├── __pycache__
+│       │           │   │   │   │   │   ├── __init__.cpython-313.pyc
+│       │           │   │   │   │   │   └── resolver.cpython-313.pyc
+│       │           │   │   │   │   └── resolver.py
+│       │           │   │   │   ├── __pycache__
+│       │           │   │   │   │   ├── base.cpython-313.pyc
+│       │           │   │   │   │   └── __init__.cpython-313.pyc
+│       │           │   │   │   └── resolvelib
+│       │           │   │   │       ├── base.py
+│       │           │   │   │       ├── candidates.py
+│       │           │   │   │       ├── factory.py
+│       │           │   │   │       ├── found_candidates.py
+│       │           │   │   │       ├── __init__.py
+│       │           │   │   │       ├── provider.py
+│       │           │   │   │       ├── __pycache__
+│       │           │   │   │       │   ├── base.cpython-313.pyc
+│       │           │   │   │       │   ├── candidates.cpython-313.pyc
+│       │           │   │   │       │   ├── factory.cpython-313.pyc
+│       │           │   │   │       │   ├── found_candidates.cpython-313.pyc
+│       │           │   │   │       │   ├── __init__.cpython-313.pyc
+│       │           │   │   │       │   ├── provider.cpython-313.pyc
+│       │           │   │   │       │   ├── reporter.cpython-313.pyc
+│       │           │   │   │       │   ├── requirements.cpython-313.pyc
+│       │           │   │   │       │   └── resolver.cpython-313.pyc
+│       │           │   │   │       ├── reporter.py
+│       │           │   │   │       ├── requirements.py
+│       │           │   │   │       └── resolver.py
+│       │           │   │   ├── self_outdated_check.py
+│       │           │   │   ├── utils
+│       │           │   │   │   ├── appdirs.py
+│       │           │   │   │   ├── compatibility_tags.py
+│       │           │   │   │   ├── compat.py
+│       │           │   │   │   ├── datetime.py
+│       │           │   │   │   ├── deprecation.py
+│       │           │   │   │   ├── direct_url_helpers.py
+│       │           │   │   │   ├── egg_link.py
+│       │           │   │   │   ├── entrypoints.py
+│       │           │   │   │   ├── filesystem.py
+│       │           │   │   │   ├── filetypes.py
+│       │           │   │   │   ├── glibc.py
+│       │           │   │   │   ├── hashes.py
+│       │           │   │   │   ├── __init__.py
+│       │           │   │   │   ├── _jaraco_text.py
+│       │           │   │   │   ├── logging.py
+│       │           │   │   │   ├── _log.py
+│       │           │   │   │   ├── misc.py
+│       │           │   │   │   ├── packaging.py
+│       │           │   │   │   ├── __pycache__
+│       │           │   │   │   │   ├── appdirs.cpython-313.pyc
+│       │           │   │   │   │   ├── compat.cpython-313.pyc
+│       │           │   │   │   │   ├── compatibility_tags.cpython-313.pyc
+│       │           │   │   │   │   ├── datetime.cpython-313.pyc
+│       │           │   │   │   │   ├── deprecation.cpython-313.pyc
+│       │           │   │   │   │   ├── direct_url_helpers.cpython-313.pyc
+│       │           │   │   │   │   ├── egg_link.cpython-313.pyc
+│       │           │   │   │   │   ├── entrypoints.cpython-313.pyc
+│       │           │   │   │   │   ├── filesystem.cpython-313.pyc
+│       │           │   │   │   │   ├── filetypes.cpython-313.pyc
+│       │           │   │   │   │   ├── glibc.cpython-313.pyc
+│       │           │   │   │   │   ├── hashes.cpython-313.pyc
+│       │           │   │   │   │   ├── __init__.cpython-313.pyc
+│       │           │   │   │   │   ├── _jaraco_text.cpython-313.pyc
+│       │           │   │   │   │   ├── _log.cpython-313.pyc
+│       │           │   │   │   │   ├── logging.cpython-313.pyc
+│       │           │   │   │   │   ├── misc.cpython-313.pyc
+│       │           │   │   │   │   ├── packaging.cpython-313.pyc
+│       │           │   │   │   │   ├── retry.cpython-313.pyc
+│       │           │   │   │   │   ├── subprocess.cpython-313.pyc
+│       │           │   │   │   │   ├── temp_dir.cpython-313.pyc
+│       │           │   │   │   │   ├── unpacking.cpython-313.pyc
+│       │           │   │   │   │   ├── urls.cpython-313.pyc
+│       │           │   │   │   │   ├── virtualenv.cpython-313.pyc
+│       │           │   │   │   │   └── wheel.cpython-313.pyc
+│       │           │   │   │   ├── retry.py
+│       │           │   │   │   ├── subprocess.py
+│       │           │   │   │   ├── temp_dir.py
+│       │           │   │   │   ├── unpacking.py
+│       │           │   │   │   ├── urls.py
+│       │           │   │   │   ├── virtualenv.py
+│       │           │   │   │   └── wheel.py
+│       │           │   │   ├── vcs
+│       │           │   │   │   ├── bazaar.py
+│       │           │   │   │   ├── git.py
+│       │           │   │   │   ├── __init__.py
+│       │           │   │   │   ├── mercurial.py
+│       │           │   │   │   ├── __pycache__
+│       │           │   │   │   │   ├── bazaar.cpython-313.pyc
+│       │           │   │   │   │   ├── git.cpython-313.pyc
+│       │           │   │   │   │   ├── __init__.cpython-313.pyc
+│       │           │   │   │   │   ├── mercurial.cpython-313.pyc
+│       │           │   │   │   │   ├── subversion.cpython-313.pyc
+│       │           │   │   │   │   └── versioncontrol.cpython-313.pyc
+│       │           │   │   │   ├── subversion.py
+│       │           │   │   │   └── versioncontrol.py
+│       │           │   │   └── wheel_builder.py
+│       │           │   ├── __main__.py
+│       │           │   ├── __pip-runner__.py
+│       │           │   ├── __pycache__
+│       │           │   │   ├── __init__.cpython-313.pyc
+│       │           │   │   ├── __main__.cpython-313.pyc
+│       │           │   │   └── __pip-runner__.cpython-313.pyc
+│       │           │   ├── py.typed
+│       │           │   └── _vendor
+│       │           │       ├── cachecontrol
+│       │           │       │   ├── adapter.py
+│       │           │       │   ├── cache.py
+│       │           │       │   ├── caches
+│       │           │       │   │   ├── file_cache.py
+│       │           │       │   │   ├── __init__.py
+│       │           │       │   │   ├── __pycache__
+│       │           │       │   │   │   ├── file_cache.cpython-313.pyc
+│       │           │       │   │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   │   └── redis_cache.cpython-313.pyc
+│       │           │       │   │   └── redis_cache.py
+│       │           │       │   ├── _cmd.py
+│       │           │       │   ├── controller.py
+│       │           │       │   ├── filewrapper.py
+│       │           │       │   ├── heuristics.py
+│       │           │       │   ├── __init__.py
+│       │           │       │   ├── LICENSE.txt
+│       │           │       │   ├── __pycache__
+│       │           │       │   │   ├── adapter.cpython-313.pyc
+│       │           │       │   │   ├── cache.cpython-313.pyc
+│       │           │       │   │   ├── _cmd.cpython-313.pyc
+│       │           │       │   │   ├── controller.cpython-313.pyc
+│       │           │       │   │   ├── filewrapper.cpython-313.pyc
+│       │           │       │   │   ├── heuristics.cpython-313.pyc
+│       │           │       │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   ├── serialize.cpython-313.pyc
+│       │           │       │   │   └── wrapper.cpython-313.pyc
+│       │           │       │   ├── py.typed
+│       │           │       │   ├── serialize.py
+│       │           │       │   └── wrapper.py
+│       │           │       ├── certifi
+│       │           │       │   ├── cacert.pem
+│       │           │       │   ├── core.py
+│       │           │       │   ├── __init__.py
+│       │           │       │   ├── LICENSE
+│       │           │       │   ├── __main__.py
+│       │           │       │   ├── __pycache__
+│       │           │       │   │   ├── core.cpython-313.pyc
+│       │           │       │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   └── __main__.cpython-313.pyc
+│       │           │       │   └── py.typed
+│       │           │       ├── dependency_groups
+│       │           │       │   ├── _implementation.py
+│       │           │       │   ├── __init__.py
+│       │           │       │   ├── LICENSE.txt
+│       │           │       │   ├── _lint_dependency_groups.py
+│       │           │       │   ├── __main__.py
+│       │           │       │   ├── _pip_wrapper.py
+│       │           │       │   ├── __pycache__
+│       │           │       │   │   ├── _implementation.cpython-313.pyc
+│       │           │       │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   ├── _lint_dependency_groups.cpython-313.pyc
+│       │           │       │   │   ├── __main__.cpython-313.pyc
+│       │           │       │   │   ├── _pip_wrapper.cpython-313.pyc
+│       │           │       │   │   └── _toml_compat.cpython-313.pyc
+│       │           │       │   ├── py.typed
+│       │           │       │   └── _toml_compat.py
+│       │           │       ├── distlib
+│       │           │       │   ├── compat.py
+│       │           │       │   ├── __init__.py
+│       │           │       │   ├── LICENSE.txt
+│       │           │       │   ├── __pycache__
+│       │           │       │   │   ├── compat.cpython-313.pyc
+│       │           │       │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   ├── resources.cpython-313.pyc
+│       │           │       │   │   ├── scripts.cpython-313.pyc
+│       │           │       │   │   └── util.cpython-313.pyc
+│       │           │       │   ├── resources.py
+│       │           │       │   ├── scripts.py
+│       │           │       │   ├── t32.exe
+│       │           │       │   ├── t64-arm.exe
+│       │           │       │   ├── t64.exe
+│       │           │       │   ├── util.py
+│       │           │       │   ├── w32.exe
+│       │           │       │   ├── w64-arm.exe
+│       │           │       │   └── w64.exe
+│       │           │       ├── distro
+│       │           │       │   ├── distro.py
+│       │           │       │   ├── __init__.py
+│       │           │       │   ├── LICENSE
+│       │           │       │   ├── __main__.py
+│       │           │       │   ├── __pycache__
+│       │           │       │   │   ├── distro.cpython-313.pyc
+│       │           │       │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   └── __main__.cpython-313.pyc
+│       │           │       │   └── py.typed
+│       │           │       ├── idna
+│       │           │       │   ├── codec.py
+│       │           │       │   ├── compat.py
+│       │           │       │   ├── core.py
+│       │           │       │   ├── idnadata.py
+│       │           │       │   ├── __init__.py
+│       │           │       │   ├── intranges.py
+│       │           │       │   ├── LICENSE.md
+│       │           │       │   ├── package_data.py
+│       │           │       │   ├── __pycache__
+│       │           │       │   │   ├── codec.cpython-313.pyc
+│       │           │       │   │   ├── compat.cpython-313.pyc
+│       │           │       │   │   ├── core.cpython-313.pyc
+│       │           │       │   │   ├── idnadata.cpython-313.pyc
+│       │           │       │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   ├── intranges.cpython-313.pyc
+│       │           │       │   │   ├── package_data.cpython-313.pyc
+│       │           │       │   │   └── uts46data.cpython-313.pyc
+│       │           │       │   ├── py.typed
+│       │           │       │   └── uts46data.py
+│       │           │       ├── __init__.py
+│       │           │       ├── msgpack
+│       │           │       │   ├── COPYING
+│       │           │       │   ├── exceptions.py
+│       │           │       │   ├── ext.py
+│       │           │       │   ├── fallback.py
+│       │           │       │   ├── __init__.py
+│       │           │       │   └── __pycache__
+│       │           │       │       ├── exceptions.cpython-313.pyc
+│       │           │       │       ├── ext.cpython-313.pyc
+│       │           │       │       ├── fallback.cpython-313.pyc
+│       │           │       │       └── __init__.cpython-313.pyc
+│       │           │       ├── packaging
+│       │           │       │   ├── _elffile.py
+│       │           │       │   ├── __init__.py
+│       │           │       │   ├── LICENSE
+│       │           │       │   ├── LICENSE.APACHE
+│       │           │       │   ├── LICENSE.BSD
+│       │           │       │   ├── licenses
+│       │           │       │   │   ├── __init__.py
+│       │           │       │   │   ├── __pycache__
+│       │           │       │   │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   │   └── _spdx.cpython-313.pyc
+│       │           │       │   │   └── _spdx.py
+│       │           │       │   ├── _manylinux.py
+│       │           │       │   ├── markers.py
+│       │           │       │   ├── metadata.py
+│       │           │       │   ├── _musllinux.py
+│       │           │       │   ├── _parser.py
+│       │           │       │   ├── __pycache__
+│       │           │       │   │   ├── _elffile.cpython-313.pyc
+│       │           │       │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   ├── _manylinux.cpython-313.pyc
+│       │           │       │   │   ├── markers.cpython-313.pyc
+│       │           │       │   │   ├── metadata.cpython-313.pyc
+│       │           │       │   │   ├── _musllinux.cpython-313.pyc
+│       │           │       │   │   ├── _parser.cpython-313.pyc
+│       │           │       │   │   ├── requirements.cpython-313.pyc
+│       │           │       │   │   ├── specifiers.cpython-313.pyc
+│       │           │       │   │   ├── _structures.cpython-313.pyc
+│       │           │       │   │   ├── tags.cpython-313.pyc
+│       │           │       │   │   ├── _tokenizer.cpython-313.pyc
+│       │           │       │   │   ├── utils.cpython-313.pyc
+│       │           │       │   │   └── version.cpython-313.pyc
+│       │           │       │   ├── py.typed
+│       │           │       │   ├── requirements.py
+│       │           │       │   ├── specifiers.py
+│       │           │       │   ├── _structures.py
+│       │           │       │   ├── tags.py
+│       │           │       │   ├── _tokenizer.py
+│       │           │       │   ├── utils.py
+│       │           │       │   └── version.py
+│       │           │       ├── pkg_resources
+│       │           │       │   ├── __init__.py
+│       │           │       │   ├── LICENSE
+│       │           │       │   └── __pycache__
+│       │           │       │       └── __init__.cpython-313.pyc
+│       │           │       ├── platformdirs
+│       │           │       │   ├── android.py
+│       │           │       │   ├── api.py
+│       │           │       │   ├── __init__.py
+│       │           │       │   ├── LICENSE
+│       │           │       │   ├── macos.py
+│       │           │       │   ├── __main__.py
+│       │           │       │   ├── __pycache__
+│       │           │       │   │   ├── android.cpython-313.pyc
+│       │           │       │   │   ├── api.cpython-313.pyc
+│       │           │       │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   ├── macos.cpython-313.pyc
+│       │           │       │   │   ├── __main__.cpython-313.pyc
+│       │           │       │   │   ├── unix.cpython-313.pyc
+│       │           │       │   │   ├── version.cpython-313.pyc
+│       │           │       │   │   └── windows.cpython-313.pyc
+│       │           │       │   ├── py.typed
+│       │           │       │   ├── unix.py
+│       │           │       │   ├── version.py
+│       │           │       │   └── windows.py
+│       │           │       ├── __pycache__
+│       │           │       │   └── __init__.cpython-313.pyc
+│       │           │       ├── pygments
+│       │           │       │   ├── console.py
+│       │           │       │   ├── filter.py
+│       │           │       │   ├── filters
+│       │           │       │   │   ├── __init__.py
+│       │           │       │   │   └── __pycache__
+│       │           │       │   │       └── __init__.cpython-313.pyc
+│       │           │       │   ├── formatter.py
+│       │           │       │   ├── formatters
+│       │           │       │   │   ├── __init__.py
+│       │           │       │   │   ├── _mapping.py
+│       │           │       │   │   └── __pycache__
+│       │           │       │   │       ├── __init__.cpython-313.pyc
+│       │           │       │   │       └── _mapping.cpython-313.pyc
+│       │           │       │   ├── __init__.py
+│       │           │       │   ├── lexer.py
+│       │           │       │   ├── lexers
+│       │           │       │   │   ├── __init__.py
+│       │           │       │   │   ├── _mapping.py
+│       │           │       │   │   ├── __pycache__
+│       │           │       │   │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   │   ├── _mapping.cpython-313.pyc
+│       │           │       │   │   │   └── python.cpython-313.pyc
+│       │           │       │   │   └── python.py
+│       │           │       │   ├── LICENSE
+│       │           │       │   ├── __main__.py
+│       │           │       │   ├── modeline.py
+│       │           │       │   ├── plugin.py
+│       │           │       │   ├── __pycache__
+│       │           │       │   │   ├── console.cpython-313.pyc
+│       │           │       │   │   ├── filter.cpython-313.pyc
+│       │           │       │   │   ├── formatter.cpython-313.pyc
+│       │           │       │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   ├── lexer.cpython-313.pyc
+│       │           │       │   │   ├── __main__.cpython-313.pyc
+│       │           │       │   │   ├── modeline.cpython-313.pyc
+│       │           │       │   │   ├── plugin.cpython-313.pyc
+│       │           │       │   │   ├── regexopt.cpython-313.pyc
+│       │           │       │   │   ├── scanner.cpython-313.pyc
+│       │           │       │   │   ├── sphinxext.cpython-313.pyc
+│       │           │       │   │   ├── style.cpython-313.pyc
+│       │           │       │   │   ├── token.cpython-313.pyc
+│       │           │       │   │   ├── unistring.cpython-313.pyc
+│       │           │       │   │   └── util.cpython-313.pyc
+│       │           │       │   ├── regexopt.py
+│       │           │       │   ├── scanner.py
+│       │           │       │   ├── sphinxext.py
+│       │           │       │   ├── style.py
+│       │           │       │   ├── styles
+│       │           │       │   │   ├── __init__.py
+│       │           │       │   │   ├── _mapping.py
+│       │           │       │   │   └── __pycache__
+│       │           │       │   │       ├── __init__.cpython-313.pyc
+│       │           │       │   │       └── _mapping.cpython-313.pyc
+│       │           │       │   ├── token.py
+│       │           │       │   ├── unistring.py
+│       │           │       │   └── util.py
+│       │           │       ├── pyproject_hooks
+│       │           │       │   ├── _impl.py
+│       │           │       │   ├── __init__.py
+│       │           │       │   ├── _in_process
+│       │           │       │   │   ├── __init__.py
+│       │           │       │   │   ├── _in_process.py
+│       │           │       │   │   └── __pycache__
+│       │           │       │   │       ├── __init__.cpython-313.pyc
+│       │           │       │   │       └── _in_process.cpython-313.pyc
+│       │           │       │   ├── LICENSE
+│       │           │       │   ├── __pycache__
+│       │           │       │   │   ├── _impl.cpython-313.pyc
+│       │           │       │   │   └── __init__.cpython-313.pyc
+│       │           │       │   └── py.typed
+│       │           │       ├── README.rst
+│       │           │       ├── requests
+│       │           │       │   ├── adapters.py
+│       │           │       │   ├── api.py
+│       │           │       │   ├── auth.py
+│       │           │       │   ├── certs.py
+│       │           │       │   ├── compat.py
+│       │           │       │   ├── cookies.py
+│       │           │       │   ├── exceptions.py
+│       │           │       │   ├── help.py
+│       │           │       │   ├── hooks.py
+│       │           │       │   ├── __init__.py
+│       │           │       │   ├── _internal_utils.py
+│       │           │       │   ├── LICENSE
+│       │           │       │   ├── models.py
+│       │           │       │   ├── packages.py
+│       │           │       │   ├── __pycache__
+│       │           │       │   │   ├── adapters.cpython-313.pyc
+│       │           │       │   │   ├── api.cpython-313.pyc
+│       │           │       │   │   ├── auth.cpython-313.pyc
+│       │           │       │   │   ├── certs.cpython-313.pyc
+│       │           │       │   │   ├── compat.cpython-313.pyc
+│       │           │       │   │   ├── cookies.cpython-313.pyc
+│       │           │       │   │   ├── exceptions.cpython-313.pyc
+│       │           │       │   │   ├── help.cpython-313.pyc
+│       │           │       │   │   ├── hooks.cpython-313.pyc
+│       │           │       │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   ├── _internal_utils.cpython-313.pyc
+│       │           │       │   │   ├── models.cpython-313.pyc
+│       │           │       │   │   ├── packages.cpython-313.pyc
+│       │           │       │   │   ├── sessions.cpython-313.pyc
+│       │           │       │   │   ├── status_codes.cpython-313.pyc
+│       │           │       │   │   ├── structures.cpython-313.pyc
+│       │           │       │   │   ├── utils.cpython-313.pyc
+│       │           │       │   │   └── __version__.cpython-313.pyc
+│       │           │       │   ├── sessions.py
+│       │           │       │   ├── status_codes.py
+│       │           │       │   ├── structures.py
+│       │           │       │   ├── utils.py
+│       │           │       │   └── __version__.py
+│       │           │       ├── resolvelib
+│       │           │       │   ├── __init__.py
+│       │           │       │   ├── LICENSE
+│       │           │       │   ├── providers.py
+│       │           │       │   ├── __pycache__
+│       │           │       │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   ├── providers.cpython-313.pyc
+│       │           │       │   │   ├── reporters.cpython-313.pyc
+│       │           │       │   │   └── structs.cpython-313.pyc
+│       │           │       │   ├── py.typed
+│       │           │       │   ├── reporters.py
+│       │           │       │   ├── resolvers
+│       │           │       │   │   ├── abstract.py
+│       │           │       │   │   ├── criterion.py
+│       │           │       │   │   ├── exceptions.py
+│       │           │       │   │   ├── __init__.py
+│       │           │       │   │   ├── __pycache__
+│       │           │       │   │   │   ├── abstract.cpython-313.pyc
+│       │           │       │   │   │   ├── criterion.cpython-313.pyc
+│       │           │       │   │   │   ├── exceptions.cpython-313.pyc
+│       │           │       │   │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   │   └── resolution.cpython-313.pyc
+│       │           │       │   │   └── resolution.py
+│       │           │       │   └── structs.py
+│       │           │       ├── rich
+│       │           │       │   ├── abc.py
+│       │           │       │   ├── align.py
+│       │           │       │   ├── ansi.py
+│       │           │       │   ├── bar.py
+│       │           │       │   ├── box.py
+│       │           │       │   ├── cells.py
+│       │           │       │   ├── _cell_widths.py
+│       │           │       │   ├── color.py
+│       │           │       │   ├── color_triplet.py
+│       │           │       │   ├── columns.py
+│       │           │       │   ├── console.py
+│       │           │       │   ├── constrain.py
+│       │           │       │   ├── containers.py
+│       │           │       │   ├── control.py
+│       │           │       │   ├── default_styles.py
+│       │           │       │   ├── diagnose.py
+│       │           │       │   ├── _emoji_codes.py
+│       │           │       │   ├── emoji.py
+│       │           │       │   ├── _emoji_replace.py
+│       │           │       │   ├── errors.py
+│       │           │       │   ├── _export_format.py
+│       │           │       │   ├── _extension.py
+│       │           │       │   ├── _fileno.py
+│       │           │       │   ├── file_proxy.py
+│       │           │       │   ├── filesize.py
+│       │           │       │   ├── highlighter.py
+│       │           │       │   ├── __init__.py
+│       │           │       │   ├── _inspect.py
+│       │           │       │   ├── json.py
+│       │           │       │   ├── jupyter.py
+│       │           │       │   ├── layout.py
+│       │           │       │   ├── LICENSE
+│       │           │       │   ├── live.py
+│       │           │       │   ├── live_render.py
+│       │           │       │   ├── logging.py
+│       │           │       │   ├── _log_render.py
+│       │           │       │   ├── _loop.py
+│       │           │       │   ├── __main__.py
+│       │           │       │   ├── markup.py
+│       │           │       │   ├── measure.py
+│       │           │       │   ├── _null_file.py
+│       │           │       │   ├── padding.py
+│       │           │       │   ├── pager.py
+│       │           │       │   ├── palette.py
+│       │           │       │   ├── _palettes.py
+│       │           │       │   ├── panel.py
+│       │           │       │   ├── _pick.py
+│       │           │       │   ├── pretty.py
+│       │           │       │   ├── progress_bar.py
+│       │           │       │   ├── progress.py
+│       │           │       │   ├── prompt.py
+│       │           │       │   ├── protocol.py
+│       │           │       │   ├── __pycache__
+│       │           │       │   │   ├── abc.cpython-313.pyc
+│       │           │       │   │   ├── align.cpython-313.pyc
+│       │           │       │   │   ├── ansi.cpython-313.pyc
+│       │           │       │   │   ├── bar.cpython-313.pyc
+│       │           │       │   │   ├── box.cpython-313.pyc
+│       │           │       │   │   ├── cells.cpython-313.pyc
+│       │           │       │   │   ├── _cell_widths.cpython-313.pyc
+│       │           │       │   │   ├── color.cpython-313.pyc
+│       │           │       │   │   ├── color_triplet.cpython-313.pyc
+│       │           │       │   │   ├── columns.cpython-313.pyc
+│       │           │       │   │   ├── console.cpython-313.pyc
+│       │           │       │   │   ├── constrain.cpython-313.pyc
+│       │           │       │   │   ├── containers.cpython-313.pyc
+│       │           │       │   │   ├── control.cpython-313.pyc
+│       │           │       │   │   ├── default_styles.cpython-313.pyc
+│       │           │       │   │   ├── diagnose.cpython-313.pyc
+│       │           │       │   │   ├── _emoji_codes.cpython-313.pyc
+│       │           │       │   │   ├── emoji.cpython-313.pyc
+│       │           │       │   │   ├── _emoji_replace.cpython-313.pyc
+│       │           │       │   │   ├── errors.cpython-313.pyc
+│       │           │       │   │   ├── _export_format.cpython-313.pyc
+│       │           │       │   │   ├── _extension.cpython-313.pyc
+│       │           │       │   │   ├── _fileno.cpython-313.pyc
+│       │           │       │   │   ├── file_proxy.cpython-313.pyc
+│       │           │       │   │   ├── filesize.cpython-313.pyc
+│       │           │       │   │   ├── highlighter.cpython-313.pyc
+│       │           │       │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   ├── _inspect.cpython-313.pyc
+│       │           │       │   │   ├── json.cpython-313.pyc
+│       │           │       │   │   ├── jupyter.cpython-313.pyc
+│       │           │       │   │   ├── layout.cpython-313.pyc
+│       │           │       │   │   ├── live.cpython-313.pyc
+│       │           │       │   │   ├── live_render.cpython-313.pyc
+│       │           │       │   │   ├── logging.cpython-313.pyc
+│       │           │       │   │   ├── _log_render.cpython-313.pyc
+│       │           │       │   │   ├── _loop.cpython-313.pyc
+│       │           │       │   │   ├── __main__.cpython-313.pyc
+│       │           │       │   │   ├── markup.cpython-313.pyc
+│       │           │       │   │   ├── measure.cpython-313.pyc
+│       │           │       │   │   ├── _null_file.cpython-313.pyc
+│       │           │       │   │   ├── padding.cpython-313.pyc
+│       │           │       │   │   ├── pager.cpython-313.pyc
+│       │           │       │   │   ├── palette.cpython-313.pyc
+│       │           │       │   │   ├── _palettes.cpython-313.pyc
+│       │           │       │   │   ├── panel.cpython-313.pyc
+│       │           │       │   │   ├── _pick.cpython-313.pyc
+│       │           │       │   │   ├── pretty.cpython-313.pyc
+│       │           │       │   │   ├── progress_bar.cpython-313.pyc
+│       │           │       │   │   ├── progress.cpython-313.pyc
+│       │           │       │   │   ├── prompt.cpython-313.pyc
+│       │           │       │   │   ├── protocol.cpython-313.pyc
+│       │           │       │   │   ├── _ratio.cpython-313.pyc
+│       │           │       │   │   ├── region.cpython-313.pyc
+│       │           │       │   │   ├── repr.cpython-313.pyc
+│       │           │       │   │   ├── rule.cpython-313.pyc
+│       │           │       │   │   ├── scope.cpython-313.pyc
+│       │           │       │   │   ├── screen.cpython-313.pyc
+│       │           │       │   │   ├── segment.cpython-313.pyc
+│       │           │       │   │   ├── spinner.cpython-313.pyc
+│       │           │       │   │   ├── _spinners.cpython-313.pyc
+│       │           │       │   │   ├── _stack.cpython-313.pyc
+│       │           │       │   │   ├── status.cpython-313.pyc
+│       │           │       │   │   ├── style.cpython-313.pyc
+│       │           │       │   │   ├── styled.cpython-313.pyc
+│       │           │       │   │   ├── syntax.cpython-313.pyc
+│       │           │       │   │   ├── table.cpython-313.pyc
+│       │           │       │   │   ├── terminal_theme.cpython-313.pyc
+│       │           │       │   │   ├── text.cpython-313.pyc
+│       │           │       │   │   ├── theme.cpython-313.pyc
+│       │           │       │   │   ├── themes.cpython-313.pyc
+│       │           │       │   │   ├── _timer.cpython-313.pyc
+│       │           │       │   │   ├── traceback.cpython-313.pyc
+│       │           │       │   │   ├── tree.cpython-313.pyc
+│       │           │       │   │   ├── _win32_console.cpython-313.pyc
+│       │           │       │   │   ├── _windows.cpython-313.pyc
+│       │           │       │   │   ├── _windows_renderer.cpython-313.pyc
+│       │           │       │   │   └── _wrap.cpython-313.pyc
+│       │           │       │   ├── py.typed
+│       │           │       │   ├── _ratio.py
+│       │           │       │   ├── region.py
+│       │           │       │   ├── repr.py
+│       │           │       │   ├── rule.py
+│       │           │       │   ├── scope.py
+│       │           │       │   ├── screen.py
+│       │           │       │   ├── segment.py
+│       │           │       │   ├── spinner.py
+│       │           │       │   ├── _spinners.py
+│       │           │       │   ├── _stack.py
+│       │           │       │   ├── status.py
+│       │           │       │   ├── styled.py
+│       │           │       │   ├── style.py
+│       │           │       │   ├── syntax.py
+│       │           │       │   ├── table.py
+│       │           │       │   ├── terminal_theme.py
+│       │           │       │   ├── text.py
+│       │           │       │   ├── theme.py
+│       │           │       │   ├── themes.py
+│       │           │       │   ├── _timer.py
+│       │           │       │   ├── traceback.py
+│       │           │       │   ├── tree.py
+│       │           │       │   ├── _win32_console.py
+│       │           │       │   ├── _windows.py
+│       │           │       │   ├── _windows_renderer.py
+│       │           │       │   └── _wrap.py
+│       │           │       ├── tomli
+│       │           │       │   ├── __init__.py
+│       │           │       │   ├── LICENSE
+│       │           │       │   ├── _parser.py
+│       │           │       │   ├── __pycache__
+│       │           │       │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   ├── _parser.cpython-313.pyc
+│       │           │       │   │   ├── _re.cpython-313.pyc
+│       │           │       │   │   └── _types.cpython-313.pyc
+│       │           │       │   ├── py.typed
+│       │           │       │   ├── _re.py
+│       │           │       │   └── _types.py
+│       │           │       ├── tomli_w
+│       │           │       │   ├── __init__.py
+│       │           │       │   ├── LICENSE
+│       │           │       │   ├── __pycache__
+│       │           │       │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   └── _writer.cpython-313.pyc
+│       │           │       │   ├── py.typed
+│       │           │       │   └── _writer.py
+│       │           │       ├── truststore
+│       │           │       │   ├── _api.py
+│       │           │       │   ├── __init__.py
+│       │           │       │   ├── LICENSE
+│       │           │       │   ├── _macos.py
+│       │           │       │   ├── _openssl.py
+│       │           │       │   ├── __pycache__
+│       │           │       │   │   ├── _api.cpython-313.pyc
+│       │           │       │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   ├── _macos.cpython-313.pyc
+│       │           │       │   │   ├── _openssl.cpython-313.pyc
+│       │           │       │   │   ├── _ssl_constants.cpython-313.pyc
+│       │           │       │   │   └── _windows.cpython-313.pyc
+│       │           │       │   ├── py.typed
+│       │           │       │   ├── _ssl_constants.py
+│       │           │       │   └── _windows.py
+│       │           │       ├── urllib3
+│       │           │       │   ├── _collections.py
+│       │           │       │   ├── connectionpool.py
+│       │           │       │   ├── connection.py
+│       │           │       │   ├── contrib
+│       │           │       │   │   ├── _appengine_environ.py
+│       │           │       │   │   ├── appengine.py
+│       │           │       │   │   ├── __init__.py
+│       │           │       │   │   ├── ntlmpool.py
+│       │           │       │   │   ├── __pycache__
+│       │           │       │   │   │   ├── appengine.cpython-313.pyc
+│       │           │       │   │   │   ├── _appengine_environ.cpython-313.pyc
+│       │           │       │   │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   │   ├── ntlmpool.cpython-313.pyc
+│       │           │       │   │   │   ├── pyopenssl.cpython-313.pyc
+│       │           │       │   │   │   ├── securetransport.cpython-313.pyc
+│       │           │       │   │   │   └── socks.cpython-313.pyc
+│       │           │       │   │   ├── pyopenssl.py
+│       │           │       │   │   ├── _securetransport
+│       │           │       │   │   │   ├── bindings.py
+│       │           │       │   │   │   ├── __init__.py
+│       │           │       │   │   │   ├── low_level.py
+│       │           │       │   │   │   └── __pycache__
+│       │           │       │   │   │       ├── bindings.cpython-313.pyc
+│       │           │       │   │   │       ├── __init__.cpython-313.pyc
+│       │           │       │   │   │       └── low_level.cpython-313.pyc
+│       │           │       │   │   ├── securetransport.py
+│       │           │       │   │   └── socks.py
+│       │           │       │   ├── exceptions.py
+│       │           │       │   ├── fields.py
+│       │           │       │   ├── filepost.py
+│       │           │       │   ├── __init__.py
+│       │           │       │   ├── LICENSE.txt
+│       │           │       │   ├── packages
+│       │           │       │   │   ├── backports
+│       │           │       │   │   │   ├── __init__.py
+│       │           │       │   │   │   ├── makefile.py
+│       │           │       │   │   │   ├── __pycache__
+│       │           │       │   │   │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   │   │   ├── makefile.cpython-313.pyc
+│       │           │       │   │   │   │   └── weakref_finalize.cpython-313.pyc
+│       │           │       │   │   │   └── weakref_finalize.py
+│       │           │       │   │   ├── __init__.py
+│       │           │       │   │   ├── __pycache__
+│       │           │       │   │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   │   └── six.cpython-313.pyc
+│       │           │       │   │   └── six.py
+│       │           │       │   ├── poolmanager.py
+│       │           │       │   ├── __pycache__
+│       │           │       │   │   ├── _collections.cpython-313.pyc
+│       │           │       │   │   ├── connection.cpython-313.pyc
+│       │           │       │   │   ├── connectionpool.cpython-313.pyc
+│       │           │       │   │   ├── exceptions.cpython-313.pyc
+│       │           │       │   │   ├── fields.cpython-313.pyc
+│       │           │       │   │   ├── filepost.cpython-313.pyc
+│       │           │       │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   ├── poolmanager.cpython-313.pyc
+│       │           │       │   │   ├── request.cpython-313.pyc
+│       │           │       │   │   ├── response.cpython-313.pyc
+│       │           │       │   │   └── _version.cpython-313.pyc
+│       │           │       │   ├── request.py
+│       │           │       │   ├── response.py
+│       │           │       │   ├── util
+│       │           │       │   │   ├── connection.py
+│       │           │       │   │   ├── __init__.py
+│       │           │       │   │   ├── proxy.py
+│       │           │       │   │   ├── __pycache__
+│       │           │       │   │   │   ├── connection.cpython-313.pyc
+│       │           │       │   │   │   ├── __init__.cpython-313.pyc
+│       │           │       │   │   │   ├── proxy.cpython-313.pyc
+│       │           │       │   │   │   ├── queue.cpython-313.pyc
+│       │           │       │   │   │   ├── request.cpython-313.pyc
+│       │           │       │   │   │   ├── response.cpython-313.pyc
+│       │           │       │   │   │   ├── retry.cpython-313.pyc
+│       │           │       │   │   │   ├── ssl_.cpython-313.pyc
+│       │           │       │   │   │   ├── ssl_match_hostname.cpython-313.pyc
+│       │           │       │   │   │   ├── ssltransport.cpython-313.pyc
+│       │           │       │   │   │   ├── timeout.cpython-313.pyc
+│       │           │       │   │   │   ├── url.cpython-313.pyc
+│       │           │       │   │   │   └── wait.cpython-313.pyc
+│       │           │       │   │   ├── queue.py
+│       │           │       │   │   ├── request.py
+│       │           │       │   │   ├── response.py
+│       │           │       │   │   ├── retry.py
+│       │           │       │   │   ├── ssl_match_hostname.py
+│       │           │       │   │   ├── ssl_.py
+│       │           │       │   │   ├── ssltransport.py
+│       │           │       │   │   ├── timeout.py
+│       │           │       │   │   ├── url.py
+│       │           │       │   │   └── wait.py
+│       │           │       │   └── _version.py
+│       │           │       └── vendor.txt
+│       │           └── pip-25.3.dist-info
+│       │               ├── entry_points.txt
+│       │               ├── INSTALLER
+│       │               ├── licenses
+│       │               │   ├── AUTHORS.txt
+│       │               │   ├── LICENSE.txt
+│       │               │   └── src
+│       │               │       └── pip
+│       │               │           └── _vendor
+│       │               │               ├── cachecontrol
+│       │               │               │   └── LICENSE.txt
+│       │               │               ├── certifi
+│       │               │               │   └── LICENSE
+│       │               │               ├── dependency_groups
+│       │               │               │   └── LICENSE.txt
+│       │               │               ├── distlib
+│       │               │               │   └── LICENSE.txt
+│       │               │               ├── distro
+│       │               │               │   └── LICENSE
+│       │               │               ├── idna
+│       │               │               │   └── LICENSE.md
+│       │               │               ├── msgpack
+│       │               │               │   └── COPYING
+│       │               │               ├── packaging
+│       │               │               │   ├── LICENSE
+│       │               │               │   ├── LICENSE.APACHE
+│       │               │               │   └── LICENSE.BSD
+│       │               │               ├── pkg_resources
+│       │               │               │   └── LICENSE
+│       │               │               ├── platformdirs
+│       │               │               │   └── LICENSE
+│       │               │               ├── pygments
+│       │               │               │   └── LICENSE
+│       │               │               ├── pyproject_hooks
+│       │               │               │   └── LICENSE
+│       │               │               ├── requests
+│       │               │               │   └── LICENSE
+│       │               │               ├── resolvelib
+│       │               │               │   └── LICENSE
+│       │               │               ├── rich
+│       │               │               │   └── LICENSE
+│       │               │               ├── tomli
+│       │               │               │   └── LICENSE
+│       │               │               ├── tomli_w
+│       │               │               │   └── LICENSE
+│       │               │               ├── truststore
+│       │               │               │   └── LICENSE
+│       │               │               └── urllib3
+│       │               │                   └── LICENSE.txt
+│       │               ├── METADATA
+│       │               ├── RECORD
+│       │               ├── REQUESTED
+│       │               └── WHEEL
+│       ├── lib64 -> lib
+│       └── pyvenv.cfg
+├── cookies.txt
+├── database
+│   ├── childfocus.db
+│   ├── migrations
+│   │   ├── 001_initial.sql
+│   │   ├── 002_sprint1_update.sql
+│   │   └── 003_sprint3_videos_full_schema.sql
+│   ├── schema.sql
+│   └── seed_data.sql
+├── docs
+│   ├── API.md
+│   ├── architecture_diagram.png
+│   └── SPRINT_LOG.md
+├── ml_training
+│   ├── notebooks
+│   │   ├── 01_data_collection.ipynb
+│   │   ├── 02_preprocessing.ipynb
+│   │   ├── 03_naive_bayes_training.ipynb
+│   │   └── 04_heuristic_validation.ipynb
+│   ├── outputs
+│   │   ├── evaluation_results.txt
+│   │   ├── final_hybrid_report.txt
+│   │   ├── hybrid_clean_progress.json
+│   │   ├── hybrid_clean_report.txt
+│   │   ├── hybrid_clean_results.json
+│   │   ├── hybrid_eval_progress.json
+│   │   ├── hybrid_full_report.txt
+│   │   ├── nb_model.pkl
+│   │   ├── recalibration_report.txt
+│   │   ├── tuning_results.txt
+│   │   └── vectorizer.pkl
+│   ├── requirements.txt
+│   └── scripts
+│       ├── build_700.py
+│       ├── build_final_dataset.py
+│       ├── client_secret.json
+│       ├── collect_handpicked.py
+│       ├── collect_metadata.py
+│       ├── convert_tflite.py
+│       ├── create_youtube_playlist.py
+│       ├── data
+│       │   ├── processed
+│       │   │   ├── metadata_clean.csv
+│       │   │   ├── metadata_labeled.csv
+│       │   │   ├── test_clean.csv
+│       │   │   └── train_clean.csv
+│       │   └── raw
+│       │       ├── enrich_checkpoint.json
+│       │       ├── final_700_dataset.csv
+│       │       ├── final_700_enriched.csv
+│       │       ├── merged_dataset.csv
+│       │       └── metadata_raw.csv
+│       ├── enrich_dataset.py
+│       ├── evaluate_all.py
+│       ├── evaluate_final_hybrid.py
+│       ├── evaluate_hybrid_real.py
+│       ├── failed_videos.csv
+│       ├── final_700_dataset.csv
+│       ├── handpicked_metadata.csv
+│       ├── handpicked_playlist_validated.csv
+│       ├── merge_datasets.py
+│       ├── preprocess.py
+│       ├── recalibrate_thresholds.py
+│       ├── regenerate_results.py
+│       ├── test_210.csv
+│       ├── token.pkl
+│       ├── train_490.csv
+│       ├── train_nb.py
+│       └── tune_weights.py
+├── New Empty File
+├── README.md
+├── setup.bat
+├── setup.sh
+└── structure.txt
+
+585 directories, 2082 files
