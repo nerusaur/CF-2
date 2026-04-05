@@ -42,9 +42,17 @@ class VideoRepository {
      * Quick metadata-only classification (title / tags / description).
      * Returns near-instantly — good for a pre-check before calling classifyFull.
      *
-     * Tags are now included in the request body so the backend's build_nb_text()
-     * receives the same inputs used during training (title × 3 + tags + description[:300]).
-     * This makes Score_NB fully deterministic: same video → same label, every time.
+     * FIX: ChildFocusApi declares @Body as Map<String, String>.
+     * Tags are joined into a space-separated string so the map stays
+     * Map<String, String> and Retrofit can serialize it without a type mismatch.
+     *
+     * The Flask backend's score_metadata() / build_nb_text() accepts tags as
+     * either a List or a plain string, so "baby shark pinkfong kids songs"
+     * produces the same TF-IDF result as ["baby shark", "pinkfong", "kids songs"].
+     * Non-alpha characters (commas, pipes) are stripped by the text cleaner anyway.
+     *
+     * If you later change ChildFocusApi to @Body body: Map<String, @JvmSuppressWildcards Any>,
+     * you can restore:  "tags" to tags
      */
     suspend fun classifyFast(
         title: String,
@@ -54,7 +62,7 @@ class VideoRepository {
         mapOf(
             "title"       to title,
             "description" to description,
-            "tags"        to tags,          // ← tags now sent to match training formula
+            "tags"        to tags.joinToString(" "),   // ← join to String; fixes Map<K,V> mismatch
         )
     )
 
