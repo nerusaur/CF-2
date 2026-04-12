@@ -121,7 +121,7 @@ def train():
 
     # ── Train ComplementNB ─────────────────────────────────────────────────────
     print("[TRAIN] Training ComplementNB...")
-    model = ComplementNB(alpha=0.1)   # alpha=0.1 (lighter smoothing for sparse text)
+    model = ComplementNB(alpha=0.15)   # alpha=0.1 (lighter smoothing for sparse text)
     model.fit(X_train_vec, y_train)
 
     # ── Evaluate ───────────────────────────────────────────────────────────────
