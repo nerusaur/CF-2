@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    network_security_config.xml
+    ───────────────────────────
+    Android 9+ blocks plain HTTP by default.
+    This config explicitly allows cleartext traffic to the Flask backend IPs.
+
+    ⚠ Add your PC's current WiFi IP here if it differs from 192.168.1.23.
+      Run `ipconfig` (Windows) or `ifconfig` (Mac/Linux) to find it.
+-->
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
+
+        <!-- Physical device on same WiFi — match ChildFocusAccessibilityService.FLASK_HOST -->
+        <domain includeSubdomains="false">192.168.1.23</domain>
+
+        <!-- Android emulator localhost alias -->
         <domain includeSubdomains="false">10.0.2.2</domain>
+
     </domain-config>
 </network-security-config>

@@ -1,0 +1,290 @@
+Microsoft Windows [Version 10.0.19045.6466]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\Comsci and Crypto\Desktop\Sample\CF-2\ml_training\scripts>py 2baseline.py
+====================================================================
+  BASELINE RESULTS — All Four Metrics  (test_210.csv, n=210)
+====================================================================
+  Baseline                    Accuracy   Precision   Recall       F1   Over_Rec
+  --------------------------------------------------------------------
+  B1  Random chance             35.71%      35.67%    35.73%    35.66%      40.00%
+  B2  Majority ('Overstimulating')    33.33%      11.11%    33.33%    16.67%     100.00%
+  B3  Keyword heuristic         49.52%      60.46%    49.32%    47.56%      27.14%
+====================================================================
+
+  NOTE — Macro averages weight all 3 classes equally.
+  Over_Rec = Overstimulating recall (child safety metric).
+
+====================================================================
+  B3 KEYWORD HEURISTIC — Per-Class Detail
+====================================================================
+                 precision    recall  f1-score   support
+
+    Educational       0.61      0.39      0.48        69
+        Neutral       0.41      0.82      0.54        71
+Overstimulating       0.79      0.27      0.40        70
+
+       accuracy                           0.50       210
+      macro avg       0.60      0.49      0.48       210
+   weighted avg       0.60      0.50      0.48       210
+
+  Confusion Matrix  (rows=Actual, cols=Predicted):
+                           Educa   Neutr   Overs
+             Educational      27      41       1
+                 Neutral       9      58       4
+         Overstimulating       8      43      19
+
+====================================================================
+  YOUR MODEL MUST BEAT (all four metrics over baseline):
+  Accuracy  > 49.52%    (B3 keyword heuristic)
+  Precision > 60.46%    (macro)
+  Recall    > 49.32%    (macro)
+  F1        > 47.56%    (macro)
+  Over_Rec  > 27.14%    (Overstimulating recall)
+====================================================================
+
+-> Run: py 3modelselection.py
+
+C:\Users\Comsci and Crypto\Desktop\Sample\CF-2\ml_training\scripts>py 3modelselection.py
+Training samples loaded: 490  <- must be 490
+Label dist: {'Educational': 161, 'Neutral': 164, 'Overstimulating': 165}
+
+==================================================================================
+  Model                     Acc%   Prec%    Rec%      F1    ±Acc    Gap%
+==================================================================================
+  Complement NB           79.59%   79.74%   79.55%  0.7937  +-3.35%   15.9%
+  Multinomial NB          79.18%   79.40%   79.14%  0.7895  +-3.45%   16.0%
+  Logistic Regression     78.78%   79.40%   78.76%  0.7883  +-3.79%   19.1%
+  Linear SVM              78.37%   78.80%   78.34%  0.7833  +-3.12%   21.6%
+  Random Forest           73.88%   74.83%   73.90%  0.7405  +-6.66%   26.1%
+==================================================================================
+
+======================================================================
+  COMPLEMENT NB — Per-Fold Detail (all four metrics)
+======================================================================
+  Fold       Accuracy   Precision   Recall       F1
+  ------------------------------------------------
+  Fold 1        84.69%      84.77%    84.63%  0.8466
+  Fold 2        75.51%      75.56%    75.51%  0.7543
+  Fold 3        81.63%      82.11%    81.60%  0.8162
+  Fold 4        76.53%      76.74%    76.39%  0.7594
+  Fold 5        79.59%      79.51%    79.64%  0.7919
+  ------------------------------------------------
+  Mean         79.59%      79.74%    79.55%  0.7937
+  ±Std     +-   3.35%  +-   3.39%  +- 3.36%  +-0.0347
+
+======================================================================
+  MODEL SELECTION DECISION GUIDE
+======================================================================
+  Highest CV Accuracy   : Complement NB
+  Highest Macro F1      : Complement NB
+  Highest Macro Recall  : Complement NB
+  Smallest Overfit Gap  : Complement NB
+
+  Selected: Complement NB
+  Reason  : Best or competitive on all four metrics with smallest
+            overfit gap. Designed for complement class estimation
+            (Rennie et al. 2003) — ideal for imbalanced 3-class text.
+
+-> Test set (test_210.csv) still SEALED.
+-> Next: py 4tunealpha.py
+
+C:\Users\Comsci and Crypto\Desktop\Sample\CF-2\ml_training\scripts>py 4tunealpha.py
+Training samples loaded: 490  <- must be 490
+
+================================================================================
+     Alpha      Acc%     ±Acc    Prec%     Rec%        F1
+================================================================================
+  alpha=0.05      78.16%  +-2.10%   78.58%   78.11%  0.7802
+  alpha=0.1       78.16%  +-1.66%   78.56%   78.11%  0.7801
+  alpha=0.15      78.98%  +-1.38%   79.46%   78.93%  0.7884
+  alpha=0.2       79.39%  +-1.76%   79.95%   79.34%  0.7926
+  alpha=0.3       78.98%  +-2.10%   79.48%   78.94%  0.7884
+  alpha=0.5       79.80%  +-2.77%   80.07%   79.76%  0.7966
+  alpha=1.0       79.59%  +-3.35%   79.74%   79.55%  0.7937
+  alpha=1.5       80.00%  +-3.14%   80.17%   79.96%  0.7975  <- BEST
+  alpha=2.0       79.39%  +-2.77%   79.56%   79.35%  0.7916
+================================================================================
+
+======================================================================
+  BEST ALPHA = 1.5 — Per-Fold Detail
+======================================================================
+  Fold       Accuracy   Precision   Recall       F1
+  ------------------------------------------------
+  Fold 1        84.69%      84.77%    84.63%  0.8466
+  Fold 2        77.55%      77.63%    77.56%  0.7751
+  Fold 3        82.65%      83.27%    82.61%  0.8261
+  Fold 4        76.53%      76.74%    76.39%  0.7594
+  Fold 5        78.57%      78.43%    78.63%  0.7804
+  ------------------------------------------------
+  Mean         80.00%      80.17%    79.96%  0.7975
+  ±Std     +-   3.14%  +-   3.22%  +- 3.13%  +-0.0331
+
+======================================================================
+  STEP 4 COMPLETE
+======================================================================
+  Best alpha : 1.5
+  CV Acc     : 80.00%
+  CV F1      : 0.7975
+
+-> Open 4b_tune_tfidf.py and confirm: BEST_ALPHA = 1.5
+-> Then run: py 4b_tune_tfidf.py
+-> Test set (test_210.csv) still SEALED.
+
+C:\Users\Comsci and Crypto\Desktop\Sample\CF-2\ml_training\scripts>py 4b_tune_tfidf.py
+Training samples loaded: 490  <- must be 490
+Alpha fixed at         : 1.5  (from Step 4)
+Test set               : still SEALED
+
+Generating Figure 1: Stratified K-Fold split visualization...
+  Saved -> C:\Users\Comsci and Crypto\Desktop\Sample\CF-2\ml_training\scripts\..\outputs\figures\fig1_stratified_kfold_split.png
+========================================================================================
+    max_feat   min_df      Acc%     ±Acc    Prec%     Rec%        F1
+========================================================================================
+  mf=5,000    md=1        81.22%  +-3.45%   81.30%   81.22%  0.8101
+  mf=5,000    md=2        80.00%  +-3.14%   80.17%   79.96%  0.7975
+  mf=5,000    md=3        80.61%  +-3.23%   81.05%   80.61%  0.8050
+  mf=5,000    md=5        76.33%  +-5.41%   76.84%   76.32%  0.7644
+
+  mf=10,000   md=1        80.20%  +-2.78%   80.34%   80.20%  0.7994
+  mf=10,000   md=2        80.00%  +-3.14%   80.17%   79.96%  0.7975
+  mf=10,000   md=3        80.61%  +-3.23%   81.05%   80.61%  0.8050
+  mf=10,000   md=5        76.33%  +-5.41%   76.84%   76.32%  0.7644
+
+  mf=15,000   md=1        79.80%  +-2.53%   79.92%   79.79%  0.7951
+  mf=15,000   md=2        80.00%  +-3.14%   80.17%   79.96%  0.7975
+  mf=15,000   md=3        80.61%  +-3.23%   81.05%   80.61%  0.8050
+  mf=15,000   md=5        76.33%  +-5.41%   76.84%   76.32%  0.7644
+
+  mf=20,000   md=1        79.80%  +-2.53%   79.92%   79.79%  0.7951
+  mf=20,000   md=2        80.00%  +-3.14%   80.17%   79.96%  0.7975
+  mf=20,000   md=3        80.61%  +-3.23%   81.05%   80.61%  0.8050
+  mf=20,000   md=5        76.33%  +-5.41%   76.84%   76.32%  0.7644
+========================================================================================
+
+  Best config: max_features=5,000, min_df=1
+  CV Acc : 81.22%  +-3.45%
+  CV F1  : 0.8101
+  vs Step 4 baseline: 80.00%  (↑ 1.22pp)
+
+Generating Figure 2: Grid search heatmap...
+  Saved -> C:\Users\Comsci and Crypto\Desktop\Sample\CF-2\ml_training\scripts\..\outputs\figures\fig2_gridsearch_heatmap.png
+Generating Figure 3: Accuracy vs stability error bar plot...
+  Saved -> C:\Users\Comsci and Crypto\Desktop\Sample\CF-2\ml_training\scripts\..\outputs\figures\fig3_accuracy_errorbar.png
+Generating Figure 4: Per-fold accuracy of best configuration...
+  Saved -> C:\Users\Comsci and Crypto\Desktop\Sample\CF-2\ml_training\scripts\..\outputs\figures\fig4_best_config_folds.png
+
+=================================================================
+  STEP 4b COMPLETE — ALL FIGURES SAVED
+=================================================================
+  fig1  Stratified K-Fold split    -> fold balance transparency
+  fig2  Grid search heatmap        -> accuracy + std across all configs
+  fig3  Accuracy vs stability      -> error bar + F1 overlay vs baseline
+  fig4  Per-fold best config       -> fold-by-fold stability proof
+
+  Best config found:
+    BEST_ALPHA        = 1.5
+    BEST_MAX_FEATURES = 5000
+    BEST_MIN_DF       = 1
+    CV Acc            = 81.22%  +-3.45%
+    CV F1             = 0.8101
+
+-> Open 5final_eval.py and set:
+     BEST_ALPHA        = 1.5
+     BEST_MAX_FEATURES = 5000
+     BEST_MIN_DF       = 1
+-> Then run: py 5final_eval.py  (unseals test_210.csv — one time only)
+-> Test set (test_210.csv) still SEALED.
+
+C:\Users\Comsci and Crypto\Desktop\Sample\CF-2\ml_training\scripts>py 5final_eval.py
+Train : 490  <- must be 490
+Test  : 210   <- must be 210
+
+==========================================================
+  CV RESULTS (training pool only, n=490, test still sealed)
+==========================================================
+  Fold       Accuracy   Precision   Recall       F1
+  --------------------------------------------------
+  Fold 1        84.69%      84.61%    84.63%  0.8460
+  Fold 2        77.55%      77.97%    77.59%  0.7752
+  Fold 3        85.71%      85.95%    85.73%  0.8566
+  Fold 4        80.61%      80.59%    80.52%  0.8038
+  Fold 5        77.55%      77.36%    77.62%  0.7687
+  --------------------------------------------------
+  Mean         81.22%      81.30%    81.22%  0.8101
+  Std    +-    3.45%  +-   3.45%  +-  3.42%  +-0.0358
+
+==========================================================
+  FINAL HOLDOUT RESULTS  (test_210.csv — unsealed once)
+==========================================================
+  Alpha              : 1.5
+  max_features       : 5000
+  min_df             : 1
+
+  Train accuracy     : 97.76%
+  Holdout accuracy   : 84.76%
+  Overfit gap        : 12.99%  (train - holdout)
+
+  ── Macro averages (unweighted mean across 3 classes) ──
+  Macro Precision    : 84.76%  (0.8476)
+  Macro Recall       : 84.77%  (0.8477)
+  Macro F1           : 84.73%  (0.8473)
+
+  ── Weighted averages (weighted by class support) ──
+  Weighted Precision : 84.75%  (0.8475)
+  Weighted Recall    : 84.76%  (0.8476)
+  Weighted F1        : 84.72%  (0.8472)
+
+  ── Child safety metrics ──
+  Bi-decision acc    : 91.43%  (Overstimulating vs Safe)
+  Overstimulating recall : 90.00%  (missed detections = 6/70)
+  CV mean (5-fold)   : 81.22% +-3.45%
+
+==========================================================
+  CLASSIFICATION REPORT (holdout, per-class breakdown)
+==========================================================
+                 precision    recall  f1-score   support
+
+    Educational     0.8507    0.8261    0.8382        69
+        Neutral     0.8406    0.8169    0.8286        71
+Overstimulating     0.8514    0.9000    0.8750        70
+
+       accuracy                         0.8476       210
+      macro avg     0.8476    0.8477    0.8473       210
+   weighted avg     0.8475    0.8476    0.8472       210
+
+
+==========================================================
+  PER-CLASS METRICS TABLE
+==========================================================
+  Class                 Precision   Recall       F1   Support
+  ----------------------------------------------------------
+  Educational              85.07%    82.61%    83.82%       69
+  Neutral                  84.06%    81.69%    82.86%       71
+  Overstimulating          85.14%    90.00%    87.50%       70
+
+==========================================================
+  CONFUSION MATRIX (rows=actual, columns=predicted)
+==========================================================
+                             Educa     Neutr     Overs
+             Educational        57         7         5
+                 Neutral         7        58         6
+         Overstimulating         3         4        63
+
+==========================================================
+  THESIS SUMMARY ROW — Complement NB  (paste into Chapter 5)
+==========================================================
+  Holdout Acc : 84.76%
+  CV Acc      : 81.22% +-3.45%
+  Overfit Gap : 12.99%
+  Macro P     : 0.8476
+  Macro R     : 0.8477
+  Macro F1    : 0.8473
+  Bi-Dec Acc  : 91.43%
+  Over. Recall: 90.00%
+
+-> These are your FINAL numbers.
+-> Do NOT re-run with different parameters after this.
+-> Paste results into 6generate_figures.py
+
+C:\Users\Comsci and Crypto\Desktop\Sample\CF-2\ml_training\scripts>

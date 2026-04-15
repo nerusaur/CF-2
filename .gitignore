@@ -8,6 +8,10 @@ __pycache__/
 dist/
 build/
 
+# Secrets
+client_secret.json
+token.pkl
+
 # Virtual environment
 venv/
 env/

@@ -1,0 +1,67 @@
+Folder PATH listing
+Volume serial number is 8BA1-4610
+C:.
+ÃÄÄÄ.idea
+³   ÀÄÄÄcaches
+ÃÄÄÄandroid
+³   ÃÄÄÄ.idea
+³   ³   ÃÄÄÄcodeStyles
+³   ³   ÀÄÄÄinspectionProfiles
+³   ÃÄÄÄ.kotlin
+³   ³   ÀÄÄÄerrors
+³   ÃÄÄÄapp
+³   ³   ÀÄÄÄsrc
+³   ³       ÃÄÄÄandroidTest
+³   ³       ³   ÀÄÄÄjava
+³   ³       ³       ÀÄÄÄcom
+³   ³       ³           ÀÄÄÄchildfocus
+³   ³       ÃÄÄÄmain
+³   ³       ³   ÃÄÄÄassets
+³   ³       ³   ÃÄÄÄjava
+³   ³       ³   ³   ÀÄÄÄcom
+³   ³       ³   ³       ÀÄÄÄchildfocus
+³   ³       ³   ³           ÃÄÄÄdata
+³   ³       ³   ³           ³   ÃÄÄÄapi
+³   ³       ³   ³           ³   ÀÄÄÄlocal
+³   ³       ³   ³           ÃÄÄÄmodel
+³   ³       ³   ³           ÃÄÄÄservice
+³   ³       ³   ³           ÃÄÄÄui
+³   ³       ³   ³           ³   ÀÄÄÄtheme
+³   ³       ³   ³           ÀÄÄÄviewmodel
+³   ³       ³   ÀÄÄÄres
+³   ³       ³       ÃÄÄÄdrawable
+³   ³       ³       ÃÄÄÄlayout
+³   ³       ³       ÃÄÄÄmipmap-anydpi-v26
+³   ³       ³       ÃÄÄÄmipmap-hdpi
+³   ³       ³       ÃÄÄÄmipmap-mdpi
+³   ³       ³       ÃÄÄÄmipmap-xhdpi
+³   ³       ³       ÃÄÄÄmipmap-xxhdpi
+³   ³       ³       ÃÄÄÄmipmap-xxxhdpi
+³   ³       ³       ÃÄÄÄvalues
+³   ³       ³       ÀÄÄÄxml
+³   ³       ÀÄÄÄtest
+³   ³           ÀÄÄÄjava
+³   ³               ÀÄÄÄcom
+³   ³                   ÀÄÄÄchildfocus
+³   ÀÄÄÄgradle
+³       ÀÄÄÄwrapper
+ÃÄÄÄbackend
+³   ÃÄÄÄapp
+³   ³   ÃÄÄÄmodels
+³   ³   ÃÄÄÄmodules
+³   ³   ÃÄÄÄroutes
+³   ³   ÀÄÄÄutils
+³   ÃÄÄÄlogs
+³   ÀÄÄÄtests
+ÃÄÄÄdatabase
+³   ÀÄÄÄmigrations
+ÃÄÄÄdocs
+ÀÄÄÄml_training
+    ÃÄÄÄnotebooks
+    ÃÄÄÄoutputs
+    ³   ÀÄÄÄfigures
+    ÀÄÄÄscripts
+        ÃÄÄÄdata
+        ³   ÃÄÄÄprocessed
+        ³   ÀÄÄÄraw
+        ÀÄÄÄVersion 1 Full

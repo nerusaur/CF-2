@@ -4,13 +4,26 @@ backend/app/modules/naive_bayes.py
 
 score_metadata() returns a plain dict — compatible with tests and hybrid_fusion.py
 score_from_metadata_dict() returns a SimpleNamespace for dot-notation (classify.py)
+
+TEXT FORMULA — uses build_nb_text() from text_builder.py, which is the EXACT same
+function used in preprocess.py during training.  This guarantees that the text fed
+into the model at inference time is built identically to the training data.
 """
 
 import os
 import pickle
-import re
 import types
 import numpy as np
+
+# ── Import shared text builder (single source of truth) ───────────────────────
+# text_builder.py lives in the same package: backend/app/modules/text_builder.py
+try:
+    from app.modules.text_builder import build_nb_text
+except ImportError:
+    # Fallback for running this file directly or from a different working directory
+    import sys
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from text_builder import build_nb_text
 
 # ── Model paths (primary: backend/app/models, fallback: ml_training/outputs) ──
 _MODULE_DIR          = os.path.dirname(os.path.abspath(__file__))
@@ -32,13 +45,12 @@ _metrics_cache = {}
 
 
 def _resolve_paths() -> bool:
-    global _MODEL_PATH, _VEC_PATH
+    global _MODEL_PATH
+    # Only check for the bundled nb_model.pkl
     for directory in [_MODELS_DIR_PRIMARY, _MODELS_DIR_FALLBACK]:
         mp = os.path.join(directory, "nb_model.pkl")
-        vp = os.path.join(directory, "vectorizer.pkl")
-        if os.path.exists(mp) and os.path.exists(vp):
+        if os.path.exists(mp):
             _MODEL_PATH = mp
-            _VEC_PATH   = vp
             return True
     return False
 
@@ -54,25 +66,31 @@ def _load_models() -> bool:
         return False
 
     try:
+        # Load the single bundled file
         with open(_MODEL_PATH, "rb") as f:
             bundle = pickle.load(f)
 
         if isinstance(bundle, dict):
             print(f"[NB] ✓ Unwrapped model from dict. Keys: {list(bundle.keys())}")
             _model         = bundle["model"]
+            _vectorizer    = bundle["vectorizer"]  # Extracted from bundle
             _label_encoder = bundle["label_encoder"]
             raw_names      = bundle.get("label_names", list(_label_encoder.classes_))
             _label_names   = [str(x) for x in raw_names]
             _metrics_cache = bundle.get("metrics", {})
         else:
+            # Fallback logic for older, non-bundled models
             _model = bundle
             from sklearn.preprocessing import LabelEncoder
             _label_encoder = LabelEncoder()
             _label_encoder.fit(["Educational", "Neutral", "Overstimulating"])
             _label_names = ["Educational", "Neutral", "Overstimulating"]
-
-        with open(_VEC_PATH, "rb") as f:
-            _vectorizer = pickle.load(f)
+            
+            # If it's an old model, we might still need a separate vectorizer file
+            _VEC_PATH = _MODEL_PATH.replace("nb_model.pkl", "vectorizer.pkl")
+            if os.path.exists(_VEC_PATH):
+                with open(_VEC_PATH, "rb") as f:
+                    _vectorizer = pickle.load(f)
 
         classes   = [str(c) for c in _label_encoder.classes_]
         _OVER_IDX = classes.index("Overstimulating") if "Overstimulating" in classes else -1
@@ -87,14 +105,6 @@ def _load_models() -> bool:
         return False
 
 
-def _clean_text(text: str) -> str:
-    text = text.lower()
-    text = re.sub(r"http\S+|www\S+", " ", text)
-    text = re.sub(r"[^a-z0-9\s]", " ", text)
-    text = re.sub(r"\s+", " ", text).strip()
-    return text
-
-
 # ════════════════════════════════════════════════════════════════════════════════
 # PUBLIC API
 # ════════════════════════════════════════════════════════════════════════════════
@@ -106,6 +116,10 @@ def score_metadata(
 ) -> dict:
     """
     Compute Score_NB from video metadata.
+
+    Text is built using build_nb_text() from text_builder.py — the same function
+    used by preprocess.py during training.  Identical input → identical output,
+    every single time (fully deterministic once the model is trained).
 
     Returns a plain dict:
         score_nb      (float)  — P(Overstimulating) in [0.0, 1.0]
@@ -123,9 +137,12 @@ def score_metadata(
             "status":        "model_not_loaded",
         }
 
-    tags_str     = " ".join(str(t) for t in tags) if isinstance(tags, list) else (tags or "")
-    desc_trimmed = (description or "")[:500]
-    combined     = _clean_text(f"{title} {desc_trimmed} {tags_str}")
+    # ── Build text using the EXACT same formula as preprocess.py ──────────────
+    combined = build_nb_text(
+        title       = title,
+        tags        = tags if tags is not None else [],
+        description = description,
+    )
 
     if not combined.strip():
         return {

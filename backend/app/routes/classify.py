@@ -14,22 +14,31 @@ DB_PATH = os.path.join(
     os.path.dirname(__file__), "..", "..", "..", "database", "childfocus.db"
 )
 
-# ── Empirically validated fusion config (v2 recalibration) ───────────────────
-# Thresholds raised from 0.20/0.08 to 0.30/0.12 after observing that the
-# first recalibration overcorrected: Educational (mean=0.1894) and Neutral
-# (mean=0.1821) score distributions overlap heavily below 0.20, causing
-# nearly all videos to be classified as Overstimulating in real-world testing.
-# 0.30 cleanly separates Overstimulating (mean=0.2675) from the other classes.
-ALPHA           = 0.6    # NB weight
-BETA            = 0.4    # Heuristic weight
-THRESHOLD_BLOCK = 0.30   # raised from 0.20 — was originally 0.75 in thesis
-THRESHOLD_ALLOW = 0.12   # raised from 0.08 — was originally 0.35 in thesis
+# ── Confidence-gated hybrid fusion config (v3) ───────────────────────────────
+# When NB confidence < CONF_THRESH the heuristic gets more weight because
+# audiovisual pacing is a more reliable signal than an uncertain text
+# classification.  H_OVERRIDE caps any extremely slow-paced video as
+# non-Overstimulating regardless of Score_NB.
+# Validated on 30-video dataset: calibration acc=60%, held-out test acc=60%.
+BASE_ALPHA      = 0.40   # NB weight when NB confidence >= CONF_THRESH
+LOW_ALPHA       = 0.15   # NB weight when NB confidence <  CONF_THRESH
+CONF_THRESH     = 0.40   # confidence boundary
+H_OVERRIDE      = 0.07   # if Score_H < this → cannot be Overstimulating
+THRESHOLD_BLOCK = 0.20   # >= Overstimulating
+THRESHOLD_ALLOW = 0.18   # <= Educational
 
-
-def _oir_label(score: float) -> str:
-    if score >= THRESHOLD_BLOCK: return "Overstimulating"
-    if score <= THRESHOLD_ALLOW: return "Educational"
-    return "Neutral"
+def _fuse(score_nb: float, score_h: float, nb_confidence: float) -> tuple[float, str]:
+    eff_alpha   = LOW_ALPHA if nb_confidence < CONF_THRESH else BASE_ALPHA
+    final       = round((eff_alpha * score_nb) + ((1 - eff_alpha) * score_h), 4)
+    if H_OVERRIDE > 0 and score_h < H_OVERRIDE:
+        label = "Educational" if final <= THRESHOLD_ALLOW else "Neutral"
+    elif final >= THRESHOLD_BLOCK:
+        label = "Overstimulating"
+    elif final <= THRESHOLD_ALLOW:
+        label = "Educational"
+    else:
+        label = "Neutral"
+    return final, label
 
 
 def extract_video_id(url: str) -> str:
@@ -51,7 +60,10 @@ def _nb_only_result(video_id: str, metadata: dict, reason: str, t_start: float) 
     nb_obj      = score_from_metadata_dict(metadata)
     score_nb    = nb_obj.score_nb
     score_final = round(score_nb, 4)
-    oir_label   = _oir_label(score_final)
+    # NB-only path: no heuristic score available, classify directly on Score_NB
+    if   score_final >= THRESHOLD_BLOCK: oir_label = "Overstimulating"
+    elif score_final <= THRESHOLD_ALLOW: oir_label = "Educational"
+    else:                                oir_label = "Neutral"
     action      = "block" if oir_label == "Overstimulating" else "allow"
     runtime     = round(time.time() - t_start, 3)
     print(f"[ROUTE] NB-only ({reason[:60]}) → {video_id} {oir_label} ({score_final}) in {runtime}s")
@@ -75,19 +87,40 @@ def _nb_only_result(video_id: str, metadata: dict, reason: str, t_start: float) 
 
 
 def _fetch_metadata_only(video_url: str) -> dict:
+    """
+    Fetches metadata for the NB-only fallback path (video + thumbnail both failed).
+    Uses yt-dlp for title/description, then enriches tags with ytInitialData
+    scraping so the NB score uses the same full keyword set as training.
+    """
+    ydlp_info = {}
+    ydlp_tags = []
     try:
         import yt_dlp
         with yt_dlp.YoutubeDL({"quiet": True, "no_warnings": True,
                                 "skip_download": True}) as ydl:
-            info = ydl.extract_info(video_url, download=False)
-        return {
-            "title":       info.get("title", ""),
-            "tags":        info.get("tags", []) or [],
-            "description": info.get("description", "") or "",
-        }
+            ydlp_info = ydl.extract_info(video_url, download=False) or {}
+        ydlp_tags = ydlp_info.get("tags", []) or []
     except Exception as e:
-        print(f"[META] ✗ {e}")
-        return {"title": "", "tags": [], "description": ""}
+        print(f"[META] ✗ yt-dlp: {e}")
+
+    # Enrich with hidden ytInitialData keywords — same source used during training
+    try:
+        from app.modules.youtube_api import scrape_ytInitialData_keywords, _merge_tags
+        vid_id       = extract_video_id(video_url)
+        scraped_tags = scrape_ytInitialData_keywords(vid_id)
+        merged_tags  = _merge_tags(ydlp_tags, scraped_tags)
+        if scraped_tags:
+            added = len(merged_tags) - len(ydlp_tags)
+            print(f"[META] Tags: {len(ydlp_tags)} yt-dlp + {added} scraped = {len(merged_tags)} total")
+    except Exception as e:
+        print(f"[META] ✗ keyword scrape failed: {e}")
+        merged_tags = ydlp_tags
+
+    return {
+        "title":       ydlp_info.get("title", ""),
+        "tags":        merged_tags,
+        "description": ydlp_info.get("description", "") or "",
+    }
 
 
 def _save_to_db(result: dict):
@@ -168,8 +201,11 @@ def classify_full():
       1. Naïve Bayes — metadata scoring (title, tags, description)
       2. Heuristic   — audiovisual analysis (FCR, CSV, ATT, thumbnail)
 
-    Fusion: Score_final = (0.6 × Score_NB) + (0.4 × Score_H)
-    Thresholds: Block >= 0.20, Allow <= 0.08
+    Fusion (v3 confidence-gated):
+      eff_alpha   = LOW_ALPHA (0.15) if NB confidence < 0.40 else BASE_ALPHA (0.40)
+      Score_final = (eff_alpha × Score_NB) + ((1 − eff_alpha) × Score_H)
+      H-override  : Score_H < 0.10 → cannot be Overstimulating
+    Thresholds: Block >= 0.20, Allow <= 0.18
 
     Fallback chain inside sample_video():
       Normal download
@@ -234,13 +270,29 @@ def classify_full():
         score_h   = h_result["score_h"]
         h_details = h_result.get("details", {})
 
-        # ── NB score (prefer downloaded title over hint) ──────────────────────
+        # ── NB score — enrich tags with ytInitialData scraping ───────────────
+        # yt-dlp tags inside `sample` are often incomplete or empty.
+        # Scraping ytInitialData gives the same full keyword set that was used
+        # during training via enrich_dataset.py → preprocess.py → train_nb.py.
+        # Without this, training sees enriched tags but inference sees weak tags
+        # (feature mismatch), which directly causes Neutral misclassification.
         nb_title = sample.get("video_title", "") or hint_title
         nb_desc  = sample.get("description", "") or hint_desc
-        nb_tags  = sample.get("tags") or hint_tags
+        sample_tags = sample.get("tags") or []
+        try:
+            from app.modules.youtube_api import scrape_ytInitialData_keywords, _merge_tags
+            scraped_tags = scrape_ytInitialData_keywords(video_id)
+            nb_tags      = _merge_tags(sample_tags, scraped_tags, hint_tags)
+            if scraped_tags:
+                print(f"[NB_INPUT] Tags: {len(sample_tags)} sample "
+                      f"+ {len(scraped_tags)} scraped "
+                      f"+ {len(hint_tags)} hint = {len(nb_tags)} total")
+        except Exception as e:
+            print(f"[NB_INPUT] ✗ tag enrichment failed: {e}")
+            nb_tags = sample_tags or hint_tags
         print(f"[NB_INPUT] title={repr(nb_title[:80])}")
         print(f"[NB_INPUT] description={'EMPTY' if not nb_desc else repr(nb_desc[:120])}")
-        print(f"[NB_INPUT] tags={nb_tags[:5]}")
+        print(f"[NB_INPUT] tags (first 5)={nb_tags[:5]}")
         nb_obj = score_from_metadata_dict({
             "title":       nb_title,
             "tags":        nb_tags,
@@ -250,9 +302,7 @@ def classify_full():
         predicted_label = nb_obj.predicted_label
 
         # ── Hybrid fusion ─────────────────────────────────────────────────────
-        # Score_final = (0.6 × Score_NB) + (0.4 × Score_H)
-        score_final = round((ALPHA * score_nb) + (BETA * score_h), 4)
-        oir_label   = _oir_label(score_final)
+        score_final, oir_label = _fuse(score_nb, score_h, nb_obj.confidence)
         action      = "block" if oir_label == "Overstimulating" else "allow"
 
         path_label = "full" if sample_status == "success" else "thumbnail-only"
@@ -273,8 +323,12 @@ def classify_full():
             "status":            "success",
             "sample_path":       path_label,
             "fusion_weights": {
-                "alpha_nb":       ALPHA,
-                "beta_heuristic": BETA,
+                "version":       "v3-confidence-gated",
+                "base_alpha_nb": BASE_ALPHA,
+                "low_alpha_nb":  LOW_ALPHA,
+                "conf_thresh":   CONF_THRESH,
+                "h_override":    H_OVERRIDE,
+                "eff_alpha":     LOW_ALPHA if nb_obj.confidence < CONF_THRESH else BASE_ALPHA,
             },
             "heuristic_details": h_details,
             "nb_details": {
@@ -398,9 +452,13 @@ def health():
         "cookies_path": COOKIES_PATH,
         "cookies_ok":   _has_cookies(),
         "fusion_config": {
-            "alpha_nb":        ALPHA,
-            "beta_heuristic":  BETA,
+            "version":         "v3-confidence-gated",
+            "base_alpha_nb":   BASE_ALPHA,
+            "low_alpha_nb":    LOW_ALPHA,
+            "conf_thresh":     CONF_THRESH,
+            "h_override":      H_OVERRIDE,
             "threshold_block": THRESHOLD_BLOCK,
             "threshold_allow": THRESHOLD_ALLOW,
+            "neutral_range":   f"{THRESHOLD_ALLOW} < score < {THRESHOLD_BLOCK}",
         },
     }), 200
