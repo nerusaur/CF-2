@@ -22,8 +22,8 @@ from sklearn.metrics import (
 )
 
 SCRIPT_DIR    = os.path.dirname(os.path.abspath(__file__))
-RESULTS_PATH  = os.path.join(SCRIPT_DIR, "..", "outputs", "hybrid_full_results.json")
-OUTPUT_PATH   = os.path.join(SCRIPT_DIR, "..", "outputs", "final_hybrid_report.txt")
+RESULTS_PATH = os.path.join(SCRIPT_DIR, "..", "outputs", "hybrid_210_results.json")
+OUTPUT_PATH   = os.path.join(SCRIPT_DIR, "..", "outputs", "post-hyperparameter_report.txt")
 
 LABELS = ["Educational", "Neutral", "Overstimulating"]
 

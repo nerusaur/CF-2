@@ -50,33 +50,15 @@ import time
 from app.modules.naive_bayes import score_metadata
 from app.modules.heuristic   import compute_heuristic_score
 
-# ── Fusion weights (empirically validated) ────────────────────────────────────
-# Updated from original thesis values (alpha=0.4, beta=0.6) based on
-# real-world evaluation showing NB is the dominant discriminator.
-ALPHA     = 0.6    # NB weight (metadata)       — was 0.4
-BETA      = 0.4    # Heuristic weight (audiovisual) — was 0.6
+# ── Fusion weights (v3 optimized) ──────────────────────────────────────────
+BASE_ALPHA    = 0.50   # (Optimized) NB weight when confidence is high
+LOW_ALPHA     = 0.15   # NB weight when metadata is "uncertain"
+CONF_THRESH   = 0.40   # The boundary for "low confidence"
+H_OVERRIDE    = 0.07   # If Score_H < 0.07, it's safe regardless of metadata
 
-# ── Thresholds (empirically recalibrated — v2) ────────────────────────────────
-# First recalibration (0.20 / 0.08) overcorrected: real-world Score_final
-# values for Educational (mean=0.1894) and Neutral (mean=0.1821) overlap
-# heavily with the 0.20 block threshold, causing excessive false positives
-# (most videos classified as Overstimulating regardless of content).
-#
-# Score distribution from 30-video real pipeline evaluation:
-#   Educational:      mean=0.1894, range=0.1073–0.2850
-#   Neutral:          mean=0.1821, range=0.0906–0.2837
-#   Overstimulating:  mean=0.2675, range=0.1856–0.4119
-#
-# A block threshold of 0.30 cleanly separates Overstimulating (mean=0.2675)
-# from the Educational/Neutral cluster (mean≈0.185) with a reasonable margin,
-# while staying below the Overstimulating minimum (0.1856) only by design —
-# the key separation occurs around the mean gap at ~0.27–0.30.
-# Allow threshold of 0.12 captures the lower Educational/Neutral tail cleanly.
-#
-# Reference: ChildFocus Thesis Chapter 5 — Threshold Recalibration Analysis
-THRESHOLD_BLOCK = 0.30   # was 0.20 (overcorrected) — originally 0.75 in thesis
-THRESHOLD_ALLOW = 0.12   # was 0.08 (overcorrected) — originally 0.35 in thesis
-
+# ── Thresholds (v3 optimized) ──────────────────────────────────────────────
+THRESHOLD_BLOCK = 0.28   # Videos >= 0.28 are Overstimulating
+THRESHOLD_ALLOW = 0.18   # Videos <= 0.18 are Educational
 
 # ── OIR Label mapping ─────────────────────────────────────────────────────────
 def _oir_label(score: float) -> str:
@@ -143,6 +125,26 @@ def classify_fast(
         "status":            nb_result.get("status", "unknown"),
     }
 
+def _fuse_v3(score_nb: float, score_h: float, confidence: float) -> tuple[float, str]:
+    """Applies the v3 confidence-gated fusion logic."""
+    # Determine which alpha to use based on NB confidence
+    eff_alpha = LOW_ALPHA if confidence < CONF_THRESH else BASE_ALPHA
+    
+    # Calculate final score
+    score_final = round((eff_alpha * score_nb) + ((1 - eff_alpha) * score_h), 4)
+    
+    # 1. Heuristic Override: If it's very "slow/educational" paced, don't block it
+    if score_h < H_OVERRIDE:
+        label = "Educational" if score_final <= THRESHOLD_ALLOW else "Neutral"
+    # 2. Standard Thresholding
+    elif score_final >= THRESHOLD_BLOCK:
+        label = "Overstimulating"
+    elif score_final <= THRESHOLD_ALLOW:
+        label = "Educational"
+    else:
+        label = "Neutral"
+        
+    return score_final, label
 
 # ── Full Classification (heuristic + NB fusion) ────────────────────────────────
 def classify_full(
@@ -152,87 +154,59 @@ def classify_full(
     tags:           list = None,
     description:    str  = "",
 ) -> dict:
-    """
-    Full hybrid classification.
-    1. Runs NB metadata scoring (fast)
-    2. Runs heuristic analysis (downloads video, extracts features)
-    3. Fuses scores: Score_final = (0.6 × NB) + (0.4 × Heuristic)
-    4. Returns final OIR label + system action
-
-    Used by /classify_full endpoint.
-    """
     t_start = time.time()
     print(f"\n[FUSION] ══════════════════════════════════════")
     print(f"[FUSION] Full classification: {video_id}")
 
-    # ── Step 1: Naïve Bayes metadata scoring ──────────────────────────────────
-    print(f"[FUSION] Step 1: NB metadata scoring...")
+    # 1. Naïve Bayes metadata scoring
     nb_result = score_metadata(title=title, tags=tags or [], description=description)
     score_nb  = nb_result.get("score_nb", 0.5)
-    print(f"[FUSION] Score_NB = {score_nb} ({nb_result.get('label', '?')})")
+    nb_conf   = nb_result.get("confidence", 0.0)
 
-    # ── Step 2: Heuristic audiovisual analysis ─────────────────────────────────
-    print(f"[FUSION] Step 2: Heuristic analysis...")
+    # 2. Heuristic audiovisual analysis
     h_result = compute_heuristic_score(video_id, thumbnail_url)
 
     if h_result.get("status") != "success":
-        # Heuristic failed — fall back to NB only
-        print(f"[FUSION] ⚠ Heuristic failed: {h_result.get('message')}. Using NB only.")
         score_final = score_nb
-        segments    = []
-        thumbnail   = 0.0
-        score_h     = score_nb  # fallback
+        oir_label   = _oir_label(score_nb) # Fallback to simple label
+        segments, thumbnail, score_h = [], 0.0, score_nb
     else:
         score_h   = h_result.get("score_h", 0.5)
         segments  = h_result.get("segments", [])
         thumbnail = h_result.get("thumbnail", 0.0)
-        print(f"[FUSION] Score_H = {score_h} (segments: {len(segments)})")
 
-        # ── Step 3: Weighted fusion ────────────────────────────────────────────
-        # Score_final = (α × Score_NB) + ((1−α) × Score_H)
-        # α = 0.6 (empirically validated — NB is dominant discriminator)
-        score_final = round((ALPHA * score_nb) + (BETA * score_h), 4)
+        # 3. Weighted fusion (v3 logic)
+        score_final, oir_label = _fuse_v3(score_nb, score_h, nb_conf)
 
-    print(f"[FUSION] Score_final = ({ALPHA} × {score_nb}) + ({BETA} × {score_h}) = {score_final}")
-
-    # ── Step 4: Final OIR label + action ──────────────────────────────────────
-    oir_label = _oir_label(score_final)
-    action    = _system_action(oir_label)
-
+    # Update print to show effective alpha
+    eff_a = LOW_ALPHA if nb_conf < CONF_THRESH else BASE_ALPHA
+    print(f"[FUSION] Score_final = ({eff_a} × {score_nb}) + ({round(1-eff_a, 2)} × {score_h}) = {score_final}")
+    
+    action = _system_action(oir_label)
     total = round(time.time() - t_start, 2)
     print(f"[FUSION] OIR = {score_final} → {oir_label} → {action}")
-    print(f"[FUSION] Total: {total}s")
     print(f"[FUSION] ══════════════════════════════════════\n")
 
     return {
         "video_id":     video_id,
         "video_title":  h_result.get("video_title", title) if h_result.get("status") == "success" else title,
-
-        # Individual scores
         "score_nb":     score_nb,
         "score_h":      score_h,
         "score_final":  score_final,
-
-        # Fusion weights used
         "fusion_weights": {
-            "alpha_nb":        ALPHA,
-            "beta_heuristic":  BETA,
+            "base_alpha": BASE_ALPHA,
+            "low_alpha":  LOW_ALPHA,
         },
-
-        # OIR classification
         "oir_label":    oir_label,
         "action":       action,
-
-        # Thresholds used
         "thresholds": {
             "block": THRESHOLD_BLOCK,
             "allow": THRESHOLD_ALLOW,
+            "h_override": H_OVERRIDE
         },
-
-        # Supporting details
         "nb_details": {
             "label":         nb_result.get("label", ""),
-            "confidence":    nb_result.get("confidence", 0.0),
+            "confidence":    nb_conf,
             "probabilities": nb_result.get("probabilities", {}),
         },
         "heuristic_details": {
@@ -241,29 +215,22 @@ def classify_full(
             "video_duration": h_result.get("video_duration", 0) if h_result.get("status") == "success" else 0,
             "runtime":        h_result.get("runtime_seconds", 0.0),
         },
-
         "status":          "success",
         "runtime_seconds": total,
     }
 
-
 def get_fusion_config() -> dict:
     """Return the current fusion configuration for API transparency."""
     return {
-        "alpha_nb":        ALPHA,
-        "beta_heuristic":  BETA,
+        "base_alpha":      BASE_ALPHA,
+        "low_alpha":       LOW_ALPHA,
         "threshold_block": THRESHOLD_BLOCK,
         "threshold_allow": THRESHOLD_ALLOW,
+        "h_override":      H_OVERRIDE,
         "oir_labels":      ["Educational", "Neutral", "Overstimulating"],
         "actions": {
             "Overstimulating": "block",
             "Neutral":         "allow",
             "Educational":     "allow",
-        },
-        "calibration_note": (
-            "Weights empirically validated via 30-video real pipeline evaluation. "
-            "Thresholds recalibrated (v2) from 0.20/0.08 to 0.30/0.12 after "
-            "observing excessive false positives caused by Educational/Neutral "
-            "score overlap with the original block threshold. See Chapter 5."
-        ),
+        }
     }

@@ -45,13 +45,12 @@ _metrics_cache = {}
 
 
 def _resolve_paths() -> bool:
-    global _MODEL_PATH, _VEC_PATH
+    global _MODEL_PATH
+    # Only check for the bundled nb_model.pkl
     for directory in [_MODELS_DIR_PRIMARY, _MODELS_DIR_FALLBACK]:
         mp = os.path.join(directory, "nb_model.pkl")
-        vp = os.path.join(directory, "vectorizer.pkl")
-        if os.path.exists(mp) and os.path.exists(vp):
+        if os.path.exists(mp):
             _MODEL_PATH = mp
-            _VEC_PATH   = vp
             return True
     return False
 
@@ -67,25 +66,31 @@ def _load_models() -> bool:
         return False
 
     try:
+        # Load the single bundled file
         with open(_MODEL_PATH, "rb") as f:
             bundle = pickle.load(f)
 
         if isinstance(bundle, dict):
             print(f"[NB] ✓ Unwrapped model from dict. Keys: {list(bundle.keys())}")
             _model         = bundle["model"]
+            _vectorizer    = bundle["vectorizer"]  # Extracted from bundle
             _label_encoder = bundle["label_encoder"]
             raw_names      = bundle.get("label_names", list(_label_encoder.classes_))
             _label_names   = [str(x) for x in raw_names]
             _metrics_cache = bundle.get("metrics", {})
         else:
+            # Fallback logic for older, non-bundled models
             _model = bundle
             from sklearn.preprocessing import LabelEncoder
             _label_encoder = LabelEncoder()
             _label_encoder.fit(["Educational", "Neutral", "Overstimulating"])
             _label_names = ["Educational", "Neutral", "Overstimulating"]
-
-        with open(_VEC_PATH, "rb") as f:
-            _vectorizer = pickle.load(f)
+            
+            # If it's an old model, we might still need a separate vectorizer file
+            _VEC_PATH = _MODEL_PATH.replace("nb_model.pkl", "vectorizer.pkl")
+            if os.path.exists(_VEC_PATH):
+                with open(_VEC_PATH, "rb") as f:
+                    _vectorizer = pickle.load(f)
 
         classes   = [str(c) for c in _label_encoder.classes_]
         _OVER_IDX = classes.index("Overstimulating") if "Overstimulating" in classes else -1
